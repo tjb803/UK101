@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Compukit UK101 Simulator - Utilities</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="5" width="100%">
+<tr align="center"><td><img src="image/uk101.gif" alt="UK101"/></td></tr>
+</table>
+<h1>Utility Applications</h1>
+<p>The simulator contains a number of utility programs that can be used for 
+various off-line tasks.</p>
+<ul>
+<li><a href="#pcode">Code Disassembler</a></li>
+<li><a href="#pdata">Data Display</a></li>
+<li><a href="#pdump">Dump File Formatter</a></li>
+<li><a href="#ptrace">Trace File Formatter</a></li>
+<li><a href="#tread">Binary Tape Reader</a></li>
+<li><a href="#twrite">Binary Tape Writer</a></li>
+</ul>
+<p>To run any of these utility programs you must ensure the simulator JAR
+file is on the Java CLASSPATH.</p>
+<hr><h2 id="pcode">Code Disassembler</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>uk101.utils.PrintCode</b> [options] bytesfile [address]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>bytesfile</code></dt><dd>A file containing the code to be disassembled.</dd>
+<dt><code>address</code></dt><dd>The code starting address.
+Defaults to 0.
+This can be provided in hexadecimal by preceding the digits with 
+a <code>$</code> or <code>0x</code> characters.</dd>
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-output <i>outputfile</i></code></dt><dd>A file to save the output. 
+Defaults to standard out.</dd>
+</dl></blockquote>
+<p>This command will disassemble a block of 6502 instruction code such as 
+a ROM image.
+The starting address of the first instruction will need to be provided as
+there is no way to determine this from the 6502 bytes alone.
+Code is displayed in standard 6502 assembler format, for example:</p>
+<pre>
+FF96:  48         PHA
+FF97:  A9 01      LDA #$01
+FF99:  D0 F6      BNE $FF91
+FF9B:  AD 12 02   LDA $0212
+FF9E:  D0 19      BNE $FFB9
+FFA0:  A9 FE      LDA #$FE
+FFA2:  8D 00 DF   STA $DF00
+FFA5:  2C 00 DF   BIT $DF00
+FFA8:  70 0F      BVS $FFB9
+FFAA:  A9 FB      LDA #$FB
+FFAC:  8D 00 DF   STA $DF00
+FFAF:  2C 00 DF   BIT $DF00
+FFB2:  70 05      BVS $FFB9
+FFB4:  A9 03      LDA #$03
+FFB6:  4C 36 A6   JMP $A636
+FFB9:  60         RTS
+</pre>
+<hr><h2 id="pdata">Data Display</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>uk101.utils.PrintBytes</b> [options] bytesfile [address]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>bytesfile</code></dt><dd>A file containing the data to be displayed.</dd>
+<dt><code>address</code></dt><dd>The data starting address.
+Defaults to 0.
+This can be provided in hexadecimal by preceding the digits with 
+a <code>$</code> or <code>0x</code> characters.</dd>
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-output <i>outputfile</i></code></dt><dd>A file to save the output. 
+Defaults to standard out.</dd>
+</dl></blockquote>
+<p>This command will print a formatted hexadecimal dump of a block of 
+data such as ROM image.
+The starting address of the first data byte will need to be provided as
+there is no way to determine this from the data bytes alone.
+Data is printed in hexadecimal and as ASCII characters, for example:</p>
+<pre>
+FF30:  06 20 4E FF 4C 11 BD C9 57 D0 06 20 4E FF 4C 00  [. N.L...W.. N.L.]
+FF40:  00 C9 4D D0 06 20 4E FF 4C 00 FE 4C 00 FF A9 0C  [..M.. N.L..L....]
+FF50:  4C 57 FA 8A 48 BA BD 03 01 C9 A3 F0 05 68 AA 4C  [LW..H........h.L]
+FF60:  EB FF A2 05 4C 7F FE 55 F9 7E F9 FF 48 AD 05 02  [....L..U.~..H...]
+FF70:  F0 22 68 20 B1 FC C9 0D D0 1B 48 8A 48 A2 0A A9  [."h ......H.H...]
+FF80:  00 20 B1 FC CA D0 FA 68 AA 68 60 48 CE 03 02 A9  [. .....h.h`H....]
+FF90:  00 8D 05 02 68 60 48 A9 01 D0 F6 AD 12 02 D0 19  [....h`H.........]
+FFA0:  A9 FE 8D 00 DF 2C 00 DF 70 0F A9 FB 8D 00 DF 2C  [.....,..p......,]
+FFB0:  00 DF 70 05 A9 03 4C 36 A6 60 2C 03 02 10 19 A9  [..p...L6.`,.....]
+FFC0:  FD 8D 00 DF A9 10 2C 00 DF F0 0A AD 00 F0 4A 90  [......,.......J.]
+FFD0:  EE AD 01 F0 60 EE 03 02 AD 0F 02 F0 03 4C 00 FD  [....`........L..]
+FFE0:  A9 50 8D 10 02 4C EA FC FF FF FF 6C 18 02 6C 1A  [.P...L.....l..l.]
+FFF0:  02 6C 1C 02 6C 1E 02 6C 20 02 22 02 00 FF 25 02  [.l..l..l ."...%.]
+</pre>
+<hr><h2 id="pdump">Dump File Formatter</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>uk101.utils.PrintDump</b> [options] dumpfile</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>dumpfile</code></dt><dd>The name of a simulator memory dump file.</dd>
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-output <i>outputfile</i></code></dt><dd>A file to save the output. 
+Defaults to standard out.</dd>
+<dt><code>-hex</code></dt><dd>Format the dump as hex bytes.
+This is the default format.</dd>
+<dt><code>-code</code></dt><dd>Format the dump as disassembled code.</dd>
+</dl></blockquote>
+<p>This will format and print the output of a simulator memory dump file.
+The memory dump files usually have a name like 
+<code>uk101&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.ram</code>.
+The memory dump can be formatted either as disassembled instructions or 
+as hexadecimal data display.
+<p>Memory dump files can be produced by using the special  
+<a href=extras.html#control">simulator control</a> instruction, or by pressing
+the <i>Dump</i> button on the Machine view window.</p>
+<hr><h2 id="ptrace">Trace File Formatter</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>uk101.utils.PrintTrace</b> [options] tracefile</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>tracefile</code></dt><dd>The name of a simulator instruction trace file.</dd>
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-output <i>outputfile</i></code></dt><dd>A file to save the output. 
+Defaults to standard out.</dd>
+</dl></blockquote>
+<p>This will format and print the output of a simulator instruction trace file.
+The instruction trace files usually have a name like 
+<code>uk101&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.trace</code></p>
+<p>The output of the trace formatter will be something like this:</p>
+<pre>
+F9B3:  CA         DEX           ; A=00    X=2F Y=1C S=F5  P=nv-bdiZc
+F9B4:  D0 F8      BNE $F9AE     ; A=00    X=2E Y=1C S=F5  P=nv-bdizc
+F9AE:  20 E7 F9   JSR $F9E7     ; A=00    X=2E Y=1C S=F5  P=nv-bdizc  EA=F9E7
+F9E7:  A9 01      LDA #$01      ; A=00    X=2E Y=1C S=F3  P=nv-bdizc
+F9E9:  8D 00 DF   STA $DF00     ; A=01    X=2E Y=1C S=F3  P=nv-bdizc  EA=DF00
+F9EC:  AD 00 DF   LDA $DF00     ; A=01    X=2E Y=1C S=F3  P=nv-bdizc  EA=DF00
+F9EF:  49 FF      EOR #$FF      ; A=FF    X=2E Y=1C S=F3  P=Nv-bdizc
+F9F1:  60         RTS           ; A=00    X=2E Y=1C S=F3  P=nv-bdiZc
+</pre>
+<p>This shows the address of each traced instruction followed by the 
+bytes of that instruction and its disassembled form.</p>
+<p>Following the instruction is the state of the various CPU registers
+and flags as they were before execution of the instruction.
+If the instruction addresses memory the effective address of the 
+instruction operand is also given - this is the address after any
+indirection and indexing has been performed.</p>
+<p>Trace files can be produced by using the special  
+<a href=extras.html#control">simulator control</a> instructions, or by selecting
+the <i>Trace</i> action on the CPU view window.</p>
+<hr><h2 id="tread">Binary Tape Reader</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>uk101.utils.TapeRead</b> [options] inputtape [outputfile]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>inputtape</code></dt><dd>The name of a binary UK101 decoded cassette 
+tape input file.</dd>
+<dt><code>outputfile</code></dt><dd>The name of an output file.  
+Defaults to standard out.</dd> 
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-encoding <i>encoding_name</i></code></dt><dd>The output file encoding. 
+Defaults to the standard platform encoding. 
+This option is rarely needed.</dd>
+</dl></blockquote>
+<p>This program will take a decoded cassette tape file and print or save it
+in a standard ASCII character format for ease of viewing or editing on 
+the PC.</p>
+<p>See <a href="samples.html#format">binary and ASCII tape formats</a> for 
+details on the differences between the &quot;binary&quot; and ASCII form 
+of program tapes.</p> 
+<hr><h2 id="twrite">Binary Tape Writer</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>uk101.utils.TapeWrite</b> [options] inputfile outputtape</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>inputfile</code></dt><dd>The name of an ASCII file representation  
+of a decoded cassette tape.</dd>
+<dt><code>outputtape</code></dt><dd>The name of a binary output file.</dd> 
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-encoding <i>encoding_name</i></code></dt><dd>The input file encoding. 
+Defaults to the standard platform encoding. 
+This option is rarely needed.</dd>
+</dl></blockquote>
+<p>This program will take an ASCII representation of a decoded cassette tape
+and write it in the original binary format, possibly for loading back
+inot a real UK101 machine.</p>
+<p>See <a href="samples.html#format">binary and ASCII tape formats</a> for
+ details on the differences between the &quot;binary&quot; and ASCII form 
+ of program tapes.</p> 
+<br><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>December 2010
+<br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
+<td align="right">Return to <a href="index.html">index</a>
+<br><br>&copy; Tim Baldwin 2010</td></tr>
+</table>
+</body>
+</html>
