@@ -1,0 +1,820 @@
+/**
+ * Compukit UK101 Simulator
+ *
+ * (C) Copyright Tim Baldwin 2010
+ */
+package uk101.hardware;
+
+import uk101.hardware.bus.DataBus;
+import uk101.machine.Computer;
+import uk101.machine.Data;
+import uk101.machine.Trace;
+
+/**
+ * Simulation of the MOS Technology 6502 microprocessor.
+ * 
+ * Instruction decoding and cycle times are from my old copy of Rodney Zaks
+ * "Programming the 6502" (3rd edition).
+ *
+ * @author Baldwin
+ */
+public class CPU6502 {
+
+    // Status register flag bits
+    static final byte FLAG_N = (byte)0x80;
+    static final byte FLAG_V = (byte)0x40;
+    static final byte FLAG_B = (byte)0x10;
+    static final byte FLAG_D = (byte)0x08;
+    static final byte FLAG_I = (byte)0x04;
+    static final byte FLAG_Z = (byte)0x02;
+    static final byte FLAG_C = (byte)0x01;
+
+    // Addressing modes
+    static final int MODE_IMPLICIT = 0;
+    static final int MODE_IMMEDIATE = 1;
+    static final int MODE_ABSOLUTE = 2;
+    static final int MODE_INDIRECT = 3;
+    static final int MODE_ZEROPAGE = 4;
+    static final int MODE_RELATIVE = 5;
+    static final int MODE_ABS_X = 6;
+    static final int MODE_ABS_Y = 7;
+    static final int MODE_PRE_X = 8;
+    static final int MODE_POST_Y = 9;
+    static final int MODE_0PAGE_X = 10;
+    static final int MODE_0PAGE_Y = 11;
+
+    // Important address pages
+    static final int STACK_BASE = 0x100;
+    static final byte STACK_TOP = (byte)0xFF;
+
+    // Address vectors
+    static final int NMI_VECTOR = 0xFFFA;
+    static final int RESET_VECTOR = 0xFFFC;
+    static final int IRQ_VECTOR = 0xFFFE;
+
+    // Processor registers
+    byte A;              // Accumulator
+    byte X, Y;           // X and Y Index registers
+    byte S;              // Stack pointer
+    byte P;              // Status register
+    short PC;            // 16-bit program counter
+
+    // Arithmetic and Logic Unit
+    ALU6502 alu;
+
+    // Data Bus gives access to the RAM and ROM
+    DataBus bus;
+
+    // Execution control
+    boolean running;
+    boolean sigRESET, sigNMI, sigIRQ;
+    int speed, cycles;
+    Trace trace;
+    Trace.Entry traceEntry;
+    
+    // Owning computer
+    Computer computer;
+
+    public CPU6502(int mhz, DataBus bus, Computer computer) {
+        this.alu = new ALU6502();
+        this.computer = computer;
+        this.bus = bus;
+        setSpeed(mhz);
+        reset();
+    }
+    
+    public void setSpeed(int mhz) {
+        speed = (mhz == 0) ? 0 : 1000/mhz;          // Cycle time in ns
+    }
+    
+    public int getSpeed() {
+        return (speed == 0) ? 0 : 1000/speed;       // Speed in MHz
+    }
+
+    void reset() {
+        A = X = Y = 0;
+        S = STACK_TOP;
+        P = 0;
+        PC = 0;
+    }
+
+    /*
+     * Normal processor execution
+     */
+    public void run() {
+        running = true;
+        while (running) {
+            execute();
+        }
+    }
+
+    public void stop() {
+        running = false;
+    }
+
+    /*
+     * External signals
+     */
+    public synchronized void signalReset() {
+        sigRESET = true;
+        notify();
+    }
+
+    public synchronized void signalNMI() {
+        sigNMI = true;
+        notify();
+    }
+
+    public synchronized void signalIRQ() {
+        if (!testFlag(FLAG_I)) {
+            sigIRQ = true;
+            notify();
+        }
+    }
+
+    /*
+     * Execute a single instruction
+     */
+    void execute() {
+        // Check for external signals before executing the next instruction
+        checkSignals();
+
+        long startTime = System.nanoTime();
+
+        // Add trace record if tracing
+        if (trace != null) {
+            traceEntry = trace.trace(PC, A, X, Y, S, P);
+        }
+
+        // Read the next opcode
+        int op = Data.asBits(fetchByte());
+
+        // The original instruction opcodes had a regular pattern and can be decoded by
+        // breaking down into various bit groups for the operation, addressing mode etc.
+        // But a big switch statement works just as well and copes better if we want to
+        // add support for undocumented instructions or additional instructions added
+        // to later versions of the processor (which didn't always match the original
+        // patterns).
+        switch (op) {
+        default:                          cycles = 0;  break;
+        case 0x6D: adc(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0x65: adc(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0x69: adc(MODE_IMMEDIATE);   cycles = 2;  break;
+        case 0x7D: adc(MODE_ABS_X);       cycles = 4;  break;
+        case 0x79: adc(MODE_ABS_Y);       cycles = 4;  break;
+        case 0x61: adc(MODE_PRE_X);       cycles = 6;  break;
+        case 0x71: adc(MODE_POST_Y);      cycles = 5;  break;
+        case 0x75: adc(MODE_0PAGE_X);     cycles = 4;  break;
+        case 0x2D: and(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0x25: and(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0x29: and(MODE_IMMEDIATE);   cycles = 2;  break;
+        case 0x3D: and(MODE_ABS_X);       cycles = 4;  break;
+        case 0x39: and(MODE_ABS_Y);       cycles = 4;  break;
+        case 0x21: and(MODE_PRE_X);       cycles = 6;  break;
+        case 0x31: and(MODE_POST_Y);      cycles = 5;  break;
+        case 0x35: and(MODE_0PAGE_X);     cycles = 4;  break;
+        case 0xCD: cmp(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0xC5: cmp(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0xC9: cmp(MODE_IMMEDIATE);   cycles = 2;  break;
+        case 0xDD: cmp(MODE_ABS_X);       cycles = 4;  break;
+        case 0xD9: cmp(MODE_ABS_Y);       cycles = 4;  break;
+        case 0xC1: cmp(MODE_PRE_X);       cycles = 6;  break;
+        case 0xD1: cmp(MODE_POST_Y);      cycles = 5;  break;
+        case 0xD5: cmp(MODE_0PAGE_X);     cycles = 4;  break;
+        case 0x4D: eor(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0x45: eor(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0x49: eor(MODE_IMMEDIATE);   cycles = 2;  break;
+        case 0x5D: eor(MODE_ABS_X);       cycles = 4;  break;
+        case 0x59: eor(MODE_ABS_Y);       cycles = 4;  break;
+        case 0x41: eor(MODE_PRE_X);       cycles = 6;  break;
+        case 0x51: eor(MODE_POST_Y);      cycles = 5;  break;
+        case 0x55: eor(MODE_0PAGE_X);     cycles = 4;  break;
+        case 0xAD: lda(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0xA5: lda(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0xA9: lda(MODE_IMMEDIATE);   cycles = 2;  break;
+        case 0xBD: lda(MODE_ABS_X);       cycles = 4;  break;
+        case 0xB9: lda(MODE_ABS_Y);       cycles = 4;  break;
+        case 0xA1: lda(MODE_PRE_X);       cycles = 6;  break;
+        case 0xB1: lda(MODE_POST_Y);      cycles = 5;  break;
+        case 0xB5: lda(MODE_0PAGE_X);     cycles = 4;  break;
+        case 0x0D: ora(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0x05: ora(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0x09: ora(MODE_IMMEDIATE);   cycles = 2;  break;
+        case 0x1D: ora(MODE_ABS_X);       cycles = 4;  break;
+        case 0x19: ora(MODE_ABS_Y);       cycles = 4;  break;
+        case 0x01: ora(MODE_PRE_X);       cycles = 6;  break;
+        case 0x11: ora(MODE_POST_Y);      cycles = 5;  break;
+        case 0x15: ora(MODE_0PAGE_X);     cycles = 4;  break;
+        case 0xED: sbc(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0xE5: sbc(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0xE9: sbc(MODE_IMMEDIATE);   cycles = 2;  break;
+        case 0xFD: sbc(MODE_ABS_X);       cycles = 4;  break;
+        case 0xF9: sbc(MODE_ABS_Y);       cycles = 4;  break;
+        case 0xE1: sbc(MODE_PRE_X);       cycles = 6;  break;
+        case 0xF1: sbc(MODE_POST_Y);      cycles = 5;  break;
+        case 0xF5: sbc(MODE_0PAGE_X);     cycles = 4;  break;
+        case 0x8D: sta(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0x85: sta(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0x9D: sta(MODE_ABS_X);       cycles = 5;  break;
+        case 0x99: sta(MODE_ABS_Y);       cycles = 5;  break;
+        case 0x81: sta(MODE_PRE_X);       cycles = 6;  break;
+        case 0x91: sta(MODE_POST_Y);      cycles = 6;  break;
+        case 0x95: sta(MODE_0PAGE_X);     cycles = 4;  break;
+        case 0xEC: cpx(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0xE4: cpx(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0xE0: cpx(MODE_IMMEDIATE);   cycles = 2;  break;
+        case 0xCC: cpy(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0xC4: cpy(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0xC0: cpy(MODE_IMMEDIATE);   cycles = 2;  break;
+        case 0xAE: ldx(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0xA6: ldx(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0xA2: ldx(MODE_IMMEDIATE);   cycles = 2;  break;
+        case 0xBE: ldx(MODE_ABS_Y);       cycles = 4;  break;
+        case 0xB6: ldx(MODE_0PAGE_Y);     cycles = 4;  break;
+        case 0xAC: ldy(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0xA4: ldy(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0xA0: ldy(MODE_IMMEDIATE);   cycles = 2;  break;
+        case 0xBC: ldy(MODE_ABS_X);       cycles = 4;  break;
+        case 0xB4: ldy(MODE_0PAGE_X);     cycles = 4;  break;
+        case 0x8E: stx(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0x86: stx(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0x96: stx(MODE_0PAGE_Y);     cycles = 4;  break;
+        case 0x8C: sty(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0x84: sty(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0x94: sty(MODE_0PAGE_X);     cycles = 4;  break;
+        case 0x0A: asl(MODE_IMPLICIT);    cycles = 2;  break;
+        case 0x0E: asl(MODE_ABSOLUTE);    cycles = 6;  break;
+        case 0x06: asl(MODE_ZEROPAGE);    cycles = 5;  break;
+        case 0x1E: asl(MODE_ABS_X);       cycles = 7;  break;
+        case 0x16: asl(MODE_0PAGE_X);     cycles = 6;  break;
+        case 0x4A: lsr(MODE_IMPLICIT);    cycles = 2;  break;
+        case 0x4E: lsr(MODE_ABSOLUTE);    cycles = 6;  break;
+        case 0x46: lsr(MODE_ZEROPAGE);    cycles = 5;  break;
+        case 0x5E: lsr(MODE_ABS_X);       cycles = 7;  break;
+        case 0x56: lsr(MODE_0PAGE_X);     cycles = 6;  break;
+        case 0x2A: rol(MODE_IMPLICIT);    cycles = 2;  break;
+        case 0x2E: rol(MODE_ABSOLUTE);    cycles = 6;  break;
+        case 0x26: rol(MODE_ZEROPAGE);    cycles = 5;  break;
+        case 0x3E: rol(MODE_ABS_X);       cycles = 7;  break;
+        case 0x36: rol(MODE_0PAGE_X);     cycles = 6;  break;
+        case 0x6A: ror(MODE_IMPLICIT);    cycles = 2;  break;
+        case 0x6E: ror(MODE_ABSOLUTE);    cycles = 6;  break;
+        case 0x66: ror(MODE_ZEROPAGE);    cycles = 5;  break;
+        case 0x7E: ror(MODE_ABS_X);       cycles = 7;  break;
+        case 0x76: ror(MODE_0PAGE_X);     cycles = 6;  break;
+        case 0x2C: bit(MODE_ABSOLUTE);    cycles = 4;  break;
+        case 0x24: bit(MODE_ZEROPAGE);    cycles = 3;  break;
+        case 0xCE: dec(MODE_ABSOLUTE);    cycles = 6;  break;
+        case 0xC6: dec(MODE_ZEROPAGE);    cycles = 5;  break;
+        case 0xDE: dec(MODE_ABS_X);       cycles = 7;  break;
+        case 0xD6: dec(MODE_0PAGE_X);     cycles = 6;  break;
+        case 0xEE: inc(MODE_ABSOLUTE);    cycles = 6;  break;
+        case 0xE6: inc(MODE_ZEROPAGE);    cycles = 5;  break;
+        case 0xFE: inc(MODE_ABS_X);       cycles = 7;  break;
+        case 0xF6: inc(MODE_0PAGE_X);     cycles = 6;  break;
+        case 0xCA: dex();                 cycles = 2;  break;
+        case 0x88: dey();                 cycles = 2;  break;
+        case 0xE8: inx();                 cycles = 2;  break;
+        case 0xC8: iny();                 cycles = 2;  break;
+        case 0xAA: tax();                 cycles = 2;  break;
+        case 0xA8: tay();                 cycles = 2;  break;
+        case 0xBA: tsx();                 cycles = 2;  break;
+        case 0x8A: txa();                 cycles = 2;  break;
+        case 0x9A: txs();                 cycles = 2;  break;
+        case 0x98: tya();                 cycles = 2;  break;
+        case 0x90: branch(FLAG_C, false); cycles = 2;  break;
+        case 0xB0: branch(FLAG_C, true);  cycles = 2;  break;
+        case 0xD0: branch(FLAG_Z, false); cycles = 2;  break;
+        case 0xF0: branch(FLAG_Z, true);  cycles = 2;  break;
+        case 0x10: branch(FLAG_N, false); cycles = 2;  break;
+        case 0x30: branch(FLAG_N, true);  cycles = 2;  break;
+        case 0x50: branch(FLAG_V, false); cycles = 2;  break;
+        case 0x70: branch(FLAG_V, true);  cycles = 2;  break;
+        case 0x18: flag(FLAG_C, false);   cycles = 2;  break;
+        case 0xD8: flag(FLAG_D, false);   cycles = 2;  break;
+        case 0x58: flag(FLAG_I, false);   cycles = 2;  break;
+        case 0xB8: flag(FLAG_V, false);   cycles = 2;  break;
+        case 0x38: flag(FLAG_C, true);    cycles = 2;  break;
+        case 0xF8: flag(FLAG_D, true);    cycles = 2;  break;
+        case 0x78: flag(FLAG_I, true);    cycles = 2;  break;
+        case 0xEA: nop();                 cycles = 2;  break;
+        case 0x48: pha();                 cycles = 3;  break;
+        case 0x08: php();                 cycles = 3;  break;
+        case 0x68: pla();                 cycles = 4;  break;
+        case 0x28: plp();                 cycles = 4;  break;
+        case 0x00: brk();                 cycles = 7;  break;
+        case 0x4C: jmp(MODE_ABSOLUTE);    cycles = 3;  break;
+        case 0x6C: jmp(MODE_INDIRECT);    cycles = 5;  break;
+        case 0x20: jsr(MODE_ABSOLUTE);    cycles = 6;  break;
+        case 0x40: rti();                 cycles = 6;  break;
+        case 0x60: rts();                 cycles = 6;  break;
+        
+        // Some extra simulator opcodes.  These are values that should never be 
+        // used on a real 6502 as they would cause the processor to lock up.
+        case 0x02: halt();                cycles = 0;  break;
+        case 0x22: dump();                cycles = 0;  break; 
+        case 0xC2: trace(true);           cycles = 0;  break;
+        case 0xE2: trace(false);          cycles = 0;  break;
+        }
+        
+        traceEntry = null;
+
+        long endTime = startTime + cycles*speed;
+        while (System.nanoTime() < endTime) /*spin*/;
+    }
+
+    /*
+     * Signal processing
+     */
+    void checkSignals() {
+        if (sigRESET) {
+            sigRESET = sigNMI = sigIRQ = false;
+            reset();
+            PC = bus.readWord(RESET_VECTOR);
+        } else if (sigNMI) {
+            sigNMI = false;
+            pushWord(PC);
+            pushByte(P);
+            setFlag(FLAG_I, true);
+            PC = bus.readWord(NMI_VECTOR);
+        } else if (sigIRQ) {
+            sigIRQ = false;
+            pushWord(PC);
+            pushByte((byte)(P & ~FLAG_B));
+            setFlag(FLAG_I, true);
+            PC = bus.readWord(IRQ_VECTOR);
+        }
+    }
+
+    /*
+     * Standard instruction set
+     */
+    void nop() {
+        return;
+    }
+
+    void brk() {
+        pushWord((short)(PC + 1));
+        pushByte((byte)(P | FLAG_B));
+        PC = bus.readWord(IRQ_VECTOR);
+    }
+
+    void sta(int mode) {
+        int addr = getOperand(mode);
+        bus.writeByte(addr, A);
+    }
+
+    void stx(int mode) {
+        int addr = getOperand(mode);
+        bus.writeByte(addr, X);
+    }
+
+    void sty(int mode) {
+        int addr = getOperand(mode);
+        bus.writeByte(addr, Y);
+    }
+
+    void lda(int mode) {
+        int addr = getOperand(mode);
+        if (mode == MODE_IMMEDIATE) {
+            A = Data.asByte(addr);
+        } else {
+            A = bus.readByte(addr);
+        }
+        setFlag(FLAG_N, A < 0);
+        setFlag(FLAG_Z, A == 0);
+    }
+
+    void ldx(int mode) {
+        int addr = getOperand(mode);
+        if (mode == MODE_IMMEDIATE) {
+            X = Data.asByte(addr);
+        } else {
+            X = bus.readByte(addr);
+        }
+        setFlag(FLAG_N, X < 0);
+        setFlag(FLAG_Z, X == 0);
+    }
+
+    void ldy(int mode) {
+        int addr = getOperand(mode);
+        if (mode == MODE_IMMEDIATE) {
+            Y = Data.asByte(addr);
+        } else {
+            Y = bus.readByte(addr);
+        }
+        setFlag(FLAG_N, Y < 0);
+        setFlag(FLAG_Z, Y == 0);
+    }
+
+    void tax() {
+        X = A;
+        setFlag(FLAG_N, X < 0);
+        setFlag(FLAG_Z, X == 0);
+    }
+
+    void txa() {
+        A = X;
+        setFlag(FLAG_N, A < 0);
+        setFlag(FLAG_Z, A == 0);
+    }
+
+    void tay() {
+        Y = A;
+        setFlag(FLAG_N, Y < 0);
+        setFlag(FLAG_Z, Y == 0);
+    }
+
+    void tya() {
+        A = Y;
+        setFlag(FLAG_N, A < 0);
+        setFlag(FLAG_Z, A == 0);
+    }
+
+     void tsx() {
+        X = S;
+        setFlag(FLAG_N, X < 0);
+        setFlag(FLAG_Z, X == 0);
+    }
+
+    void txs() {
+        S = X;
+    }
+
+    void ora(int mode) {
+        int addr = getOperand(mode);
+        if (mode == MODE_IMMEDIATE) {
+            A = alu.or(A, Data.asByte(addr));
+        } else {
+            A = alu.or(A, bus.readByte(addr));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_Z, alu.isZero);
+    }
+
+    void and(int mode) {
+        int addr = getOperand(mode);
+        if (mode == MODE_IMMEDIATE) {
+            A = alu.and(A, Data.asByte(addr));
+        } else {
+            A = alu.and(A, bus.readByte(addr));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_Z, alu.isZero);
+    }
+
+    void eor(int mode) {
+        int addr = getOperand(mode);
+        if (mode == MODE_IMMEDIATE) {
+            A = alu.xor(A, Data.asByte(addr));
+        } else {
+            A = alu.xor(A, bus.readByte(addr));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_Z, alu.isZero);
+    }
+
+    void adc(int mode) {
+        int addr = getOperand(mode);
+        if (mode == MODE_IMMEDIATE) {
+            A = alu.add(A, Data.asByte(addr), testFlag(FLAG_C));
+        } else {
+            A = alu.add(A, bus.readByte(addr), testFlag(FLAG_C));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_V, alu.isOverflow);
+        setFlag(FLAG_Z, alu.isZero);
+        setFlag(FLAG_C, alu.isCarry);
+    }
+
+    void sbc(int mode) {
+        int addr = getOperand(mode);
+        if (mode == MODE_IMMEDIATE) {
+            A = alu.sub(A, Data.asByte(addr), testFlag(FLAG_C));
+        } else {
+            A = alu.sub(A, bus.readByte(addr), testFlag(FLAG_C));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_V, alu.isOverflow);
+        setFlag(FLAG_Z, alu.isZero);
+        setFlag(FLAG_C, alu.isCarry);
+    }
+
+
+    void cmp(int mode) {
+        int addr = getOperand(mode);
+        if (mode == MODE_IMMEDIATE) {
+            alu.cmp(A, Data.asByte(addr));
+        } else {
+            alu.cmp(A, bus.readByte(addr));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_Z, alu.isZero);
+        setFlag(FLAG_C, alu.isCarry);
+    }
+
+    void cpx(int mode) {
+        int addr = getOperand(mode);
+        if (mode == MODE_IMMEDIATE) {
+            alu.cmp(X, Data.asByte(addr));
+        } else {
+            alu.cmp(X, bus.readByte(addr));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_Z, alu.isZero);
+        setFlag(FLAG_C, alu.isCarry);
+    }
+
+    void cpy(int mode) {
+        int addr = getOperand(mode);
+        if (mode == MODE_IMMEDIATE) {
+            alu.cmp(Y, Data.asByte(addr));
+        } else {
+            alu.cmp(Y, bus.readByte(addr));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_Z, alu.isZero);
+        setFlag(FLAG_C, alu.isCarry);
+    }
+
+    void asl(int mode) {
+        if (mode == MODE_IMPLICIT) {
+            A = alu.shl(A);
+        } else {
+            int addr = getOperand(mode);
+            bus.writeByte(addr, alu.shl(bus.readByte(addr)));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_Z, alu.isZero);
+        setFlag(FLAG_C, alu.isCarry);
+    }
+
+    void rol(int mode) {
+        if (mode == MODE_IMPLICIT) {
+            A = alu.rol(A, testFlag(FLAG_C));
+        } else {
+            int addr = getOperand(mode);
+            bus.writeByte(addr, alu.rol(bus.readByte(addr), testFlag(FLAG_C)));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_Z, alu.isZero);
+        setFlag(FLAG_C, alu.isCarry);
+    }
+
+    void ror(int mode) {
+        if (mode == MODE_IMPLICIT) {
+            A = alu.ror(A, testFlag(FLAG_C));
+        } else {
+            int addr = getOperand(mode);
+            bus.writeByte(addr, alu.ror(bus.readByte(addr), testFlag(FLAG_C)));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_Z, alu.isZero);
+        setFlag(FLAG_C, alu.isCarry);
+    }
+
+    void lsr(int mode) {
+        if (mode == MODE_IMPLICIT) {
+            A = alu.shr(A);
+        } else {
+            int addr = getOperand(mode);
+            bus.writeByte(addr, alu.shr(bus.readByte(addr)));
+        }
+        setFlag(FLAG_N, alu.isNegative);
+        setFlag(FLAG_Z, alu.isZero);
+        setFlag(FLAG_C, alu.isCarry);
+    }
+
+    void dec(int mode) {
+        int addr = getOperand(mode);
+        byte b = (byte)(bus.readByte(addr) - 1);
+        bus.writeByte(addr, b);
+        setFlag(FLAG_N, b < 0);
+        setFlag(FLAG_Z, b == 0);
+    }
+
+    void inc(int mode) {
+        int addr = getOperand(mode);
+        byte b = (byte)(bus.readByte(addr) + 1);
+        bus.writeByte(addr, b);
+        setFlag(FLAG_N, b < 0);
+        setFlag(FLAG_Z, b == 0);
+    }
+
+    void dex() {
+        X -= 1;
+        setFlag(FLAG_N, X < 0);
+        setFlag(FLAG_Z, X == 0);
+    }
+
+    void inx() {
+        X += 1;
+        setFlag(FLAG_N, X < 0);
+        setFlag(FLAG_Z, X == 0);
+    }
+
+    void dey() {
+        Y -= 1;
+        setFlag(FLAG_N, Y < 0);
+        setFlag(FLAG_Z, Y == 0);
+    }
+
+    void iny() {
+        Y += 1;
+        setFlag(FLAG_N, Y < 0);
+        setFlag(FLAG_Z, Y == 0);
+    }
+
+    void bit(int mode) {
+        int addr = getOperand(mode);
+        byte b = (byte)(bus.readByte(addr));
+        setFlag(FLAG_Z, (b & A) == 0);
+        setFlag(FLAG_N, (b & 0x80) != 0);
+        setFlag(FLAG_V, (b & 0x40) != 0);
+    }
+
+    void jmp(int mode) {
+        PC = Data.asWord(getOperand(mode));
+    }
+
+    void jsr(int mode) {
+        pushWord(Data.asWord(PC + 1));
+        PC = Data.asWord(getOperand(mode));
+    }
+
+    void rts() {
+        PC = pullWord();
+        PC += 1;
+    }
+
+    void rti() {
+        P = pullByte();
+        PC = pullWord();
+    }
+
+    void php() {
+        pushByte(P);
+    }
+
+    void pha() {
+        pushByte(A);
+    }
+
+    void plp() {
+        P = pullByte();
+    }
+
+    void pla() {
+        A = pullByte();
+        setFlag(FLAG_N, A < 0);
+        setFlag(FLAG_Z, A == 0);
+    }
+
+    // Combined instructions for simple operations
+    void pushByte(byte b) {
+        bus.writeByte(STACK_BASE + Data.asAddr(S), b);
+        S -= 1;
+    }
+
+    void pushWord(short w) {
+        bus.writeWord(STACK_BASE + Data.asAddr(S)-1, w);
+        S -= 2;
+    }
+
+    byte pullByte() {
+        S += 1;
+        return bus.readByte(STACK_BASE + Data.asAddr(S));
+    }
+
+    short pullWord() {
+        S += 2;
+        return bus.readWord(STACK_BASE + Data.asAddr(S)-1);
+    }
+
+    void flag(byte flag, boolean value) {
+        setFlag(flag, value);
+        if (flag == FLAG_D) {
+            alu.setDecimal(value);
+        }
+    }
+
+    void branch(byte flag, boolean value) {
+        int offset = getOperand(MODE_RELATIVE);
+        if (testFlag(flag) == value) {
+            PC += offset;
+            cycles += 1;
+        }
+    }
+    
+    /*
+     * Additional simulator instructions
+     */
+    synchronized void halt() {
+        try {
+            wait();
+        } catch (InterruptedException e) {
+        }
+    }
+    
+    void dump() {
+        if (computer != null) { 
+            computer.dump();
+        }    
+    }
+    
+    void trace(boolean enable) {
+        if (computer != null) {
+            computer.trace(enable);
+        }    
+    }
+
+    /*
+     * Set and test processor status flags
+     */
+    void setFlag(byte flag, boolean set) {
+        if (set)
+            P |= flag;
+        else
+            P &= ~flag;
+    }
+
+    boolean testFlag(byte flag) {
+        return (P & flag) != 0;
+    }
+
+    /*
+     * Memory access through the program counter
+     */
+    byte fetchByte() {
+        byte b = bus.readByte(Data.asAddr(PC));
+        PC += 1;
+        if (traceEntry != null) {
+            traceEntry.addByte(b);
+        }
+        return b;
+    }
+
+    short fetchWord() {
+        short w = bus.readWord(Data.asAddr(PC));
+        PC += 2;
+        if (traceEntry != null) {
+            traceEntry.addWord(w);
+        }
+        return w;
+    }
+
+    // Decode the instruction operand
+    int getOperand(int mode) {
+        int addr = 0;
+        switch (mode) {
+        case MODE_IMPLICIT:  break;
+        case MODE_IMMEDIATE: addr = Data.asBits(fetchByte());                             break;
+        case MODE_ABSOLUTE:  addr = Data.asAddr(fetchWord());                             break;
+        case MODE_INDIRECT:  addr = Data.asAddr(bus.readWord(Data.asAddr(fetchWord())));  break;
+        case MODE_ZEROPAGE:  addr = Data.asAddr(fetchByte());                             break;
+        case MODE_RELATIVE:  addr = Data.asInt(fetchByte());                              break;
+        case MODE_ABS_X:     addr = Data.asAddr(fetchWord()) + Data.asAddr(X);            break;
+        case MODE_ABS_Y:     addr = Data.asAddr(fetchWord()) + Data.asAddr(Y);            break;
+        case MODE_PRE_X:     addr = Data.asAddr(bus.readWord(Data.asAddr(fetchByte()) + Data.asAddr(X))); break;
+        case MODE_POST_Y:    addr = Data.asAddr(bus.readWord(Data.asAddr(fetchByte()))) + Data.asAddr(Y); break;
+        case MODE_0PAGE_X:   addr = Data.asAddr(fetchByte()) + Data.asAddr(X);            break;
+        case MODE_0PAGE_Y:   addr = Data.asAddr(fetchByte()) + Data.asAddr(Y);            break;
+        }
+        if (traceEntry != null) {
+            traceEntry.addAddr(addr);
+        }
+        return addr;
+    }
+
+    // Enable/disable tracing
+    public void trace(Trace trace) {
+        this.trace = trace;
+    }
+
+    /*
+     * Mainly for debugging
+     */
+    public String toString() {
+        StringBuilder s = new StringBuilder("CPU: ");
+        s.append("PC=").append(Data.toHexString(PC));
+        s.append(" A=").append(Data.toHexString(A));
+        s.append(" X=").append(Data.toHexString(X));
+        s.append(" Y=").append(Data.toHexString(Y));
+        s.append(" S=").append(Data.toHexString(S));
+        s.append(" P=").append(toFlagString(P));
+        return s.toString();
+    }
+
+    public static String toFlagString(byte b) {
+        StringBuilder s = new StringBuilder();
+        s.append((b & FLAG_N) != 0 ? "N" : "n");
+        s.append((b & FLAG_V) != 0 ? "V" : "v");
+        s.append("-");
+        s.append((b & FLAG_B) != 0 ? "B" : "b");
+        s.append((b & FLAG_D) != 0 ? "D" : "d");
+        s.append((b & FLAG_I) != 0 ? "I" : "i");
+        s.append((b & FLAG_Z) != 0 ? "Z" : "z");
+        s.append((b & FLAG_C) != 0 ? "C" : "c");
+        return s.toString();
+    }
+}
