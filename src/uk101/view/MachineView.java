@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import uk101.machine.Computer;
 import uk101.view.component.DisplayText;
@@ -35,6 +36,9 @@ public class MachineView extends JInternalFrame implements ActionListener {
 
     Computer computer;
     ComputerView view;
+    
+    DisplayText speed;
+    Timer speedTimer;
 
     public MachineView(Computer computer, ComputerView computerView) {
         super("Machine", true, false, false, true);
@@ -54,10 +58,17 @@ public class MachineView extends JInternalFrame implements ActionListener {
         // Information panel
         JPanel ip = new JPanel(new GridLayout(0, 2, 5, 5));
         ip.setBorder(BorderFactory.createTitledBorder("Configuration"));
-        int speed = computer.cpu.getSpeed();
-        ip.add(new DisplayText("Cpu", (speed == 0) ? "Max" : speed + "MHz", false));
+        speed = new DisplayText("Actual", "0", false);
+        int mhz = computer.cpu.getMHz();
+        ip.add(new DisplayText("Cpu", (mhz == 0) ? "Max" : mhz + "MHz", false));
+        ip.add(speed);
         ip.add(new DisplayText("RAM", computer.ram.kBytes() + "KB", false));
         ip.add(new DisplayText("ROM", computer.monitor.getName(), false));
+        
+        // Timer to update CPU actual speed
+        speedTimer = new Timer(2000, this);
+        speedTimer.setRepeats(true);
+        speedTimer.start();
 
         // Debug panel
         JPanel db = new JPanel(new GridLayout(1, 0, 3, 3));
@@ -89,10 +100,12 @@ public class MachineView extends JInternalFrame implements ActionListener {
      */
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals(MACHINE_DUMP)) {
+        if (e.getSource() == speedTimer) {
+            speed.setValue(String.format("%-1.2fMHz", computer.cpu.getSpeed()));
+        } else if (e.getActionCommand().equals(MACHINE_DUMP)) {
             computer.dump();
         } else if (e.getActionCommand().equals(MACHINE_TRACE)) {
-            computer.trace(((SmallButton)e.getSource()).isSelected());
+            computer.trace(((SmallToggle)e.getSource()).isSelected());
         } else if (e.getActionCommand().equals(MACHINE_RESET)) {
             computer.cpu.signalReset();
         } else if (e.getActionCommand().equals(MACHINE_NMI)) {
