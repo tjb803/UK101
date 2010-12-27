@@ -33,9 +33,12 @@ public class Configuration implements Serializable {
     public static final String WHITE = "white";
     public static final String GREEN = "green";
     public static final String AMBER = "amber";
+    public static final String SYNC = "sync";
+    public static final String ASYNC = "async";
     
     // Property processing
     static Collection<String> colours = Arrays.asList(new String[] {WHITE, GREEN, AMBER});
+    static Collection<String> updates = Arrays.asList(new String[] {SYNC, ASYNC});
     static Item[] items = {
         new Item("cpuSpeed", "cpu.speed", 0, 2),
         new Item("ramSize", "ram.size", 4, 40),
@@ -46,6 +49,7 @@ public class Configuration implements Serializable {
         new Item("screenOffset", "screen.offset", 0, 63),
         new Item("screenColour", "screen.colour", colours),
         new Item("screenColour", "screen.color", colours),
+        new Item("screenUpdate", "screen.update", updates),
         new Item("romBASIC", "rom.basic", null),
         new Item("romMonitor", "rom.monitor", null),
         new Item("romCharset", "rom.charset", null),
@@ -63,6 +67,7 @@ public class Configuration implements Serializable {
     public int screenSize = 1;
     public int screenWidth = 48, screenOffset = 13;
     public String screenColour = WHITE;
+    public String screenUpdate = ASYNC;
  
     public Configuration(Args parms, Configuration initial) throws IOException {
         // Load a properties file, if specified, and apply any command line
@@ -88,11 +93,11 @@ public class Configuration implements Serializable {
         }
 
         // Apply any settings found in the initial config or the properties
-        if (initial != null || !props.isEmpty()) {
-            for (Item item : items) {
+        for (Item item : items) {
+            if (initial != null) 
                 item.init(initial, this);
+            if (props.containsKey(item.key))
                 item.parse(props, this);
-            }    
         }    
     }
     
@@ -137,36 +142,32 @@ public class Configuration implements Serializable {
         }
         
         void init(Configuration initial, Configuration cfg) {
-            if (initial != null) {
-                try {
-                    Field f = Configuration.class.getField(var);
-                    f.set(cfg, f.get(initial));
-                } catch (Exception e) {     // Not supposed to happen!
-                }
-            }    
+            try {
+                Field f = Configuration.class.getField(var);
+                f.set(cfg, f.get(initial));
+            } catch (Exception e) {     // Ignore all errors
+            }
         }
         
         void parse(Properties props, Configuration cfg) {
-            if (props.containsKey(key)) {
-                try {
-                    if (type == INT) {
-                        int i = Integer.parseInt(props.getProperty(key).trim());
-                        if (i >= min && i <= max) {
-                            Configuration.class.getField(var).setInt(cfg, i);
-                        }
-                    } else if (type == STR) {
-                        String s = props.getProperty(key).trim();
-                        if (range == null) {
-                            Configuration.class.getField(var).set(cfg, s);
-                        } else {
-                            s = s.toLowerCase();
-                            if (range.contains(s)) {
-                                Configuration.class.getField(var).set(cfg, s);   
-                            }    
-                        }
+            try {
+                if (type == INT) {
+                    int i = Integer.parseInt(props.getProperty(key).trim());
+                    if (i >= min && i <= max) {
+                        Configuration.class.getField(var).setInt(cfg, i);
                     }
-                } catch (Exception e) {     // Not supposed to happen!
+                } else if (type == STR) {
+                    String s = props.getProperty(key).trim();
+                    if (range == null) {
+                        Configuration.class.getField(var).set(cfg, s);
+                    } else {
+                        s = s.toLowerCase();
+                        if (range.contains(s)) {
+                            Configuration.class.getField(var).set(cfg, s);   
+                        }    
+                    }
                 }
+            } catch (Exception e) {     // Ignore all errors
             }
         }
     }

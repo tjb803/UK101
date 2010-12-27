@@ -161,6 +161,17 @@ a smaller display, <code>2</code> is a larger display.</td>
 <td><code>white</code>, <code>green</code> or <code>amber</code></td>
 <td align="center"><code>white</code></td>
 <td>This defines the colour of the screen display.</td>
+<tr><td><code>screen.update</code></td>
+<td><code>sync</code> or <code>async</code></td>
+<td align="center"><code>async</code></td>
+<td>This defines how screen updates are performed.
+<i>Async</i> performs all updates via the Java Swing event dispatch 
+thread - this is a more correct way to update the screen but can give slower
+results.
+<i>Sync</i> performs updates to each character cell as they are written
+by the simulation - this can give much faster output but can lead to 
+some screen corruption if there are windows overlapping the video
+window.</td>
 </table>
 <p/>
 <br><table border="1" frame="above" rules="none" width="100%">

@@ -44,6 +44,7 @@ public class VideoView extends JInternalFrame {
         int ssize = (cfg.screenSize < 2) ? 1 : 2;
         Color colour = getScreenColour(cfg.screenColour);
         screen = new VideoScreen(video, srows, scols, dscan, ssize, colour);
+        screen.setUpdateMode(getScreenUpdate(cfg.screenUpdate));
 
         // Surround the screen by a small border (about half a character cell wide).
         Dimension cell = screen.getCellSize();
@@ -68,6 +69,14 @@ public class VideoView extends JInternalFrame {
         else if (name.equals(Configuration.AMBER))
             colour = VideoScreen.SCREEN_AMBER;
         return colour;
+    }
+    
+    // Map configuration screen update mode
+    boolean getScreenUpdate(String name) {
+        boolean sync = false;
+        if (name.equals(Configuration.SYNC))
+            sync = true;
+        return sync;
     }
 
     /*

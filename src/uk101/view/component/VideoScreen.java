@@ -39,6 +39,8 @@ public class VideoScreen extends JPanel {
 
     int cw, ch;                 // Character width and height
     int sw, sh;                 // Scaled character width and height on screen
+    
+    boolean syncPaint;          // Window update style
 
     /*
      * Video size and character set can be found from the video hardware
@@ -98,6 +100,13 @@ public class VideoScreen extends JPanel {
             y += sh;
         }
     }
+    
+    /*
+     * Set window update mode
+     */
+    public void setUpdateMode(boolean sync) {
+        syncPaint = sync;
+    }
 
     /*
      * Indicate a screen character needs updating
@@ -105,7 +114,27 @@ public class VideoScreen extends JPanel {
     public void screenUpdate(int row, int col, byte b) {
         if (cells[row][col] != b) {
             cells[row][col] = b;
-            repaint(col*sw, row*sh, sw, sh);
+            
+            // Support two types of update: asynchronous and synchronous.
+            // async - this is the proper Swing update method, we just invalidate
+            //         the changed rectangle and allow the Swing event dispatch 
+            //         thread to update some time later.
+            // sync  - draws directly to the output graphics context.  This gives 
+            //         faster updates which works better for this application, but
+            //         will give screen corruption if another simulator window  
+            //         overlays the video.
+
+            if (syncPaint) {
+                Graphics g = getGraphics();
+                if (g != null) {
+                    g.drawImage(charset[b & 0xFF], col*sw, row*sh, sw, sh, this);
+                    g.dispose();
+                } else {    
+                    repaint(col*sw, row*sh, sw, sh);
+                }
+            } else {
+                repaint(col*sw, row*sh, sw, sh);
+            }    
         }
     }
     
