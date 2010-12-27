@@ -58,7 +58,7 @@ public class Computer extends Thread implements DataBus {
         config = cfg;
         
         // A 6502 CPU
-        cpu = new CPU6502(cfg.cpuSpeed, this, this);
+        cpu = new CPU6502(cfg.cpuSpeed, this);
 
         // Address space is 64K.  Assumption here is that any ROM/RAM or any
         // memory-mapped devices are mapped in BLKSIZE sections.
@@ -106,6 +106,7 @@ public class Computer extends Thread implements DataBus {
      */
     public void reset() {
         cpu.signalReset();
+        keyboard.reset();
     }
 
     /*
@@ -216,6 +217,6 @@ public class Computer extends Thread implements DataBus {
     public Computer(boolean test) throws IOException {
         ram = new RAM(4);
         monitor = new ROM("MONUK02.ROM");
-        cpu = new CPU6502(1, null, null);
+        cpu = new CPU6502(1, null);
     }
 }

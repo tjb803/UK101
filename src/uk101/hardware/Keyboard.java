@@ -78,13 +78,11 @@ public class Keyboard extends Memory {
         // Build the key matrix.  One byte per row, one bit per column.
         // Keys set bits to 0 when pressed, so we start out with all bits
         // set to 1.
+        keys = new HashMap<Integer,Key>();
         matrix = new byte[8];
-        for (int i = 0; i < matrix.length; i++) {
-            matrix[i] = (byte)0xFF;
-        }
+        reset();
 
         // Define the supported keys
-        keys = new HashMap<Integer,Key>();
         addKey('1', '!', 7, 7);
         addKey('2', '\"', 7, 6);
         addKey('3', '#', 7, 5);
@@ -172,6 +170,29 @@ public class Keyboard extends Memory {
         if (k != null) {
             matrix[k.row] |= k.col;
         }
+    }
+    
+    public boolean isPressed(int key) {
+        boolean pressed = false;
+        Key k = keys.get(key);
+        if (k != null) {
+            pressed = ((matrix[k.row] & k.col) == 0);
+        }
+        return pressed;
+    }
+    
+    /*
+     * Perform a reset to ensure all keys are released (except maybe 
+     * the SHIFT-LOCK). 
+     */
+    public void reset() {
+        boolean sl = isPressed(KEY_SHIFTLOCK);
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i] = (byte)0xFF;
+        }
+        if (sl) {
+            pressKey(KEY_SHIFTLOCK);
+        }    
     }
 
     // Add details of a key

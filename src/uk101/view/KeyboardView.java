@@ -131,6 +131,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
             keyboard.pressKey(key.getCode());
         } else {
             int m = MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.BUTTON2_DOWN_MASK | MouseEvent.BUTTON3_DOWN_MASK;
+            computer.keyboard.reset();
             if ((e.getModifiersEx() & m) != MouseEvent.BUTTON1_DOWN_MASK) {
                 computer.reset();
             }
