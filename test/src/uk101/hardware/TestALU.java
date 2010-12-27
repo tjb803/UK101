@@ -76,11 +76,22 @@ public class TestALU extends TestCase {
         assertResult((byte)0x7F, false, true, false, true);
     }
 
+    // Test correct operation of comparison
+    public void testCmp() throws Exception {
+        alu.isOverflow = false;             // Overflow not used in CMP instructions
+        
+        result = alu.cmp((byte)0x01, (byte)0xFF);
+        assertResult((byte)0x02, false, false, false, false);
+        
+        result = alu.cmp((byte)0x7F, (byte)0x80);
+        assertResult((byte)0xFF, true, false, false, false);
+    }
+    
     private void assertResult(byte value, boolean negative, boolean overflow, boolean zero, boolean carry) {
         assertEquals(value, (byte)result);
-        assertTrue("N", alu.isNegative == negative);
+        assertTrue("N", (result < 0) == negative);
+        assertTrue("Z", (result == 0) == zero);
         assertTrue("V", alu.isOverflow == overflow);
-        assertTrue("Z", alu.isZero == zero);
         assertTrue("C", alu.isCarry == carry);
     }
 }

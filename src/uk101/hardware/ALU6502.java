@@ -13,15 +13,13 @@ package uk101.hardware;
 class ALU6502 {
 
     // ALU status flags
-    boolean isZero;
-    boolean isNegative;
     boolean isOverflow;
     boolean isCarry;
 
     private boolean isDecimal;
 
     ALU6502() {
-        isNegative = isOverflow = isZero = isCarry = false;
+        isOverflow = isCarry = false;
         isDecimal = false;
     }
 
@@ -44,10 +42,10 @@ class ALU6502 {
         } else {
             int uresult = (value1 & 0xFF) + (value2 & 0xFF) + c;
             int sresult = value1 + value2 + c;
+            isCarry = (uresult < 0 || uresult > 255);
+            isOverflow = (sresult > 127 || sresult < -128);
             result = (byte)uresult;
-            setFlags(uresult, sresult);
         }
-        setFlags(result);
         return result;
     }
 
@@ -62,18 +60,18 @@ class ALU6502 {
         } else {
             int uresult = (value1 & 0xFF) - (value2 & 0xFF) - c;
             int sresult = value1 - value2 - c;
+            isCarry = (uresult >= 0 && uresult <= 255);
+            isOverflow = (sresult > 127 || sresult < -128);
             result = (byte)uresult;
-            setFlags(uresult, sresult);
-            isCarry = !isCarry;
         }
-        setFlags(result);
         return result;
     }
 
-    void cmp(byte value1, byte value2) {
-        boolean toCarry = ((value1 & 0xFF) >= (value2 & 0xFF));
-        byte result = (byte)((value1 & 0xFF) - (value2 & 0xFF));
-        setFlags(result, toCarry);
+    byte cmp(byte value1, byte value2) {
+        int v1 = (value1 & 0xFF);
+        int v2 = (value2 & 0xFF);
+        isCarry = (v1 >= v2);
+        return (byte)(v1- v2);
     }
 
     /*
@@ -81,21 +79,15 @@ class ALU6502 {
      */
 
     byte and(byte value1, byte value2) {
-        byte result = (byte)(value1 & value2);
-        setFlags(result);
-        return result;
+        return (byte)(value1 & value2);
     }
 
     byte or(byte value1, byte value2) {
-        byte result = (byte)(value1 | value2);
-        setFlags(result);
-        return result;
+        return (byte)(value1 | value2);
     }
 
     byte xor(byte value1, byte value2) {
-        byte result = (byte)(value1 ^ value2);
-        setFlags(result);
-        return result;
+        return (byte)(value1 ^ value2);
     }
 
     /*
@@ -103,31 +95,23 @@ class ALU6502 {
      */
 
     byte shl(byte value) {
-        boolean toCarry = (value < 0);
-        byte result = (byte)(value << 1);
-        setFlags(result, toCarry);
-        return result;
+        isCarry = (value < 0);
+        return (byte)(value << 1);
     }
 
     byte rol(byte value, boolean carry) {
-        boolean toCarry = (value < 0);
-        byte result = (byte)((value << 1) | (carry ? 1 : 0));
-        setFlags(result, toCarry);
-        return result;
+        isCarry = (value < 0);
+        return (byte)((value << 1) | (carry ? 1 : 0));
     }
 
     byte shr(byte value) {
-        boolean toCarry = ((value & 1) != 0);
-        byte result = (byte)((value & 0xFF) >> 1);
-        setFlags(result, toCarry);
-        return result;
+        isCarry = ((value & 1) != 0);
+        return (byte)((value & 0xFF) >> 1);
     }
 
     byte ror(byte value, boolean carry) {
-        boolean toCarry = (value & 0x01) != 0;
-        byte result = (byte)(((value & 0xFF) >> 1) | (carry ? 0x80 : 0));
-        setFlags(result, toCarry);
-        return result;
+        isCarry = ((value & 1) != 0);
+        return (byte)(((value & 0xFF) >> 1) | (carry ? 0x80 : 0));
     }
 
     /*
@@ -143,25 +127,6 @@ class ALU6502 {
         int lo = i % 10;
         int hi = (i/10) % 10;
         return (byte)(lo + (hi<<4));
-    }
-
-    /*
-     * Set status flags
-     */
-    private void setFlags(byte result) {
-        isNegative = (result < 0);
-        isZero = (result == 0);
-    }
-
-    private void setFlags(byte result, boolean carry) {
-        isNegative = (result < 0);
-        isZero = (result == 0);
-        isCarry = carry;
-    }
-
-    private void setFlags(int uresult, int sresult) {
-        isCarry = (uresult > 255) || (uresult < 0);
-        isOverflow = (sresult > 127) || (sresult < -128);
     }
 
     /*

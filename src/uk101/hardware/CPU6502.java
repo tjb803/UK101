@@ -68,34 +68,82 @@ public class CPU6502 {
     // Execution control
     boolean running;
     boolean sigRESET, sigNMI, sigIRQ;
-    int speed, cycles;
+    
+    // Timing control
+    int speed, cycles, cpuCycles;
+    long cpuStart, nanoPause;
+    
+    // Debugging
     Trace trace;
     Trace.Entry traceEntry;
-    
-    // Owning computer
-    Computer computer;
 
-    public CPU6502(int mhz, DataBus bus, Computer computer) {
+    public CPU6502(int mhz, DataBus bus) {
         this.alu = new ALU6502();
-        this.computer = computer;
         this.bus = bus;
-        setSpeed(mhz);
         reset();
+        setMHz(mhz);
+        calibrate(mhz);
     }
     
-    public void setSpeed(int mhz) {
-        speed = (mhz == 0) ? 0 : 1000/mhz;          // Cycle time in ns
+    /*
+     * Set/get the required processor clock speed.
+     */
+    public void setMHz(int mhz) {
+        // speed = cycle time in nanoseconds (or zero)
+        speed = (mhz == 0) ? 0 : 1000/mhz;
     }
     
-    public int getSpeed() {
-        return (speed == 0) ? 0 : 1000/speed;       // Speed in MHz
+    public int getMHz() {
+        // Convert cycle time back to clock speed
+        return (speed == 0) ? 0 : 1000/speed; 
+    }
+    
+    /*
+     * Return the actual simulated clock speed in MHz since this 
+     * method was last called.  This method will probably be called
+     * on a regular basis to be used to display the actual processor
+     * speed.
+     */
+    public float getSpeed() {
+        // Calculate speed
+        long cpuTime = System.currentTimeMillis() - cpuStart;
+        float mhz = (float)cpuCycles/(float)(cpuTime*1000);
+        
+        // Reset counters ready for next call
+        cpuStart = System.currentTimeMillis();
+        cpuCycles = 0;
+        
+        // Attempt to re-calibrate instruction timings, as JVM speed
+        // may vary over time (as more classes get compiled).
+        calibrate(mhz);
+        
+        return mhz;
     }
 
-    void reset() {
-        A = X = Y = 0;
-        S = STACK_TOP;
-        P = 0;
-        PC = 0;
+    // It is difficult to simulate the exact instruction timings in Java 
+    // as there is no system timer with a guaranteed micro-second accuracy.
+    // This method makes an attempt to determine the time taken to read 
+    // and the granularity of the results of the System.nanoTime() timer.
+    void calibrate(float actual) {
+        if (speed > 0) {
+            long l1 = System.nanoTime();
+            long l2 = System.nanoTime();
+            l2 = System.nanoTime();  
+            l2 = System.nanoTime();  
+            l2 = System.nanoTime();
+            long interval = (l2-l1)/4;
+            
+            // Set the 'pause' value used to time the instructions.  We know it 
+            // will take about 1 'interval' to read the timer, so we'll only 
+            // delay if the are more than about 2.5 'intervals' of time needed
+            // to complete an instruction.  This ought to err slightly on the 
+            // fast side (which is probably better than running slightly slow?).
+            long np = interval*2 + interval/2;
+            if (nanoPause == 0)
+                nanoPause = np;
+            else if (np > 0)
+                nanoPause = (nanoPause + np)/2;
+        }
     }
 
     /*
@@ -103,8 +151,20 @@ public class CPU6502 {
      */
     public void run() {
         running = true;
+        cpuStart = System.currentTimeMillis();
+        cpuCycles = 0;
         while (running) {
+            long start = System.nanoTime();
             execute();
+            
+            // It is difficult to timings exactly right, but we add some
+            // delay here (by spinning), if necessary, until approximately 
+            // enough time has passed for cycle count for the last instruction. 
+            if (speed > 0) {
+                long end = start + cycles*speed;                
+                while (end-start > nanoPause)
+                    start = System.nanoTime();
+            }  
         }
     }
 
@@ -131,6 +191,14 @@ public class CPU6502 {
             notify();
         }
     }
+    
+    // Processor reset state
+    void reset() {
+        A = X = Y = 0;
+        S = STACK_TOP;
+        P = 0;
+        PC = 0;
+    }
 
     /*
      * Execute a single instruction
@@ -138,8 +206,6 @@ public class CPU6502 {
     void execute() {
         // Check for external signals before executing the next instruction
         checkSignals();
-
-        long startTime = System.nanoTime();
 
         // Add trace record if tracing
         if (trace != null) {
@@ -316,11 +382,9 @@ public class CPU6502 {
         case 0xC2: trace(true);           cycles = 0;  break;
         case 0xE2: trace(false);          cycles = 0;  break;
         }
-        
-        traceEntry = null;
 
-        long endTime = startTime + cycles*speed;
-        while (System.nanoTime() < endTime) /*spin*/;
+        cpuCycles += cycles;
+        traceEntry = null;
     }
 
     /*
@@ -381,8 +445,7 @@ public class CPU6502 {
         } else {
             A = bus.readByte(addr);
         }
-        setFlag(FLAG_N, A < 0);
-        setFlag(FLAG_Z, A == 0);
+        setNZ(A);
     }
 
     void ldx(int mode) {
@@ -392,8 +455,7 @@ public class CPU6502 {
         } else {
             X = bus.readByte(addr);
         }
-        setFlag(FLAG_N, X < 0);
-        setFlag(FLAG_Z, X == 0);
+        setNZ(X);
     }
 
     void ldy(int mode) {
@@ -403,38 +465,32 @@ public class CPU6502 {
         } else {
             Y = bus.readByte(addr);
         }
-        setFlag(FLAG_N, Y < 0);
-        setFlag(FLAG_Z, Y == 0);
+        setNZ(Y); 
     }
 
     void tax() {
         X = A;
-        setFlag(FLAG_N, X < 0);
-        setFlag(FLAG_Z, X == 0);
+        setNZ(X);
     }
 
     void txa() {
         A = X;
-        setFlag(FLAG_N, A < 0);
-        setFlag(FLAG_Z, A == 0);
+        setNZ(A);
     }
 
     void tay() {
         Y = A;
-        setFlag(FLAG_N, Y < 0);
-        setFlag(FLAG_Z, Y == 0);
+        setNZ(Y);
     }
 
     void tya() {
         A = Y;
-        setFlag(FLAG_N, A < 0);
-        setFlag(FLAG_Z, A == 0);
+        setNZ(A);
     }
 
      void tsx() {
         X = S;
-        setFlag(FLAG_N, X < 0);
-        setFlag(FLAG_Z, X == 0);
+        setNZ(X);
     }
 
     void txs() {
@@ -448,8 +504,7 @@ public class CPU6502 {
         } else {
             A = alu.or(A, bus.readByte(addr));
         }
-        setFlag(FLAG_N, alu.isNegative);
-        setFlag(FLAG_Z, alu.isZero);
+        setNZ(A);
     }
 
     void and(int mode) {
@@ -459,8 +514,7 @@ public class CPU6502 {
         } else {
             A = alu.and(A, bus.readByte(addr));
         }
-        setFlag(FLAG_N, alu.isNegative);
-        setFlag(FLAG_Z, alu.isZero);
+        setNZ(A);
     }
 
     void eor(int mode) {
@@ -470,8 +524,7 @@ public class CPU6502 {
         } else {
             A = alu.xor(A, bus.readByte(addr));
         }
-        setFlag(FLAG_N, alu.isNegative);
-        setFlag(FLAG_Z, alu.isZero);
+        setNZ(A);
     }
 
     void adc(int mode) {
@@ -481,10 +534,9 @@ public class CPU6502 {
         } else {
             A = alu.add(A, bus.readByte(addr), testFlag(FLAG_C));
         }
-        setFlag(FLAG_N, alu.isNegative);
         setFlag(FLAG_V, alu.isOverflow);
-        setFlag(FLAG_Z, alu.isZero);
         setFlag(FLAG_C, alu.isCarry);
+        setNZ(A);
     }
 
     void sbc(int mode) {
@@ -494,135 +546,132 @@ public class CPU6502 {
         } else {
             A = alu.sub(A, bus.readByte(addr), testFlag(FLAG_C));
         }
-        setFlag(FLAG_N, alu.isNegative);
         setFlag(FLAG_V, alu.isOverflow);
-        setFlag(FLAG_Z, alu.isZero);
         setFlag(FLAG_C, alu.isCarry);
+        setNZ(A);
     }
 
 
     void cmp(int mode) {
+        byte b;
         int addr = getOperand(mode);
         if (mode == MODE_IMMEDIATE) {
-            alu.cmp(A, Data.asByte(addr));
+            b = alu.cmp(A, Data.asByte(addr));
         } else {
-            alu.cmp(A, bus.readByte(addr));
+            b = alu.cmp(A, bus.readByte(addr));
         }
-        setFlag(FLAG_N, alu.isNegative);
-        setFlag(FLAG_Z, alu.isZero);
         setFlag(FLAG_C, alu.isCarry);
+        setNZ(b);
     }
 
     void cpx(int mode) {
+        byte b;
         int addr = getOperand(mode);
         if (mode == MODE_IMMEDIATE) {
-            alu.cmp(X, Data.asByte(addr));
+            b = alu.cmp(X, Data.asByte(addr));
         } else {
-            alu.cmp(X, bus.readByte(addr));
+            b = alu.cmp(X, bus.readByte(addr));
         }
-        setFlag(FLAG_N, alu.isNegative);
-        setFlag(FLAG_Z, alu.isZero);
         setFlag(FLAG_C, alu.isCarry);
+        setNZ(b);
     }
 
     void cpy(int mode) {
+        byte b;
         int addr = getOperand(mode);
         if (mode == MODE_IMMEDIATE) {
-            alu.cmp(Y, Data.asByte(addr));
+            b = alu.cmp(Y, Data.asByte(addr));
         } else {
-            alu.cmp(Y, bus.readByte(addr));
+            b = alu.cmp(Y, bus.readByte(addr));
         }
-        setFlag(FLAG_N, alu.isNegative);
-        setFlag(FLAG_Z, alu.isZero);
         setFlag(FLAG_C, alu.isCarry);
+        setNZ(b);
     }
 
     void asl(int mode) {
+        byte b;
         if (mode == MODE_IMPLICIT) {
-            A = alu.shl(A);
+            A = b = alu.shl(A);
         } else {
             int addr = getOperand(mode);
-            bus.writeByte(addr, alu.shl(bus.readByte(addr)));
+            b = alu.shl(bus.readByte(addr));
+            bus.writeByte(addr, b);
         }
-        setFlag(FLAG_N, alu.isNegative);
-        setFlag(FLAG_Z, alu.isZero);
         setFlag(FLAG_C, alu.isCarry);
+        setNZ(b);
     }
 
     void rol(int mode) {
+        byte b;
         if (mode == MODE_IMPLICIT) {
-            A = alu.rol(A, testFlag(FLAG_C));
+            A = b = alu.rol(A, testFlag(FLAG_C));
         } else {
             int addr = getOperand(mode);
-            bus.writeByte(addr, alu.rol(bus.readByte(addr), testFlag(FLAG_C)));
+            b = alu.rol(bus.readByte(addr), testFlag(FLAG_C));
+            bus.writeByte(addr, b);
         }
-        setFlag(FLAG_N, alu.isNegative);
-        setFlag(FLAG_Z, alu.isZero);
         setFlag(FLAG_C, alu.isCarry);
+        setNZ(b);
     }
 
     void ror(int mode) {
+        byte b;
         if (mode == MODE_IMPLICIT) {
-            A = alu.ror(A, testFlag(FLAG_C));
+            A = b = alu.ror(A, testFlag(FLAG_C));
         } else {
             int addr = getOperand(mode);
-            bus.writeByte(addr, alu.ror(bus.readByte(addr), testFlag(FLAG_C)));
+            b = alu.ror(bus.readByte(addr), testFlag(FLAG_C));
+            bus.writeByte(addr, b);
         }
-        setFlag(FLAG_N, alu.isNegative);
-        setFlag(FLAG_Z, alu.isZero);
         setFlag(FLAG_C, alu.isCarry);
+        setNZ(b);
     }
 
     void lsr(int mode) {
+        byte b;
         if (mode == MODE_IMPLICIT) {
-            A = alu.shr(A);
+            A = b = alu.shr(A);
         } else {
             int addr = getOperand(mode);
-            bus.writeByte(addr, alu.shr(bus.readByte(addr)));
+            b = alu.shr(bus.readByte(addr));
+            bus.writeByte(addr, b);
         }
-        setFlag(FLAG_N, alu.isNegative);
-        setFlag(FLAG_Z, alu.isZero);
         setFlag(FLAG_C, alu.isCarry);
+        setNZ(b);
     }
 
     void dec(int mode) {
         int addr = getOperand(mode);
         byte b = (byte)(bus.readByte(addr) - 1);
         bus.writeByte(addr, b);
-        setFlag(FLAG_N, b < 0);
-        setFlag(FLAG_Z, b == 0);
+        setNZ(b);
     }
 
     void inc(int mode) {
         int addr = getOperand(mode);
         byte b = (byte)(bus.readByte(addr) + 1);
         bus.writeByte(addr, b);
-        setFlag(FLAG_N, b < 0);
-        setFlag(FLAG_Z, b == 0);
+        setNZ(b);
     }
 
     void dex() {
         X -= 1;
-        setFlag(FLAG_N, X < 0);
-        setFlag(FLAG_Z, X == 0);
+        setNZ(X);
     }
 
     void inx() {
         X += 1;
-        setFlag(FLAG_N, X < 0);
-        setFlag(FLAG_Z, X == 0);
+        setNZ(X);
     }
 
     void dey() {
         Y -= 1;
-        setFlag(FLAG_N, Y < 0);
-        setFlag(FLAG_Z, Y == 0);
+        setNZ(Y);
     }
 
     void iny() {
         Y += 1;
-        setFlag(FLAG_N, Y < 0);
-        setFlag(FLAG_Z, Y == 0);
+        setNZ(Y);
     }
 
     void bit(int mode) {
@@ -666,8 +715,7 @@ public class CPU6502 {
 
     void pla() {
         A = pullByte();
-        setFlag(FLAG_N, A < 0);
-        setFlag(FLAG_Z, A == 0);
+        setNZ(A);
     }
 
     // Combined instructions for simple operations
@@ -717,14 +765,14 @@ public class CPU6502 {
     }
     
     void dump() {
-        if (computer != null) { 
-            computer.dump();
+        if (bus instanceof Computer) { 
+            ((Computer)bus).dump();
         }    
     }
     
     void trace(boolean enable) {
-        if (computer != null) {
-            computer.trace(enable);
+        if (bus instanceof Computer) {
+            ((Computer)bus).trace(enable);
         }    
     }
 
@@ -740,6 +788,11 @@ public class CPU6502 {
 
     boolean testFlag(byte flag) {
         return (P & flag) != 0;
+    }
+    
+    void setNZ(byte value) {
+        setFlag(FLAG_N, value < 0);
+        setFlag(FLAG_Z, value == 0);
     }
 
     /*
@@ -777,8 +830,8 @@ public class CPU6502 {
         case MODE_ABS_Y:     addr = Data.asAddr(fetchWord()) + Data.asAddr(Y);            break;
         case MODE_PRE_X:     addr = Data.asAddr(bus.readWord(Data.asAddr(fetchByte()) + Data.asAddr(X))); break;
         case MODE_POST_Y:    addr = Data.asAddr(bus.readWord(Data.asAddr(fetchByte()))) + Data.asAddr(Y); break;
-        case MODE_0PAGE_X:   addr = Data.asAddr(fetchByte()) + Data.asAddr(X);            break;
-        case MODE_0PAGE_Y:   addr = Data.asAddr(fetchByte()) + Data.asAddr(Y);            break;
+        case MODE_0PAGE_X:   addr = (Data.asAddr(fetchByte()) + Data.asAddr(X)) & 0xFF;   break;
+        case MODE_0PAGE_Y:   addr = (Data.asAddr(fetchByte()) + Data.asAddr(Y)) & 0xFF;   break;
         }
         if (traceEntry != null) {
             traceEntry.addAddr(addr);
