@@ -42,17 +42,17 @@ public class Configuration implements Serializable {
     static Item[] items = {
         new Item("cpuSpeed", "cpu.speed", 0, 2),
         new Item("ramSize", "ram.size", 4, 40),
+        new Item("romBASIC", "rom.basic", null),
+        new Item("romMonitor", "rom.monitor", null),
+        new Item("romCharset", "rom.charset", null),
         new Item("videoRows", "video.rows", 16, 32),
         new Item("videoCols", "video.cols", 32, 64),
         new Item("screenSize", "screen.size", 1, 2),
         new Item("screenWidth", "screen.width", 16, 64),
         new Item("screenOffset", "screen.offset", 0, 63),
         new Item("screenColour", "screen.colour", colours),
-        new Item("screenColour", "screen.color", colours),
+        new Item("screenColour", "screen.color", colours, true),
         new Item("screenUpdate", "screen.update", updates),
-        new Item("romBASIC", "rom.basic", null),
-        new Item("romMonitor", "rom.monitor", null),
-        new Item("romCharset", "rom.charset", null),
     };
     
     // Default hardware configuration
@@ -118,6 +118,19 @@ public class Configuration implements Serializable {
          Configuration cfg = (Configuration)in.readObject();
          return cfg;
     }
+    
+    /*
+     * Print configuration
+     */
+    public String toString() {
+        String s = "";
+        for (Item item : items) {
+            if (!item.alt) {
+                s += "  " + item.key + "=" + item.value(this) + "\n";
+            }    
+        }
+        return s;
+    }
 
     // Configuration item
     private static class Item {
@@ -128,6 +141,7 @@ public class Configuration implements Serializable {
         String var, key;
         int min, max;
         Collection<String> range;
+        boolean alt;
         
         Item(String var, String key, int min, int max) {
             this.type = INT;
@@ -141,6 +155,11 @@ public class Configuration implements Serializable {
             this.range = range;
         }
         
+        Item(String var, String key, Collection<String> range, boolean alt) {
+            this(var, key, range);
+            this.alt = alt;
+        }
+
         void init(Configuration initial, Configuration cfg) {
             try {
                 Field f = Configuration.class.getField(var);
@@ -169,6 +188,15 @@ public class Configuration implements Serializable {
                 }
             } catch (Exception e) {     // Ignore all errors
             }
+        }
+        
+        String value(Configuration cfg) {
+            String value = null;
+            try {
+                value = Configuration.class.getField(var).get(cfg).toString();
+            } catch (Exception e) {     // Ignore all errors
+            }
+            return value;
         }
     }
 }

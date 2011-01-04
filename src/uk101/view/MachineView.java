@@ -58,7 +58,7 @@ public class MachineView extends JInternalFrame implements ActionListener {
         // Information panel
         JPanel ip = new JPanel(new GridLayout(0, 2, 5, 5));
         ip.setBorder(BorderFactory.createTitledBorder("Configuration"));
-        speed = new DisplayText("Actual", "0", false);
+        speed = new DisplayText("Clock", "0", false);
         int mhz = computer.cpu.getMHz();
         ip.add(new DisplayText("Cpu", (mhz == 0) ? "Max" : mhz + "MHz", false));
         ip.add(speed);

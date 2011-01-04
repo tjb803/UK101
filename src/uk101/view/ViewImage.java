@@ -137,4 +137,23 @@ public class ViewImage implements Serializable {
          ViewImage view = (ViewImage)in.readObject();
          return view;
     }
+    
+    /*
+     * Print a view image
+     */
+    public String toString() {
+        String s = "  Application: " + title + "\n";
+        s += "    position = " + printRect(position) + ", " + printRect(position2) + "\n";
+        s += "  Windows:\n";
+        for (ViewImage v : windows) {
+            s += "    " + v.title + "\n";
+            s += "      position = " + printRect(v.position) + "\n";
+            s += "      isMin = " + v.isMin + ", isMax = " + v.isMax + "\n";
+        }
+        return s;
+    }
+    
+    private String printRect(Rectangle rect) {
+        return "[x=" + rect.x + " y=" + rect.y + " w=" + rect.width + " h=" + rect.height + "]";
+    }
 }

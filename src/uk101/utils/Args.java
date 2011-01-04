@@ -41,7 +41,7 @@ public class Args {
                 arg = arg.substring(1);
                 if (opts != null && opts.containsKey(arg)) {
                     String remap = opts.get(arg);
-                    if (remap.endsWith("-"))
+                    if (remap != null && remap.endsWith("-"))
                         arg = remap.substring(0, remap.length()-1);
                 }
                 if (opts != null && opts.containsKey(arg)) {

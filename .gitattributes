@@ -80,6 +80,7 @@ src/uk101/utils/Disassembler.java -text
 src/uk101/utils/PrintBytes.java -text
 src/uk101/utils/PrintCode.java -text
 src/uk101/utils/PrintDump.java -text
+src/uk101/utils/PrintMachine.java -text
 src/uk101/utils/PrintTrace.java -text
 src/uk101/utils/TapeRead.java -text
 src/uk101/utils/TapeWrite.java -text
