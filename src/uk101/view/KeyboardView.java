@@ -131,7 +131,6 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
             keyboard.pressKey(key.getCode());
         } else {
             int m = MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.BUTTON2_DOWN_MASK | MouseEvent.BUTTON3_DOWN_MASK;
-            computer.keyboard.reset();
             if ((e.getModifiersEx() & m) != MouseEvent.BUTTON1_DOWN_MASK) {
                 computer.reset();
             }
@@ -195,11 +194,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     }
 
     public void keyReleased(KeyEvent e) {
-        if (mappedKey != 0) {
-            keyboard.releaseKey(mappedKey);
-            keyboard.releaseKey(mappedShift);
-            mappedKey = mappedShift = 0;
-        }
+        releaseMapped();
         int key = mapKey(e);
         if (key != 0) {
             keyboard.releaseKey(key);
@@ -211,14 +206,8 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     public void keyTyped(KeyEvent e) {
         if (!rawMode && !ctrl) {
             char key = e.getKeyChar();
-            if (key > 31 && key < 127) {
-                if (SHIFT_CHARS.indexOf(key) != -1) {
-                    mappedShift = Keyboard.KEY_LSHIFT;
-                    keyboard.pressKey(mappedShift);
-                }
-                mappedKey = key;
-                keyboard.pressKey(mappedKey);
-            }
+            if (key > 31 && key < 127) 
+                pressMapped(key);
         }
     }
 
@@ -247,5 +236,23 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
             break;
         }
         return key;
+    }
+    
+    void pressMapped(int key) {
+        releaseMapped();
+        if (SHIFT_CHARS.indexOf(key) != -1) {
+            mappedShift = Keyboard.KEY_LSHIFT;
+            keyboard.pressKey(mappedShift);
+        }
+        mappedKey = key;
+        keyboard.pressKey(mappedKey);
+    }
+    
+    void releaseMapped() {
+        if (mappedKey != 0) {
+            keyboard.releaseKey(mappedKey);
+            keyboard.releaseKey(mappedShift);
+            mappedKey = mappedShift = 0;
+        }
     }
 }

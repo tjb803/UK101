@@ -106,7 +106,6 @@ public class Computer extends Thread implements DataBus {
      */
     public void reset() {
         cpu.signalReset();
-        keyboard.reset();
     }
 
     /*
