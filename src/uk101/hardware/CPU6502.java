@@ -71,7 +71,7 @@ public class CPU6502 {
     
     // Timing control
     int speed, cycles, cpuCycles;
-    long cpuStart, nanoPause;
+    long cpuStart, nanoInterval;
     
     // Debugging
     Trace trace;
@@ -81,8 +81,8 @@ public class CPU6502 {
         this.alu = new ALU6502();
         this.bus = bus;
         reset();
+        calibrate();
         setMHz(mhz);
-        calibrate(mhz);
     }
     
     /*
@@ -105,7 +105,7 @@ public class CPU6502 {
      * speed.
      */
     public float getSpeed() {
-        // Calculate speed
+        // Calculate speed 
         long cpuTime = System.currentTimeMillis() - cpuStart;
         float mhz = (float)cpuCycles/(float)(cpuTime*1000);
         
@@ -113,37 +113,18 @@ public class CPU6502 {
         cpuStart = System.currentTimeMillis();
         cpuCycles = 0;
         
-        // Attempt to re-calibrate instruction timings, as JVM speed
-        // may vary over time (as more classes get compiled).
-        calibrate(mhz);
-        
         return mhz;
     }
 
-    // It is difficult to simulate the exact instruction timings in Java 
-    // as there is no system timer with a guaranteed micro-second accuracy.
     // This method makes an attempt to determine the time taken to read 
     // and the granularity of the results of the System.nanoTime() timer.
-    void calibrate(float actual) {
-        if (speed > 0) {
-            long l1 = System.nanoTime();
-            long l2 = System.nanoTime();
-            l2 = System.nanoTime();  
-            l2 = System.nanoTime();  
-            l2 = System.nanoTime();
-            long interval = (l2-l1)/4;
-            
-            // Set the 'pause' value used to time the instructions.  We know it 
-            // will take about 1 'interval' to read the timer, so we'll only 
-            // delay if the are more than about 2.5 'intervals' of time needed
-            // to complete an instruction.  This ought to err slightly on the 
-            // fast side (which is probably better than running slightly slow?).
-            long np = interval*2 + interval/2;
-            if (nanoPause == 0)
-                nanoPause = np;
-            else if (np > 0)
-                nanoPause = (nanoPause + np)/2;
-        }
+    void calibrate() {
+        long l1 = System.nanoTime();
+        long l2 = System.nanoTime();
+        l2 = System.nanoTime();  
+        l2 = System.nanoTime();  
+        l2 = System.nanoTime();
+        nanoInterval = (l2-l1)/4;
     }
 
     /*
@@ -153,17 +134,26 @@ public class CPU6502 {
         running = true;
         cpuStart = System.currentTimeMillis();
         cpuCycles = 0;
+        
+        long now = System.nanoTime();
+        long end = now;
+        long sync = now;
         while (running) {
-            long start = System.nanoTime();
             execute();
             
-            // It is difficult to timings exactly right, but we add some
-            // delay here (by spinning), if necessary, until approximately 
-            // enough time has passed for cycle count for the last instruction. 
+            // It is difficult to get timings exactly right in Java.  This logic
+            // assumes we are running too fast (which should be true most of the 
+            // time on anything except a very slow machine) and adds some delays
+            // when we have accumulated enough excess time for a delay to be 
+            // worthwhile.  However, as we might sometimes run very slow (for 
+            // example when loading from tapes), the clock is re-synchronised
+            // every 1/100th of a second or so.
             if (speed > 0) {
-                long end = start + cycles*speed;                
-                while (end-start > nanoPause)
-                    start = System.nanoTime();
+                end += cycles*speed;
+                if (end-sync > 10000000)
+                    sync = now = System.nanoTime();
+                while (end-now > nanoInterval)
+                    now = System.nanoTime();
             }  
         }
     }
@@ -375,12 +365,10 @@ public class CPU6502 {
         case 0x40: rti();                 cycles = 6;  break;
         case 0x60: rts();                 cycles = 6;  break;
         
-        // Some extra simulator opcodes.  These are values that should never be 
-        // used on a real 6502 as they would cause the processor to lock up.
+        // Some extra simulator opcodes.  These are correspond to the WAIt and 
+        // SToP opcodes of the 65C816.
         case 0x02: halt();                cycles = 0;  break;
-        case 0x22: dump();                cycles = 0;  break; 
-        case 0xC2: trace(true);           cycles = 0;  break;
-        case 0xE2: trace(false);          cycles = 0;  break;
+        case 0x22: debug();               cycles = 0;  break;
         }
 
         cpuCycles += cycles;
@@ -764,16 +752,21 @@ public class CPU6502 {
         }
     }
     
-    void dump() {
-        if (bus instanceof Computer) { 
-            ((Computer)bus).dump();
-        }    
-    }
-    
-    void trace(boolean enable) {
-        if (bus instanceof Computer) {
-            ((Computer)bus).trace(enable);
-        }    
+    void debug() {
+        int action = getOperand(MODE_IMMEDIATE);
+        switch (action) {
+        case 0xFF:
+            if (bus instanceof Computer)
+                ((Computer)bus).dump();
+            break;
+        case 0x01: case 0x02:    
+            if (bus instanceof Computer)
+                ((Computer)bus).trace(action == 0x01);
+            break;
+        default:
+            PC -= 1;
+            break;
+        }
     }
 
     /*

@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
 import java.awt.image.MemoryImageSource;
 import java.util.Arrays;
@@ -94,7 +95,7 @@ public class VideoScreen extends JPanel {
             int x = minCol*sw;
             byte[] rcells = cells[r];
             for (int c = minCol; c <= maxCol; c++) {
-                g.drawImage(charset[rcells[c] & 0xFF], x, y, sw, sh, this);
+                g.drawImage(charset[rcells[c] & 0xFF], x, y, this);
                 x += sw;
             }
             y += sh;
@@ -116,18 +117,18 @@ public class VideoScreen extends JPanel {
             cells[row][col] = b;
             
             // Support two types of update: asynchronous and synchronous.
-            // async - this is the proper Swing update method, we just invalidate
+            // async - this is the proper swing update method, we just invalidate
             //         the changed rectangle and allow the Swing event dispatch 
-            //         thread to update some time later.
+            //         thread to repaint some time later.
             // sync  - draws directly to the output graphics context.  This gives 
-            //         faster updates which works better for this application, but
-            //         will give screen corruption if another simulator window  
-            //         overlays the video.
+            //         faster updates which works better for this application on
+            //         slower machines, but can give screen corruption if another 
+            //         simulator window overlays the video.
 
             if (syncPaint) {
                 Graphics g = getGraphics();
                 if (g != null) {
-                    g.drawImage(charset[b & 0xFF], col*sw, row*sh, sw, sh, this);
+                    g.drawImage(charset[b & 0xFF], col*sw, row*sh, this);
                     g.dispose();
                 } else {    
                     repaint(col*sw, row*sh, sw, sh);
@@ -168,8 +169,14 @@ public class VideoScreen extends JPanel {
         charset = new Image[256];
         int offset = 0;
         for (int c = 0; c < 256; c++) {
-            charset[c] = createImage(new MemoryImageSource(cw, ch, colours, charmap, offset, cw));
+            // Create image from the bitmap data
+            Image img = createImage(new MemoryImageSource(cw, ch, colours, charmap, offset, cw));
             offset += cw * ch;
+            // Save a scaled image to speed up drawing
+            charset[c] = new BufferedImage(sw, sh, BufferedImage.TYPE_INT_RGB);
+            Graphics gc = charset[c].getGraphics();
+            gc.drawImage(img, 0, 0, sw, sh, null);
+            gc.dispose();
         }
     }
 }
