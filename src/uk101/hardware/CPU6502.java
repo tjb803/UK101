@@ -145,12 +145,14 @@ public class CPU6502 {
             // assumes we are running too fast (which should be true most of the 
             // time on anything except a very slow machine) and adds some delays
             // when we have accumulated enough excess time for a delay to be 
-            // worthwhile.  However, as we might sometimes run very slow (for 
-            // example when loading from tapes), the clock is re-synchronised
-            // every 1/100th of a second or so.
+            // worthwhile - this means individual instructions won't be at the 
+            // exact correct speed, but on average the CPU should be close.
+            // However, as we might sometimes run too slow (for example when 
+            // loading from tapes), the clock is re-synchronised every 1/100th of 
+            // a second or so.
             if (speed > 0) {
                 end += cycles*speed;
-                if (end-sync > 10000000)
+                if (end-sync > 100000000)
                     sync = now = System.nanoTime();
                 while (end-now > nanoInterval)
                     now = System.nanoTime();
@@ -365,8 +367,7 @@ public class CPU6502 {
         case 0x40: rti();                 cycles = 6;  break;
         case 0x60: rts();                 cycles = 6;  break;
         
-        // Some extra simulator opcodes.  These are correspond to the WAIt and 
-        // SToP opcodes of the 65C816.
+        // Some extra simulator opcodes. 
         case 0x02: halt();                cycles = 0;  break;
         case 0x22: debug();               cycles = 0;  break;
         }

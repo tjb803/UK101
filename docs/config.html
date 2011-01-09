@@ -128,7 +128,7 @@ be the name of a file containing a replacement ROM.</td>
 <td align="center"><code>64</code></td>
 <td>This defines the number of columns in the video buffer.</td></tr>
 </table>
-<p>Note that the settings of the video hardware define the amount of 
+<p><i>Note:</i> The settings of the video hardware define the amount of 
 video RAM (rows x columns rounded up to the nearest 1K boundary) and 
 the geometry of screen buffer.
 This is not quite the same as what gets displayed on the screen as 
@@ -155,7 +155,7 @@ each row of the hardware video buffer.</td>
 <tr><td><code>screen.size</code></td>
 <td><code>1</code> or <code>2</code></td>
 <td align="center"><code>1</code></td>
-<td>This defines the size of the video display: <code>1</code>is 
+<td>This defines the size of the video display: <code>1</code> is 
 a smaller display, <code>2</code> is a larger display.</td>
 <tr><td><code>screen.colour</code><br><code>screen.color</code></td>
 <td><code>white</code>, <code>green</code> or <code>amber</code></td>
@@ -165,15 +165,23 @@ a smaller display, <code>2</code> is a larger display.</td>
 <td><code>sync</code> or <code>async</code></td>
 <td align="center"><code>async</code></td>
 <td>This defines how screen updates are performed.
-<i>Async</i> performs all updates via the Java Swing event dispatch 
-thread - this is a more correct way to update the screen but can give slower
-results.
-<i>Sync</i> performs updates to each character cell as they are written
-by the simulation - this can give much faster output but can lead to 
+<table frame="void">
+<tr valign="top"><td><code>async&nbsp;</code></td> 
+<td>performs all updates via the Java Swing event dispatch thread.
+This is a more correct way to update the screen but can give slower
+results on older PCs.</td></tr>
+<tr valign="top"><td><code>sync&nbsp;</code></td>
+<td>performs updates to each character cell as they are written
+by the simulation - this may give faster output but can lead to 
 some screen corruption if there are windows overlapping the video
-window.</td>
+window.</td></tr>
+</table></td>
 </table>
-<p/>
+<p><i>Note:</i> On any modern PC, especially anything with a dual
+or multicore processor, the default <i>async</i> screen update option
+is likely to produce the best results.
+On older hardware the <i>sync</i> option may result in faster and/or
+smoother operation.
 <br><table border="1" frame="above" rules="none" width="100%">
 <tr><td align="left">Tim Baldwin<br>December 2010
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>

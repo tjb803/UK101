@@ -8,10 +8,14 @@ v0.5.0
 v0.6.0
 ------
   Improvements:
-   - Add 'video.update=sync' option to improve performance on slower machines
-   - Better simulation of CPU speed
+   - Add 'video.update=async/sync' option to improve performance on slower 
+     machines
+   - Better simulation of CPU correct speed
    - Include indication of actual processor speed
+   - Better special debug processor opcodes
    
   Main bug fixes:
-   - Page-0 indexed addresses not wrapping around 0xFF
+   - Page-0 indexed addresses not wrapping around 0xFF, which caused 
+     division in BASIC to give incorrect results 
+   - Bug with utility programs parsing command line parmeters  
       

@@ -44,9 +44,20 @@ The program can be run by executing the 'uk101-n.n.n.jar' file.
 For further details refer to the 'Quick Start' and 'Operation' sections
 in the documentation.
 
+Latest Improvements
+-------------------
+The latest release will always include various minor bug fixes.  In 
+addition the following are notable improvements:
+
+v0.6.0:
+ - Better CPU speed accuracy
+ - screen.update=async/sync property
+ - Bug fix for broken BASIC division 
+
 Release History
 ---------------
-v0.5.0  December 2010    First public release
+v0.5.0  December 2010  First public release
+v0.6.0  January 2011   Bug fixes 
 
 ===========
 Tim Baldwin
