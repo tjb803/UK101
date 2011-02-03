@@ -49,7 +49,7 @@ public class VideoScreen extends JPanel {
      * as a set of character cells in a row,column matrix.  This represents
      * just the visible portion of the screen.
      */
-    public VideoScreen(Video video, int rows, int cols, int vscan, int scale, Color colour) {
+    public VideoScreen(Video video, int rows, int cols, int hscan, int vscan, int scale, Color colour) {
         setOpaque(true);
         setBackground(SCREEN_BLACK);
 
@@ -57,7 +57,7 @@ public class VideoScreen extends JPanel {
         this.rows = rows;
         this.cols = cols;
         cw = video.charWidth;  ch = video.charHeight;
-        sw = cw*scale;  sh = ch*vscan*scale;
+        sw = cw*hscan*scale;  sh = ch*vscan*scale;
 
         // Internal copy of the current character cells.  Ensure this is filled
         // with spaces to begin with, so we don't see garbage on the screen.

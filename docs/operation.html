@@ -201,11 +201,37 @@ If you are saving raw data or saving machine code programs you
 may want to select the <i>Binary</i> output format.</p>
 <p>When a tape is playing or recording the format selected 
 will be displayed to the right of the tape name.</p>
+<br clear="left"/><hr>
+<h2 id="osi">Ohio Scientific Superboard II Emulation</h2>
+<p>The UK101 was very heavily based on the Ohio Superboard II from the
+US and has an almost identical machine architecture and design.
+This means that, by using the Monitor, BASIC and Character Generator
+ROMs from the Superboard machine, the simulator can emulate the 
+Superboard II just as well as the UK101.</p>
+<p>The two main differences are:
+<table frame="void" rules="none">
+<tr valign="top"><td><img src="image/opsbvd.jpg">
+<p>The video display on the Superboard was arranged as 32 rows by 
+32 columns (rather than 16 x 64) and a typical TV would probably show
+around 24 characters per line.</p></td>
+<td><img src="image/opsbkb.jpg">
+<p>The keyboard included a couple of extra keys (marked <code>ESC</code>
+and <code>REPEAT</code>) and the key to the left of the RETURN key was 
+marked <code>LINE FEED</code>.</p></td></tr>
+</table>
+<p>These differences, together with the necessary ROM files, can be 
+set in the system <a href="config.html">configuration</a>.
+A sample set of ROMs and a sample 
+<a href="../samples/superboard/superboard.properties">Superboard 
+configuration</a> properties file can be found in the directory:</p>
+<blockquote>
+<code>samples/superboard</code>
+</blockquote>  
 <br clear="left"/><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>December 2010
+<tr><td align="left">Tim Baldwin<br>February 2011
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2010</td></tr>
+<br><br>&copy; Tim Baldwin 2010,2011</td></tr>
 </table>
 </body>
 </html>

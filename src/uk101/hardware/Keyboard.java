@@ -1,18 +1,21 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2011
  */
 package uk101.hardware;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import uk101.machine.Configuration;
 import uk101.machine.Data;
 
 /**
  * The keyboard is mapped into a 1K block of memory at DC00-DFFF, although it
  * only uses 1 byte.
+ *
+ * This class emulates both the UK101 and the Ohio Superboard II keyboards.
  *
  * @author Baldwin
  */
@@ -20,13 +23,16 @@ public class Keyboard extends Memory {
 
     public static final int KEY_RUBOUT = -1;
     public static final int KEY_UPARROW = -2;
+    public static final int KEY_LINEFEED = KEY_UPARROW;
     public static final int KEY_RETURN = -3;
     public static final int KEY_CTRL = -4;
     public static final int KEY_SHIFTLOCK = -5;
     public static final int KEY_LSHIFT = -6;
     public static final int KEY_RSHIFT = -7;
     public static final int KEY_SPACE = -8;
-    public static final int KEY_RESET = -9;
+    public static final int KEY_ESC = -9;
+    public static final int KEY_REPEAT = -10;
+    public static final int KEY_RESET = -99;
 
     /*
      * There's no real storage associated with the keyboard, just an 8x8 matrix
@@ -47,7 +53,7 @@ public class Keyboard extends Memory {
      *         ( |   ) |     |   * |   = | RUB |     |     |
      *         8 |   9 |   0 |   : |   - | OUT |     |     |
      *  R6 ------+-----+-----+-----+-----+-----+-----+-----+
-     *         > |   \ |     |     |     |     |     |     |
+     *         > |   \ |     |(1)  |     |     |     |     |
      *         . |   L |   O |   ^ |  CR |     |     |     |
      *  R5 ------+-----+-----+-----+-----+-----+-----+-----+
      *           |     |     |     |     |     |     |     |
@@ -62,18 +68,27 @@ public class Keyboard extends Memory {
      *           |     |     |     |   ? |   + |   @ |     |
      *         Q |   A |   Z |space|   / |   ; |   P |     |
      *  R1 ------+-----+-----+-----+-----+-----+-----+-----+
-     *           |     |     |     |     | left|right|SHIFT|
+     *      (2)  |     |(3)  |     |     | left|right|SHIFT|
      *           | CTRL|     |     |     |SHIFT|SHIFT| LOCK|
      *  R0 ------+-----+-----+-----+-----+-----+-----+-----+
+     *  
+     * Notes for Ohio Superboard II keyboard:
+     *  (1) This key is labelled LINE FEED
+     *  (2) This position is the REPEAT key
+     *  (3) This position is the ESC key
      */
 
+    boolean isUK;
     Map<Integer,Key> keys;
     byte[] matrix;
     byte kbport;
 
-    public Keyboard() {
+    public Keyboard(String type) {
         blocks = K1/BLKSIZE;        // Decodes to a 1K block
         kbport = (byte)0xFF;        // Default is to return nothing
+        
+        // UK or US keyboard?
+        isUK = type.equals(Configuration.UK);
 
         // Build the key matrix.  One byte per row, one bit per column.
         // Keys set bits to 0 when pressed, so we start out with all bits
@@ -99,9 +114,8 @@ public class Keyboard extends Memory {
         addKey('-', '=', 6, 3);
         addKey(KEY_RUBOUT, 0, 6, 2);
         addKey('.', '>', 5, 7);
-        addKey('L', 'l', 5, 6);  addKey('\\', 0, 5, 6);
+        addKey('L', 'l', 5, 6);  
         addKey('O', 'o', 5, 5);
-        addKey(KEY_UPARROW, '^', 5, 4);
         addKey(KEY_RETURN, 0, 5, 3);
         addKey('W', 'w', 4, 7);
         addKey('E', 'e', 4, 6);
@@ -116,13 +130,13 @@ public class Keyboard extends Memory {
         addKey('G', 'g', 3, 4);
         addKey('H', 'h', 3, 3);
         addKey('J', 'j', 3, 2);
-        addKey('K', 'k', 3, 1);  addKey('[', 0, 3, 1);
+        addKey('K', 'k', 3, 1);  
         addKey('X', 'x', 2, 7);
         addKey('C', 'c', 2, 6);
         addKey('V', 'v', 2, 5);
         addKey('B', 'b', 2, 4);
         addKey('N', 'n', 2, 3);
-        addKey('M', 'm', 2, 2);  addKey(']', 0, 2, 2);
+        addKey('M', 'm', 2, 2);  
         addKey(',', '<', 2, 1);
         addKey('Q', 'q', 1, 7);
         addKey('A', 'a', 1, 6);
@@ -130,11 +144,22 @@ public class Keyboard extends Memory {
         addKey(KEY_SPACE, ' ', 1, 4);
         addKey('/', '?', 1, 3);
         addKey(';', '+', 1, 2);
-        addKey('P', 'p', 1, 1);  addKey('@', 0, 1, 1);
+        addKey('P', 'p', 1, 1);  
         addKey(KEY_CTRL, 0, 0, 6);
         addKey(KEY_LSHIFT, 0, 0, 2);
         addKey(KEY_RSHIFT, 0, 0, 1);
         addKey(KEY_SHIFTLOCK, 0, 0, 0);
+        if (isUK) {
+            addKey(KEY_UPARROW, '^', 5, 4);
+            addKey('\\', 0, 5, 6);
+            addKey('[', 0, 3, 1);
+            addKey(']', 0, 2, 2);
+            addKey('@', 0, 1, 1);
+        } else {
+            addKey(KEY_LINEFEED, '\\', 5, 4);
+            addKey(KEY_ESC, 0, 0, 5);
+            addKey(KEY_REPEAT, 0, 0, 7);
+        }
 
         // Start with SHIFTKOCK pressed
         pressKey(KEY_SHIFTLOCK);
@@ -179,6 +204,13 @@ public class Keyboard extends Memory {
         Key key = new Key(row, col);
         if (k1 != 0) keys.put(k1, key);
         if (k2 != 0) keys.put(k2, key);
+    }
+    
+    /*
+     * Return keyboard type
+     */
+    public boolean isUK() {
+        return isUK;
     }
 
     /*

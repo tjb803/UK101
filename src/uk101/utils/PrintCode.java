@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.Map;
 
 /**
  * This class will disassemble and print a 6502 binary image.
@@ -33,7 +32,7 @@ public class PrintCode {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Map<String,String> options = Args.optionMap();
+        Args.Map options = Args.optionMap();
         options.put("output", "outputfile");
         Args parms = new Args("PrintCode", "bytesfile [address]", args, options);
         File inputFile = parms.getInputFile(1);

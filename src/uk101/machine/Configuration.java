@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2011
  */
 package uk101.machine;
 
@@ -35,10 +35,13 @@ public class Configuration implements Serializable {
     public static final String AMBER = "amber";
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";
+    public static final String UK = "uk";
+    public static final String US = "us";
     
     // Property processing
     static Collection<String> colours = Arrays.asList(new String[] {WHITE, GREEN, AMBER});
     static Collection<String> updates = Arrays.asList(new String[] {SYNC, ASYNC});
+    static Collection<String> keyboards = Arrays.asList(new String[] {UK, US});
     static Item[] items = {
         new Item("cpuSpeed", "cpu.speed", 0, 2),
         new Item("ramSize", "ram.size", 4, 40),
@@ -53,6 +56,7 @@ public class Configuration implements Serializable {
         new Item("screenColour", "screen.colour", colours),
         new Item("screenColour", "screen.color", colours, true),
         new Item("screenUpdate", "screen.update", updates),
+        new Item("keyboard", "keyboard", keyboards),
     };
     
     // Default hardware configuration
@@ -62,6 +66,7 @@ public class Configuration implements Serializable {
     public String romBASIC = "BASUK101.ROM";
     public String romMonitor = "MONUK02.ROM";
     public String romCharset = "CHGUK101.ROM";
+    public String keyboard = UK;
    
     // Default view configuration
     public int screenSize = 1;

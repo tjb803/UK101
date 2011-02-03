@@ -57,6 +57,13 @@ the default configuration can be found in the file:
 <blockquote><pre>
 <a href="../samples/properties/uk101.properties">samples/properties/uk101.properties</a>
 </pre></blockquote>
+<p>An example of a Java properties file that contains settings
+suitable for emulating an 
+<a href="operation.html#osi">Ohio Scientific Superboard II</a> can be 
+found in the file:
+<blockquote><pre>
+<a href="../samples/superboard/superboard.properties">samples/superboard/superboard.properties</a>
+</pre></blockquote>
 <p>The following sections list all the property names and property
 values that can be used.
 Note that property names and values are case-sensitive.</p>
@@ -111,6 +118,20 @@ be the name of a file containing a replacement ROM.</td>
 <td>This defines the video character generator ROM that is installed.
 The value can be the built-in name <code>CHGUK101.ROM</code> or it can
 be the name of a file containing a replacement ROM.</td>
+</table>
+<p/>
+<hr>
+<h2 id="keyboard">Keyboard</h2>
+<p>This settings controls the keyboard layout and available keys/</p>
+<table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
+<tr><th width="15%">Name</th><th width="15%">Values</th>
+<th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>keyboard</code></td>
+<td><code>uk</code> or <code>us</code></td>
+<td align="center"><code>uk</code></td>
+<td>This defines keyboard layout and the available keys.
+The setting <code>uk</code> gives a UK101 keyboard and the setting
+<code>us</code> gives an Ohio Scientific Superboard II keyboard.</td></tr>
 </table>
 <p/>
 <hr>
@@ -183,10 +204,10 @@ is likely to produce the best results.
 On older hardware the <i>sync</i> option may result in faster and/or
 smoother operation.
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>December 2010
+<tr><td align="left">Tim Baldwin<br>February 2011
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2010</td></tr>
+<br><br>&copy; Tim Baldwin 2010,2011</td></tr>
 </table>
 </body>
 </html>

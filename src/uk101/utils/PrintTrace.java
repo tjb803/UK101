@@ -8,7 +8,6 @@ package uk101.utils;
 import java.io.File;
 import java.io.PrintStream;
 import java.text.DateFormat;
-import java.util.Map;
 
 import uk101.hardware.CPU6502;
 import uk101.machine.Data;
@@ -44,7 +43,7 @@ public class PrintTrace {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Map<String,String> options = Args.optionMap();
+        Args.Map options = Args.optionMap();
         options.put("output", "outputfile");
         Args parms = new Args("PrintTrace", "tracefile", args, options);
         File inputFile = parms.getInputFile(1);

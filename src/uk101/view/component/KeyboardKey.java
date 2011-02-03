@@ -45,6 +45,10 @@ public class KeyboardKey extends JButton {
     }
 
     int code;
+    
+    public KeyboardKey(String text, int keycode, MouseListener handler) {
+        this(text, KEY_STD, keycode, handler);
+    }
 
     public KeyboardKey(String text, int size, int keycode, MouseListener handler) {
         setLayout(new BorderLayout());

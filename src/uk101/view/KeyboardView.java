@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2011
  */
 package uk101.view;
 
@@ -38,12 +38,20 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
 
     static final String[] KB_ROW1 =
         { "! 1", "\" 2", "# 3", "$ 4", "% 5", "& 6", "' 7", "( 8", ") 9", "0", "* :", "= -" };
-    static final String[] KB_ROW2 =
+    
+    static final String[] UK_ROW2 =
         { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "@ P", "\u2191 ^" };
-    static final String[] KB_ROW3 =
+    static final String[] UK_ROW3 =
         { "A", "S", "D", "F", "G", "H", "LF J", "[ K", "\\ L", "+ ;" };
-    static final String[] KB_ROW4 =
+    static final String[] UK_ROW4 =
         { "Z", "X", "ETX C", "V", "B", "N", "] M", "< ,", "> .", "? /" };
+    
+    static final String[] US_ROW2 =
+        { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" };
+    static final String[] US_ROW3 =
+        { "A", "S", "D", "F", "G", "H", "J", "K", "L", "+ ;" };
+    static final String[] US_ROW4 =
+        { "Z", "X", "C", "V", "B", "N", "M", "< ,", "> .", "? /" };
 
     Computer computer;
     Keyboard keyboard;
@@ -59,28 +67,55 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         addKeyListener(this);
 
         // Layout the basic keys
-        JPanel row1 = makeRow(KB_ROW1, 0);
-        JPanel row2 = makeRow(KB_ROW2, KeyboardKey.KEY_HALF);
-        JPanel row3 = makeRow(KB_ROW3, 0);
-        JPanel row4 = makeRow(KB_ROW4, 0);
-        JPanel row5 = makeRow(new String[0], KeyboardKey.KEY_BIG+KeyboardKey.KEY_STD);
-
-        // Add various additional keys to the rows
-        row1.add(new KeyboardKey("RUB OUT", KeyboardKey.KEY_STD, Keyboard.KEY_RUBOUT, this));
+        JPanel row1, row2, row3, row4, row5;
+        row1 = makeRow(KB_ROW1);
+        row5 = makeRow(new String[0]);
+        if (keyboard.isUK()) {
+            row2 = makeRow(UK_ROW2);
+            row3 = makeRow(UK_ROW3);
+            row4 = makeRow(UK_ROW4);
+        } else {
+            row2 = makeRow(US_ROW2);
+            row3 = makeRow(US_ROW3);
+            row4 = makeRow(US_ROW4);
+        }
+        
+        // Add various additional keys to the rows.  Note the SHIFT-LOCK key starts in
+        // the pressed state.
+        row1.add(new KeyboardKey("RUB OUT", Keyboard.KEY_RUBOUT, this));
+        if (!keyboard.isUK()) {
+            row2.add(new KeyboardKey("ESC", Keyboard.KEY_ESC, this), 0);
+            row2.add(new KeyboardKey("LINE FEED", Keyboard.KEY_LINEFEED, this));
+        }
         row2.add(new KeyboardKey("RETURN", KeyboardKey.KEY_BIG, Keyboard.KEY_RETURN, this));
-        row3.add(new KeyboardKey("CTRL", KeyboardKey.KEY_STD, Keyboard.KEY_CTRL, this), 0);
+        row3.add(new KeyboardKey("CTRL", Keyboard.KEY_CTRL, this), 0);
+        row3.add(new KeyboardLock("SHIFT LOCK", Keyboard.KEY_SHIFTLOCK, true, this));
+        if (!keyboard.isUK()) {
+            row3.add(new KeyboardKey("REPT", Keyboard.KEY_REPEAT, this));
+        }
         row4.add(new KeyboardKey("SHIFT", KeyboardKey.KEY_BIG, Keyboard.KEY_LSHIFT, this), 0);
         row4.add(new KeyboardKey("SHIFT", KeyboardKey.KEY_BIG, Keyboard.KEY_RSHIFT, this));
         row5.add(new KeyboardKey("", KeyboardKey.KEY_STD*8, Keyboard.KEY_SPACE, this));
 
-        // Add the SHIFT-LOCK starting in the pressed state
-        KeyboardLock slock = new KeyboardLock("SHIFT LOCK", KeyboardKey.KEY_STD, Keyboard.KEY_SHIFTLOCK, this);
-        slock.setSelected(true);
-        row3.add(slock);
+        // Add filler space to align the rows
+        if (keyboard.isUK()) {
+            row2.add(KeyboardKey.getOffset(KeyboardKey.KEY_HALF), 0);
+            row5.add(KeyboardKey.getOffset(KeyboardKey.KEY_BIG+KeyboardKey.KEY_STD));
+        } else {
+            row1.add(KeyboardKey.getOffset(KeyboardKey.KEY_HALF), 0);
+            row3.add(KeyboardKey.getOffset(KeyboardKey.KEY_HALF), 0);
+            row4.add(KeyboardKey.getOffset(KeyboardKey.KEY_HALF), 0);
+            row5.add(KeyboardKey.getOffset(KeyboardKey.KEY_HALF+KeyboardKey.KEY_BIG+KeyboardKey.KEY_STD), 0);
+        }
 
-        // Add the RESET keys, these must be clicked with both mouse buttons to reset the machine
-        row3.add(new KeyboardKey("RESET", KeyboardKey.KEY_STD, Keyboard.KEY_RESET, this));
-        row3.add(new KeyboardKey("RESET", KeyboardKey.KEY_STD, Keyboard.KEY_RESET, this));
+        // Add the RESET/BREAK keys, these must be clicked with both mouse buttons to 
+        // reset the machine
+        if (keyboard.isUK()) {        
+            row3.add(new KeyboardKey("RESET", Keyboard.KEY_RESET, this));
+            row3.add(new KeyboardKey("RESET", Keyboard.KEY_RESET, this));
+        } else {
+            row3.add(new KeyboardKey("BREAK", Keyboard.KEY_RESET, this));
+        }
 
         // Add the keyboard 'raw' mode selector
         JCheckBox raw = new JCheckBox("Raw mode");
@@ -103,18 +138,13 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     }
 
     // Build a row of standard keys
-    JPanel makeRow(String[] names, int offset) {
+    JPanel makeRow(String[] names) {
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
         row.setAlignmentX(LEFT_ALIGNMENT);
-
-        if (offset > 0) {
-            row.add(KeyboardKey.getOffset(offset));
-        }
         for (int i = 0; i < names.length; i++) {
-            row.add(new KeyboardKey(names[i], KeyboardKey.KEY_STD, 0, this));
+            row.add(new KeyboardKey(names[i], 0, this));
         }
-
         return row;
     }
 
@@ -178,8 +208,13 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
      * In normal mode we try to interpret the real PC keys and try to press the
      * matching character on the UK101 keyboard.  In 'raw' mode we just process
      * basic key-ups and key-downs.
+     * 
      * Note: when the Ctrl key is pressed we always process as if in 'raw' mode,
      *       this is to ensure the BASIC editor works correctly.
+     *       
+     * Note: for Superboard II mappings, any of the keys to right of the P key (ie
+     *       the square-brackets and the backslash (on a US keyboard)) will map to
+     *       the LINEFEED key, and the Insert key will map to REPEAT.      
      */
     static final String SHIFT_CHARS = "!\"#$%&'()*=@[\\+]<>?";
     int mappedKey = 0, mappedShift = 0;
@@ -215,9 +250,12 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         int code = e.getKeyCode();
         int key = 0;
         switch (code) {
+        case KeyEvent.VK_CONTROL:    key = Keyboard.KEY_CTRL;    break;
         case KeyEvent.VK_ENTER:      key = Keyboard.KEY_RETURN;  break;
         case KeyEvent.VK_BACK_SPACE: key = Keyboard.KEY_RUBOUT;  break;
-        case KeyEvent.VK_CONTROL:    key = Keyboard.KEY_CTRL;    break;
+        case KeyEvent.VK_ESCAPE:     key = Keyboard.KEY_ESC;     break;
+        case KeyEvent.VK_INSERT:     key = Keyboard.KEY_REPEAT;  break;
+        case KeyEvent.VK_DELETE:     key = Keyboard.KEY_RUBOUT;  break;
         case KeyEvent.VK_SHIFT:
             if (rawMode || ctrl) {
                 if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT)
@@ -227,7 +265,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
             }
             break;
         default:
-            if (rawMode || ctrl) {  // Note: the key(s) to the left of the Enter key map to UPARROW.
+            if (rawMode || ctrl) {  // Note: the key(s) to the right of the 'P' key map to UPARROW/LINE FEED
                 if (code == KeyEvent.VK_OPEN_BRACKET || code == KeyEvent.VK_CLOSE_BRACKET)
                     key = Keyboard.KEY_UPARROW;
                 else if (code > 31 && code < 127)

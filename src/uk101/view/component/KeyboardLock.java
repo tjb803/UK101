@@ -28,11 +28,12 @@ public class KeyboardLock extends JToggleButton {
      * to do.  For the moment it just copies code from KeyboardKey, but is
      * less general as we know it is only used for SHIFT-LOCK.
      */
-    public KeyboardLock(String text, int size, int keycode, ItemListener handler) {
+    public KeyboardLock(String text, int keycode, boolean state, ItemListener handler) {
         setLayout(new BorderLayout());
         setBorder(KeyboardKey.KEY_BORDER);
         setFocusable(false);
         setAlignmentY(BOTTOM_ALIGNMENT);
+        setSelected(state);
         addItemListener(handler);
 
         // Lock-keys are always the default size.

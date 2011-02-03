@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Utility class to process command line arguments.
@@ -18,20 +17,24 @@ import java.util.Map;
  * @author Baldwin
  */
 public class Args {
+    
+    public static class Map extends LinkedHashMap<String,String> {
+        private static final long serialVersionUID = 1L;
+    }
 
     String name, parms;
-    Map<String,String> opts;
-    Map<String,String> options = new HashMap<String,String>();
+    Args.Map opts;
+    HashMap<String,String> options = new HashMap<String,String>();
     List<String> parameters = new ArrayList<String>();
 
-    public static Map<String,String> optionMap() {
-        return new LinkedHashMap<String,String>();
+    public static Args.Map optionMap() {
+        return new Args.Map();
     }
 
     /*
      * Process a set of arguments, creating a list of options and parameters
      */
-    public Args(String name, String parms, String[] args, Map<String,String> opts) {
+    public Args(String name, String parms, String[] args, Args.Map opts) {
         this.name = name;
         this.parms = parms;
         this.opts = opts;

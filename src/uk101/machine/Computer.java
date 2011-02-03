@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2011
  */
 package uk101.machine;
 
@@ -73,7 +73,7 @@ public class Computer extends Thread implements DataBus {
         addMemory(0xF800, monitor);
 
         // Keyboard, screen and ACIA are memory mapped.
-        keyboard = new Keyboard();
+        keyboard = new Keyboard(cfg.keyboard);
         video = new Video(cfg.videoRows, cfg.videoCols, new ROM(cfg.romCharset));
         acia = new ACIA6850();
         addMemory(0xDF00, keyboard);

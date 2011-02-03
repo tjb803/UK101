@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.text.DateFormat;
-import java.util.Map;
 
 import uk101.machine.Configuration;
 import uk101.machine.Dump;
@@ -37,7 +36,7 @@ public class PrintMachine {
     
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Map<String,String> options = Args.optionMap();
+        Args.Map options = Args.optionMap();
         options.put("hex", null);
         options.put("code", null);
         Args parms = new Args("PrintMachine", "machine [outputfile]", args, options);

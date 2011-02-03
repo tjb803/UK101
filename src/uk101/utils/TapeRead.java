@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.Map;
 
 import uk101.io.UK101OutputStream;
 
@@ -34,7 +33,7 @@ public class TapeRead {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Map<String,String> options = Args.optionMap();
+        Args.Map options = Args.optionMap();
         options.put("encoding", "outputencoding");
         Args parms = new Args("TapeRead", "inputtape [outputfile]", args, options);
 

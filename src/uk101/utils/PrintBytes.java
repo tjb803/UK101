@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.Map;
 
 import uk101.machine.Data;
 
@@ -36,7 +35,7 @@ public class PrintBytes {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Map<String,String> options = Args.optionMap();
+        Args.Map options = Args.optionMap();
         options.put("output", "outputfile");
         Args parms = new Args("PrintBytes", "bytesfile [address]", args, options);
         File inputFile = parms.getInputFile(1);
