@@ -1,16 +1,16 @@
-<!--                                -->
-<!--    Compukit UK101 Simulator    -->
-<!--                                -->
-<!-- (C) Copyright Tim Baldwin 2010 -->
-<!--                                -->
+<!--                                     -->
+<!--      Compukit UK101 Simulator       -->
+<!--                                     -->
+<!-- (C) Copyright Tim Baldwin 2010,2011 -->
+<!--                                     -->
 
 <!-- Build the runtime and source JARs and ZIPs -->
 
 <project name="UK101" default="buildAll">
     <property name="project-name" value="UK101"/>
     <property name="system-name" value="Compukit UK101"/>
-    <property name="system-version" value="0.6.0"/>
-    <property name="system-author" value="(C) Copyright Tim Baldwin 2010"/>
+    <property name="system-version" value="0.6.1"/>
+    <property name="system-author" value="(C) Copyright Tim Baldwin 2010,2011"/>
 
     <property name="jar-name" value="uk101-${system-version}.jar"/>
     <property name="zip-name" value="uk101-${system-version}.zip"/>

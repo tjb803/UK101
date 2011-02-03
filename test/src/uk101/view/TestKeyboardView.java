@@ -16,7 +16,7 @@ public class TestKeyboardView extends BaseViewTest {
 
     protected void setupTest() {
         // Create the store display component and add to the frame.
-        kbView = new KeyboardView(testComputer, new Keyboard());
+        kbView = new KeyboardView(testComputer, new Keyboard("uk"));
         testView.add(kbView);
     }
 
