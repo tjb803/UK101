@@ -100,7 +100,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         // Add filler space to align the rows
         if (keyboard.isUK()) {
             row2.add(KeyboardKey.getOffset(KeyboardKey.KEY_HALF), 0);
-            row5.add(KeyboardKey.getOffset(KeyboardKey.KEY_BIG+KeyboardKey.KEY_STD));
+            row5.add(KeyboardKey.getOffset(KeyboardKey.KEY_BIG+KeyboardKey.KEY_STD), 0);
         } else {
             row1.add(KeyboardKey.getOffset(KeyboardKey.KEY_HALF), 0);
             row3.add(KeyboardKey.getOffset(KeyboardKey.KEY_HALF), 0);

@@ -111,16 +111,17 @@ public class Computer extends Thread implements DataBus {
     /*
      * Implement the DataBus interface used by the processor to access
      * memory in the address space.
+     *
+     * It shouldn't really matter what value is returned if we try to read 
+     * non-existent memory - I suspect the real machine would return 0 or 
+     * -1.  But I'm returning 32 (the space character) as when the monitor
+     * ROM scrolls the screen it sometimes seems to read beyond the end of
+     * the video RAM.  I guess on the real machine this either didn't
+     * happen or the video logic didn't show anything, but I was seeing 
+     * garbage characters on the screen very briefly.  By returning space
+     * characters this is avoided.
      */
     public byte readByte(int addr) {
-        // It shouldn't really matter what value is returned if we try to read 
-        // non-existent memory- I suspect the real machine would return 0 or 
-        // -1.  But I'm returning 32 (the space character) as when the monitor
-        // ROM scrolls the screen it sometimes seems to read beyond the end of
-        // the video RAM.  I guess on the real machine this either didn't
-        // happen or the video logic didn't show anything, but I was seeing 
-        // garbage characters on the screen very briefly.  By returning space
-        // characters this is avoided.
         byte b = 32;
         Memory m = memory[addr/Memory.BLKSIZE];
         if (m != null) {
@@ -130,7 +131,7 @@ public class Computer extends Thread implements DataBus {
     }
 
     public short readWord(int addr) {
-        byte bl = 0, bh = 0;
+        byte bl = 32, bh = 32;
         Memory m = memory[addr/Memory.BLKSIZE];
         if (m != null) {
             bl = m.readByte(addr-m.base);
