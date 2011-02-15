@@ -32,14 +32,24 @@ public abstract class Memory {
     }
     
     public int kBytes() {       // Memory size in Kbytes 
-        return store.length/K1;
+        return toK(store.length);
     }
 
     protected void setStore(byte[] sb) {
         store = sb;
-        blocks = (store.length + BLKSIZE-1)/BLKSIZE;
+        blocks = toBlocks(store.length);
     }
 
+    // Round up to the nearest 1K
+    public static int toK(int size) {
+        return (size + K1-1)/K1;
+    }
+    
+    // Round up to block size
+    public static int toBlocks(int size) {
+        return (size + BLKSIZE-1)/BLKSIZE;
+    }
+    
     /*
      * Mainly for debugging
      */

@@ -62,7 +62,7 @@ public class Computer extends Thread implements DataBus {
 
         // Address space is 64K.  Assumption here is that any ROM/RAM or any
         // memory-mapped devices are mapped in BLKSIZE sections.
-        memory = new Memory[Memory.K64/Memory.BLKSIZE];
+        memory = new Memory[Memory.toBlocks(Memory.K64)];
 
         // Install the system ROMs and RAM
         ram = new RAM(cfg.ramSize);

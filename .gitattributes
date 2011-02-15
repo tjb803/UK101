@@ -48,11 +48,11 @@ samples/basic/hectic.basic -text
 samples/basic/hello.basic -text
 samples/basic/nytaxi.basic -text
 samples/machines/invaders.uk101 -text
+samples/properties/BASOSI.ROM -text
+samples/properties/CHGOSI.ROM -text
+samples/properties/MONOSI.ROM -text
+samples/properties/superboard.properties -text
 samples/properties/uk101.properties -text
-samples/superboard/CHGOSI.ROM -text
-samples/superboard/OSIBASIC.ROM -text
-samples/superboard/OSIMON.ROM -text
-samples/superboard/superboard.properties -text
 samples/tapes/exmon.tape -text
 samples/tapes/invaders.tape -text
 src/uk101/Main.java -text

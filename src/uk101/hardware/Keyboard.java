@@ -84,7 +84,7 @@ public class Keyboard extends Memory {
     byte kbport;
 
     public Keyboard(String type) {
-        blocks = K1/BLKSIZE;        // Decodes to a 1K block
+        blocks = toBlocks(K1);      // Decodes to a 1K block
         kbport = (byte)0xFF;        // Default is to return nothing
         
         // UK or US keyboard?

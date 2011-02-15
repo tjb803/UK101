@@ -16,7 +16,7 @@ import uk101.view.VideoView;
  *
  * @author Baldwin
  */
-public class Video extends Memory {
+public class Video extends RAM {
 
     public int rows, cols;
 
@@ -24,12 +24,12 @@ public class Video extends Memory {
     public int charWidth, charHeight;
 
     public Video(int height, int width, ROM chargen) throws IOException {
+        // Allocate the video RAM as seen by the CPU. 
+        super(toK(height*width));
+        
+        // Save video configuration
         rows = height;
         cols = width;
-
-        // Allocate the video RAM as seen by the CPU. 
-        int vk = (height*width + K1-1)/K1;
-        setStore(new byte[vk*K1]);
 
         // Character generator ROM - characters are defined as 8x8 pixels.
         charSet = chargen;
