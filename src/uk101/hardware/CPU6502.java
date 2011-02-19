@@ -23,6 +23,7 @@ public class CPU6502 {
     // Status register flag bits
     static final byte FLAG_N = (byte)0x80;
     static final byte FLAG_V = (byte)0x40;
+    static final byte FLAG_1 = (byte)0x20;
     static final byte FLAG_B = (byte)0x10;
     static final byte FLAG_D = (byte)0x08;
     static final byte FLAG_I = (byte)0x04;
@@ -188,7 +189,7 @@ public class CPU6502 {
     void reset() {
         A = X = Y = 0;
         S = STACK_TOP;
-        P = 0;
+        P = FLAG_1;
         PC = 0;
     }
 

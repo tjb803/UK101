@@ -17,5 +17,10 @@ v0.6.0
   Main bug fixes:
    - Page-0 indexed addresses not wrapping around 0xFF, which caused 
      division in BASIC to give incorrect results 
-   - Bug with utility programs parsing command line parmeters  
-      
+   - Bug with utility programs parsing command line parameters  
+   
+v1.0.0
+------ 
+  Improvements:
+   - Add support for Ohio Scientific Superboard II emulation  
+    
