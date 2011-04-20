@@ -27,7 +27,7 @@ public class TestUK101Streams extends TestCase {
     String end = System.getProperty("line.separator");
 
     String[] lines1 = { "10 PRINT \"HELLO\u0001:\u0080\u00fe\"", "20 GOTO 10" };
-    String text1 = end + "10 PRINT \"HELLO\\u0001:\\u0080\\u00FE\"" + end + "20 GOTO 10" + end;
+    String text1 = end + "10 PRINT \"HELLO\\01:\\80\\FE\"" + end + "20 GOTO 10" + end;
 
 
     public void testOutputStream1() throws Exception {

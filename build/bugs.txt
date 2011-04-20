@@ -23,4 +23,12 @@ v1.0.0
 ------ 
   Improvements:
    - Add support for Ohio Scientific Superboard II emulation  
+   
+v1.0.1
+------ 
+  Improvements:
+   - Add correct timing to ACIA to allow 8K Super Invaders to run! 
+   
+  Main bug fixes:
+   - Reduce CPU usage  
     

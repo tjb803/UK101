@@ -37,7 +37,7 @@ public class MachineView extends JInternalFrame implements ActionListener {
     Computer computer;
     ComputerView view;
     
-    DisplayText speed;
+    DisplayText speed, baud;
     Timer speedTimer;
 
     public MachineView(Computer computer, ComputerView computerView) {
@@ -58,15 +58,15 @@ public class MachineView extends JInternalFrame implements ActionListener {
         // Information panel
         JPanel ip = new JPanel(new GridLayout(0, 2, 5, 5));
         ip.setBorder(BorderFactory.createTitledBorder("Configuration"));
-        speed = new DisplayText("Clock", "0", false);
-        int mhz = computer.cpu.getMHz();
-        ip.add(new DisplayText("Cpu", (mhz == 0) ? "Max" : mhz + "MHz", false));
+        speed = new DisplayText("Cpu", computer.cpu.getMHz() + ".00Mhz", false);
+        baud = new DisplayText("Baud Rate", computer.acia.getBaudRate() + "", false);
         ip.add(speed);
+        ip.add(baud);
         ip.add(new DisplayText("RAM", computer.ram.kBytes() + "KB", false));
         ip.add(new DisplayText("ROM", computer.monitor.getName(), false));
         
         // Timer to update CPU actual speed
-        speedTimer = new Timer(2000, this);
+        speedTimer = new Timer(3000, this);
         speedTimer.setRepeats(true);
         speedTimer.start();
 
@@ -102,6 +102,7 @@ public class MachineView extends JInternalFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == speedTimer) {
             speed.setValue(String.format("%-1.2fMHz", computer.cpu.getSpeed()));
+            baud.setValue(Integer.toString(computer.acia.getBaudRate()));
         } else if (e.getActionCommand().equals(MACHINE_DUMP)) {
             computer.dump();
         } else if (e.getActionCommand().equals(MACHINE_TRACE)) {

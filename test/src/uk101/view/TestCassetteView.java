@@ -17,7 +17,7 @@ public class TestCassetteView extends BaseViewTest {
 
     protected void setupTest() {
         // Create the cassette component and add to the frame.
-        cView = new CassetteView(new TapeRecorder());
+        cView = new CassetteView(new TapeRecorder(testComputer.acia));
         testView.add(cView);
     }
 

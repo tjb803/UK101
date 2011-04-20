@@ -121,6 +121,26 @@ be the name of a file containing a replacement ROM.</td>
 </table>
 <p/>
 <hr>
+<h2 id="acia">ACIA Baud Rate</h2>
+<p>This setting controls the default baud rate for the ACIA.</p>
+<table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
+<tr><th width="15%">Name</th><th width="15%">Values</th>
+<th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>baud.rate</code></td>
+<td>from <code>110</code> to <code>115200</code></td>
+<td align="center"><code>300</code></td>
+<td>This defines default baud rate of the ACIA. 
+<p>Some programs (in particular some games) relied on the ACIA control
+signals to generate accurate timings that were independent of the CPU 
+speed.</p></td></tr>
+</table>
+<p><i>Note:</i> The ACIA baud rate setting is ignored when reading or 
+writing to a simulated cassette tape, these operations simply run as fast
+as they can.
+Although it was necessary to run a real cassette storage tape at 300 or 
+maybe 600 baud for reliable data transter, this is not a limitation of
+the simulated tapes.</p>
+<hr>
 <h2 id="keyboard">Keyboard</h2>
 <p>This settings controls the keyboard layout and available keys.</p>
 <table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
@@ -204,7 +224,7 @@ is likely to produce the best results.
 On older hardware the <i>sync</i> option may result in faster and/or
 smoother operation.</p>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>February 2011
+<tr><td align="left">Tim Baldwin<br>April 2011
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
 <br><br>&copy; Tim Baldwin 2010,2011</td></tr>

@@ -45,6 +45,7 @@ public class Configuration implements Serializable {
     static Item[] items = {
         new Item("cpuSpeed", "cpu.speed", 0, 2),
         new Item("ramSize", "ram.size", 4, 40),
+        new Item("baudRate", "baud.rate", 110, 115200),
         new Item("romBASIC", "rom.basic", null),
         new Item("romMonitor", "rom.monitor", null),
         new Item("romCharset", "rom.charset", null),
@@ -62,6 +63,7 @@ public class Configuration implements Serializable {
     // Default hardware configuration
     public int cpuSpeed = 1;
     public int ramSize = 8;
+    public int baudRate = 300;
     public int videoRows = 16, videoCols = 64;
     public String romBASIC = "BASUK101.ROM";
     public String romMonitor = "MONUK02.ROM";

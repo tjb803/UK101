@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import uk101.hardware.bus.IOBus;
+import uk101.hardware.bus.IODevice;
 
 /**
  * Program storage via 'tapes'.  This simple implementation just reads
@@ -22,9 +23,13 @@ import uk101.hardware.bus.IOBus;
  */
 public class TapeRecorder implements IOBus {
 
+    IODevice acia;
     InputStream input;
     OutputStream output;
-    Object reader;
+    
+    public TapeRecorder(IODevice io) {
+        acia = io;
+    }
 
     /*
      * Set new input and output tape streams
@@ -39,11 +44,7 @@ public class TapeRecorder implements IOBus {
             }
         }
         input = in;
-        if (reader != null) {
-            synchronized (reader) {
-                reader.notify();
-            }
-        }
+        acia.setRxBus((in == null) ? null : this);
     }
 
     public void setOutputTape(OutputStream out) {
@@ -56,6 +57,7 @@ public class TapeRecorder implements IOBus {
             }
         }
         output = out;
+        acia.setTxBus((out == null) ? null : this);
     }
 
     public void shutdown() {
@@ -65,7 +67,7 @@ public class TapeRecorder implements IOBus {
 
     /*
      * Implement the IOBus interface to allow the recorder to be be
-     * hooked up to the output of the ACIA.
+     * hooked up to the ACIA.
      */
 
     public int readByte() {
@@ -88,10 +90,6 @@ public class TapeRecorder implements IOBus {
                 System.err.println(e);
             }
         }
-    }
-
-    public void setListener(Object listener) {
-        reader = listener;
     }
 
     /*

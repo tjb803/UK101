@@ -66,6 +66,7 @@ src/uk101/hardware/ROM.java -text
 src/uk101/hardware/Video.java -text
 src/uk101/hardware/bus/DataBus.java -text
 src/uk101/hardware/bus/IOBus.java -text
+src/uk101/hardware/bus/IODevice.java -text
 src/uk101/icon/uk101-32.png -text
 src/uk101/icon/uk101-48.png -text
 src/uk101/icon/uk101.ico -text

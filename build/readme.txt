@@ -49,8 +49,12 @@ Latest Improvements
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
 
+v1.0.1
+ - "baud.rate" property to allow correct ACIA timing signals
+ - greatly reduced CPU usage 
+
 v1.0.0
- - "keyboard=uk/us" property to support Superboard II emulation. 
+ - "keyboard=uk/us" property to support Superboard II emulation
 
 v0.6.0:
  - Better CPU speed accuracy
@@ -62,6 +66,7 @@ Release History
 v0.5.0  December 2010  First public release
 v0.6.0  January 2011   Bug fixes 
 v1.0.0  February 2011  Add Ohio Superboard support
+v1.0.1  April 2011     ACIA support for 8K Super Invaders
 
 ===========
 Tim Baldwin

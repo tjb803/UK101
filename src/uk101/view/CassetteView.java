@@ -154,9 +154,13 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
                 "File " + tapeFile.getPath() + " already exists.",
                 "Are you sure you want to overwrite it?"
             };
-            if (JOptionPane.showInternalConfirmDialog(this, 
-                    msg, getTitle(), JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+            String[] opts = { "No", "Yes" };
+            // I don't think showInternalOptionDialog works properly (at least in some look 
+            // and feels) when the initialValue is something other than the first option.
+            // So I have reversed YES and NO here - a return value of NO_OPTION means YES!
+            if (JOptionPane.showInternalOptionDialog(this, 
+                    msg, getTitle(), JOptionPane.YES_NO_OPTION, 
+                    JOptionPane.WARNING_MESSAGE, null, opts, opts[0]) == JOptionPane.NO_OPTION) {
                 out = Stream.getOutputStream(tapeFile, outFormat);  
             } else {
                 stop.button.doClick();

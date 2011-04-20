@@ -12,9 +12,7 @@ package uk101.hardware.bus;
  * @author Baldwin
  */
 public interface IOBus {
-
+    
     public int readByte();                  // Read 8-bit value
     public void writeByte(int value);       // Write 8-bit value
-
-    public void setListener(Object reader); // Object to notify when reading
 }

@@ -13,6 +13,19 @@ import java.util.List;
 
 /**
  * Utility class to process command line arguments.
+ * 
+ * General form is a set of positional arguments (accessed by position
+ * number) and a set of options (introduced by a '-' and accessed by
+ * option name).
+ * 
+ * Options are defined by entries in a Args.Map option map where
+ *   key = option name
+ *   value = option value (as displayed in usage summary)
+ *   
+ * Some special cases for the option value are:
+ *   null - option is a flag, either present or absent
+ *   ends with a '+' - usage summary shows next option on the same line
+ *   ends with a '-' - option is a synonym for another option  
  *
  * @author Baldwin
  */

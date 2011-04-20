@@ -75,14 +75,13 @@ public class Computer extends Thread implements DataBus {
         // Keyboard, screen and ACIA are memory mapped.
         keyboard = new Keyboard(cfg.keyboard);
         video = new Video(cfg.videoRows, cfg.videoCols, new ROM(cfg.romCharset));
-        acia = new ACIA6850();
+        acia = new ACIA6850(cfg.baudRate);
         addMemory(0xDF00, keyboard);
         addMemory(0xD000, video);
         addMemory(0xF000, acia);
 
         // Create a tape recorder to load and save programs and plug it into the ACIA.
-        recorder = new TapeRecorder();
-        acia.setDevice(recorder);
+        recorder = new TapeRecorder(acia);
     }
 
     // Add some memory into the address space, removing anything previously
@@ -218,5 +217,6 @@ public class Computer extends Thread implements DataBus {
         ram = new RAM(4);
         monitor = new ROM("MONUK02.ROM");
         cpu = new CPU6502(1, null);
+        acia = new ACIA6850(300);
     }
 }

@@ -23,7 +23,7 @@ public class CPU6502 {
     // Status register flag bits
     static final byte FLAG_N = (byte)0x80;
     static final byte FLAG_V = (byte)0x40;
-    static final byte FLAG_1 = (byte)0x20;
+    static final byte FLAG_x = (byte)0x20;
     static final byte FLAG_B = (byte)0x10;
     static final byte FLAG_D = (byte)0x08;
     static final byte FLAG_I = (byte)0x04;
@@ -148,15 +148,23 @@ public class CPU6502 {
             // when we have accumulated enough excess time for a delay to be 
             // worthwhile - this means individual instructions won't be at the 
             // exact correct speed, but on average the CPU should be close.
-            // However, as we might sometimes run too slow (for example when 
-            // loading from tapes), the clock is re-synchronised every 1/100th of 
-            // a second or so.
+            // However just in case we start to run too slow the clock is 
+            // re-synchronised every 1/10th of a second or so.
             if (speed > 0) {
                 end += cycles*speed;
-                if (end-sync > 100000000)
+                if (end-sync > 1000000000) {
                     sync = now = System.nanoTime();
-                while (end-now > nanoInterval)
+                    if (now > end) {
+                        end = now;
+                    }
+                } 
+                while (end-now > nanoInterval) {
+                    try {
+                        Thread.sleep(0, (int)(end-now));
+                    } catch (InterruptedException e) {
+                    }
                     now = System.nanoTime();
+                }    
             }  
         }
     }
@@ -189,7 +197,7 @@ public class CPU6502 {
     void reset() {
         A = X = Y = 0;
         S = STACK_TOP;
-        P = FLAG_1;
+        P = FLAG_x;
         PC = 0;
     }
 
