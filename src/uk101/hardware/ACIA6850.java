@@ -127,47 +127,35 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
     /*
      * Worker thread that handles transmitting and receiving characters.
      */
-    public void run() {
+    public synchronized void run() {
         while (true) {
             try {
-                byte status;
-                int txb = -1, rxb = -1;
-                synchronized (this) {
-                    wait();
-                    status = statusReg;
-                    txb = txByte;
-                }    
-                    
+                wait();
+                   
                 // Anything waiting to be transmitted? 
-                if ((status & STATUS_TDRE) == 0) {
+                if ((statusReg & STATUS_TDRE) == 0) {
                     // If a device is attached we assume it handles the timing of the
                     // character; if there is no device we pause for the correct time
                     // to write a single character.  (This allows the ACIA to be used 
                     // to generate a timing signal, but still allows saving to simulated
                     // tape files to happen as quickly as possible.)
                     if (txBus != null) {
-                        txBus.writeByte(txb);
+                        txBus.writeByte(txByte);
                     } else {
-                        Thread.sleep(txTime);
+                        wait(txTime);
                     }
-                    status |= STATUS_TDRE;
+                    statusReg |= STATUS_TDRE;
                 }
 
                 // Anything to receive
-                if ((status & STATUS_RDRF) == 0) {
+                if ((statusReg & STATUS_RDRF) == 0) {
                     if (rxBus != null) {
-                        rxb = rxBus.readByte();
-                        if (rxb != -1) {
-                            status |= STATUS_RDRF;
+                        int b = rxBus.readByte();
+                        if (b != -1) {
+                            rxByte = (byte)b;
+                            statusReg |= STATUS_RDRF;
                         }
                     }
-                }
-                
-                synchronized (this) {
-                    if (rxb != -1) {
-                        rxByte = (byte)rxb;
-                    }
-                    statusReg = status;
                 }
             } catch (InterruptedException e) {
             }

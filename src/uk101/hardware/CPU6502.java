@@ -152,7 +152,7 @@ public class CPU6502 {
             // re-synchronised every 1/10th of a second or so.
             if (speed > 0) {
                 end += cycles*speed;
-                if (end-sync > 1000000000) {
+                if (end-sync > 100000000) {
                     sync = now = System.nanoTime();
                     if (now > end) {
                         end = now;
