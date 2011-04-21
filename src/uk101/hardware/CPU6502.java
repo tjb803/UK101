@@ -154,13 +154,10 @@ public class CPU6502 {
                 end += cycles*speed;
                 if (end-sync > 100000000) {
                     sync = now = System.nanoTime();
-                    if (now > end) {
-                        end = now;
-                    }
                 } 
                 while (end-now > nanoInterval) {
                     try {
-                        Thread.sleep(0, (int)(end-now));
+                        Thread.sleep(0, Math.min((int)(end-now), 999999));
                     } catch (InterruptedException e) {
                     }
                     now = System.nanoTime();
