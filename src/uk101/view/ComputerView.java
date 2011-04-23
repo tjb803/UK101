@@ -5,14 +5,18 @@
  */
 package uk101.view;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.beans.PropertyVetoException;
 import java.io.File;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
+import javax.swing.JInternalFrame;
 import javax.swing.filechooser.FileFilter;
 
 import uk101.machine.Computer;
@@ -49,6 +53,12 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         keyboard = new KeyboardView(computer, computer.keyboard);
         cassette = new CassetteView(computer.recorder);
         machine = new MachineView(computer, this);
+        
+        // Attach the keyboard handler to each top level frame
+        attachKeyboard(video, keyboard);
+        attachKeyboard(keyboard, keyboard);
+        attachKeyboard(cassette, keyboard);
+        attachKeyboard(machine, keyboard);
 
         add(machine);
         add(cassette);
@@ -99,6 +109,25 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         return false;       // Layout is incomplete (frame is unsized)
     }
 
+    // Attach a keyListener to a top level window and ensure that no 
+    // subcomponents can grab focus.
+    private void attachKeyboard(JInternalFrame frame, KeyListener listener) {
+        frame.setFocusable(true);
+        frame.addKeyListener(listener);
+        for (Component c : frame.getComponents()) {
+            removeFocus(c);
+        }
+    }
+    
+    private void removeFocus(Component c) {
+        c.setFocusable(false);
+        if (c instanceof Container) {
+            for (Component cc : ((Container)c).getComponents()) {
+                removeFocus(cc);
+            }
+        }
+    }
+    
     // Set focus to the keyboard
     public void focusKeyboard() {
         try {

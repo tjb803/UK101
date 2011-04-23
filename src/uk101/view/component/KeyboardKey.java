@@ -53,7 +53,6 @@ public class KeyboardKey extends JButton {
     public KeyboardKey(String text, int size, int keycode, MouseListener handler) {
         setLayout(new BorderLayout());
         setBorder(KEY_BORDER);
-        setFocusable(false);
         setAlignmentY(BOTTOM_ALIGNMENT);
         addMouseListener(handler);
 

@@ -52,6 +52,7 @@ addition the following are notable improvements:
 v1.0.1
  - "baud.rate" property to allow correct ACIA timing signals
  - greatly reduced CPU usage 
+ - keyboard window doesn't need to be selected to type
 
 v1.0.0
  - "keyboard=uk/us" property to support Superboard II emulation

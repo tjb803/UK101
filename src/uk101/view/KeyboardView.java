@@ -63,8 +63,6 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         this.keyboard = keyboard;
 
         rawMode = false;
-        setFocusable(true);
-        addKeyListener(this);
 
         // Layout the basic keys
         JPanel row1, row2, row3, row4, row5;
@@ -120,7 +118,6 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         // Add the keyboard 'raw' mode selector
         JCheckBox raw = new JCheckBox("Raw mode");
         raw.setAlignmentY(BOTTOM_ALIGNMENT);
-        raw.setFocusable(false);
         raw.addItemListener(this);
         row5.add(Box.createHorizontalGlue());
         row5.add(raw);

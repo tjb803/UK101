@@ -28,6 +28,7 @@ v1.0.1
 ------ 
   Improvements:
    - Add correct timing to ACIA to allow 8K Super Invaders to run! 
+   - Keyboard window no longer needs to be selected to type 
    
   Main bug fixes:
    - Reduce CPU usage  

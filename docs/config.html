@@ -80,13 +80,12 @@ Note that property names and values are case-sensitive.</p>
 A standard 6502 ran at 1Mhz but most could be over-clocked to 2Mhz quite
 successfully, which doubles the speed of the machine (although some
 games may then run too fast).
-<p>This setting represents a maximum simulation speed.  
-It is possible that an older or slower PC will not be able reach 
-the maximum requested.</p>
 <p>Setting a value of <code>0</code> will cause the simulation to
 run as fast as it can.</p></td></tr>
 </table>
-<p/>
+<p><i>Note: </i>This setting represents a maximum simulation speed.  
+It is possible that an older or slower PC will not be able reach 
+the maximum requested.</p>
 <hr>
 <h2 id="memory">RAM and ROM</h2>
 <p>These settings control details of the installed RAM and ROMs.</p>
@@ -136,10 +135,7 @@ speed.</p></td></tr>
 </table>
 <p><i>Note:</i> The ACIA baud rate setting is ignored when reading or 
 writing to a simulated cassette tape, these operations simply run as fast
-as they can.
-Although it was necessary to run a real cassette storage tape at 300 or 
-maybe 600 baud for reliable data transter, this is not a limitation of
-the simulated tapes.</p>
+as they can.</p>
 <hr>
 <h2 id="keyboard">Keyboard</h2>
 <p>This settings controls the keyboard layout and available keys.</p>
@@ -203,7 +199,7 @@ a smaller display, <code>2</code> is a larger display.</td>
 <td align="center"><code>white</code></td>
 <td>This defines the colour of the screen display.</td>
 <tr><td><code>screen.update</code></td>
-<td><code>sync</code> or <code>async</code></td>
+<td><code>async</code> or <code>sync</code></td>
 <td align="center"><code>async</code></td>
 <td>This defines how screen updates are performed.
 <table frame="void">

@@ -31,7 +31,6 @@ public class KeyboardLock extends JToggleButton {
     public KeyboardLock(String text, int keycode, boolean state, ItemListener handler) {
         setLayout(new BorderLayout());
         setBorder(KeyboardKey.KEY_BORDER);
-        setFocusable(false);
         setAlignmentY(BOTTOM_ALIGNMENT);
         setSelected(state);
         addItemListener(handler);
