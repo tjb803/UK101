@@ -128,40 +128,47 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
      * Worker thread that handles transmitting and receiving characters.
      */
     public void run() {
-        byte status = statusReg;
-        int tx = -1, rx = -1;
+        boolean tx, rx;
+        byte sb;
+        int tb, rb;
+
+        rb = -1;
+        sb = 0;
         while (true) {
             try {
                 synchronized (this) {
-                    statusReg = status;
-                    if (rx != -1) 
-                        rxByte = (byte)rx;
+                    if (sb != 0) statusReg |= sb;
+                    if (rb != -1) rxByte = (byte)rb;
                     wait();
-                    status = statusReg;
-                    tx = txByte;
+                    
+                    tx = ((statusReg & STATUS_TDRE) == 0);
+                    rx = ((statusReg & STATUS_RDRF) == 0);
+                    tb = txByte;
+                    rb = -1;
+                    sb = 0;
                 }
                    
                 // Anything waiting to be transmitted? 
-                if ((status & STATUS_TDRE) == 0) {
+                if (tx) {
                     // If a device is attached we assume it handles the timing of the
                     // character; if there is no device we pause for the correct time
                     // to write a single character.  (This allows the ACIA to be used 
                     // to generate a timing signal, but still allows saving to simulated
                     // tape files to happen as quickly as possible.)
                     if (txBus != null) {
-                        txBus.writeByte(tx);
+                        txBus.writeByte(tb);
                     } else {
                         Thread.sleep(txTime);
                     }
-                    status |= STATUS_TDRE;
+                    sb |= STATUS_TDRE;
                 }
 
                 // Anything to receive
-                if ((status & STATUS_RDRF) == 0) {
+                if (rx) {
                     if (rxBus != null) {
-                        rx = rxBus.readByte();
-                        if (rx != -1) {
-                            status |= STATUS_RDRF;
+                        rb = rxBus.readByte();
+                        if (rb != -1) {
+                            sb |= STATUS_RDRF;
                         }
                     }
                 }
