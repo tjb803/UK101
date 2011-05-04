@@ -58,7 +58,7 @@ public class MachineView extends JInternalFrame implements ActionListener {
         // Information panel
         JPanel ip = new JPanel(new GridLayout(0, 2, 5, 5));
         ip.setBorder(BorderFactory.createTitledBorder("Configuration"));
-        speed = new DisplayText("Cpu", computer.cpu.getMHz() + ".00Mhz", false);
+        speed = new DisplayText("Cpu", computer.cpu.getMHz() + ".00MHz", false);
         baud = new DisplayText("Baud Rate", computer.acia.getBaudRate() + "", false);
         ip.add(speed);
         ip.add(baud);
@@ -66,7 +66,8 @@ public class MachineView extends JInternalFrame implements ActionListener {
         ip.add(new DisplayText("ROM", computer.monitor.getName(), false));
         
         // Timer to update CPU actual speed
-        speedTimer = new Timer(3000, this);
+        speedTimer = new Timer(2500, this);
+        speedTimer.setInitialDelay(5000);
         speedTimer.setRepeats(true);
         speedTimer.start();
 

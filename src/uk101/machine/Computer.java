@@ -54,6 +54,11 @@ public class Computer extends Thread implements DataBus {
             version = "0.0.0";
         }
         
+        // Lower the simulation thread priority a little to ensure the GUI
+        // remains responsive.
+        setName(name);
+        setPriority(Math.max(Thread.MIN_PRIORITY, getPriority()/2));
+        
         // Save the configuration
         config = cfg;
         
@@ -75,7 +80,7 @@ public class Computer extends Thread implements DataBus {
         // Keyboard, screen and ACIA are memory mapped.
         keyboard = new Keyboard(cfg.keyboard);
         video = new Video(cfg.videoRows, cfg.videoCols, new ROM(cfg.romCharset));
-        acia = new ACIA6850(cfg.baudRate);
+        acia = new ACIA6850(cfg.baudRate, getPriority());
         addMemory(0xDF00, keyboard);
         addMemory(0xD000, video);
         addMemory(0xF000, acia);
@@ -158,11 +163,6 @@ public class Computer extends Thread implements DataBus {
      * Run the simulation thread
      */
     public void run() {
-        // Lower the simulation thread priority a little to ensure the GUI
-        // remains responsive.
-        setPriority(Math.max(Thread.MIN_PRIORITY, getPriority()/2));
-        setName(name);
-
         // Run the CPU
         cpu.signalReset();
         cpu.run();
@@ -217,6 +217,6 @@ public class Computer extends Thread implements DataBus {
         ram = new RAM(4);
         monitor = new ROM("MONUK02.ROM");
         cpu = new CPU6502(1, null);
-        acia = new ACIA6850(300);
+        acia = new ACIA6850(300, Thread.NORM_PRIORITY);
     }
 }

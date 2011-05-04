@@ -92,6 +92,13 @@ public class CPU6502 {
     public void setMHz(int mhz) {
         // speed = cycle time in nanoseconds (or zero)
         speed = (mhz == 0) ? 0 : 1000/mhz;
+        
+        // cycle time ought to be 1000/mhz, but due to the way the timing
+        // loops work this causes the CPU to run very slightly slow.  So
+        // the cycle time is reduced by 0.5% to try to compensate.
+        if (speed != 0) {
+            speed -= (speed*5)/1000;
+        }
     }
     
     public int getMHz() {
@@ -149,11 +156,14 @@ public class CPU6502 {
             // worthwhile - this means individual instructions won't be at the 
             // exact correct speed, but on average the CPU should be close.
             // However just in case we start to run too slow the clock is 
-            // re-synchronised every 1/10th of a second or so.
+            // re-synchronised every 1/5th of a second or so.
             if (speed > 0) {
                 end += cycles*speed;
-                if (end-sync > 100000000) {
+                if (end-sync > 200000000) {
                     sync = now = System.nanoTime();
+                    if (now > end) {
+                        end = now;
+                    }
                 } 
                 while (end-now > nanoInterval) {
                     try {

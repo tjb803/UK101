@@ -33,7 +33,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
      * port, so this logic is fairly simple.
      */
 
-    byte statusReg;                 // STatus register
+    byte statusReg;                 // Status register
     byte txByte, rxByte;            // Transmit/receive buffers
     
     int txClock;                    // Transmit clock rate
@@ -42,7 +42,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
     
     IOBus txBus, rxBus;
 
-    public ACIA6850(int baud) {
+    public ACIA6850(int baud, int priority) {
         blocks = 1;                 // Fills a complete block
 
         statusReg = STATUS_TDRE;    // Initial state - ready to transmit
@@ -52,9 +52,10 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
         txClock = baud*16;
         baudRate = baud;
 
-        // Start the worker thread
+        // Start the worker thread.  Use a lower priority than the CPU thread.
         Thread worker = new Thread(this);
         worker.setName(getClass().getSimpleName());
+        worker.setPriority(Math.max(Thread.MIN_PRIORITY, priority-1));
         worker.start();
     }
     
