@@ -12,7 +12,7 @@ import uk101.machine.Configuration;
 import uk101.machine.Data;
 
 /**
- * The keyboard is mapped into a 1K block of memory at DC00-DFFF, although it
+ * The keyboard is mapped into a 1K block of memory at DF00-DFFF, although it
  * only uses 1 byte.
  *
  * This class emulates both the UK101 and the Ohio Superboard II keyboards.

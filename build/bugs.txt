@@ -31,5 +31,5 @@ v1.0.1
    - Keyboard window no longer needs to be selected to type 
    
   Main bug fixes:
-   - Reduce CPU usage  
+   - Reduce Java CPU usage  
     

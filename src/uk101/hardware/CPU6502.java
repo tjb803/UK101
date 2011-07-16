@@ -97,7 +97,7 @@ public class CPU6502 {
         // loops work this causes the CPU to run very slightly slow.  So
         // the cycle time is reduced by 0.5% to try to compensate.
         if (speed != 0) {
-            speed -= (speed*5)/1000;
+            speed -= speed/200;
         }
     }
     
