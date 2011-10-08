@@ -84,10 +84,16 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         int maxX2 = keyboard.getWidth() + cassette.getWidth() + 10;
         int maxX = Math.max(maxX1, maxX2);
         int maxY = keyboard.getHeight() + video.getHeight();
+        
+        int macX = maxX - machine.getWidth(), macY = 0;
+        machine.setLocation(macX, macY);
 
         int vidX = 0, vidY = 0;
         if (video.getWidth() < keyboard.getWidth()) {
             vidX = (keyboard.getWidth() - video.getWidth())/2;
+            if (vidX + video.getWidth() > macX) {
+                vidX = 0;
+            }
         }
         video.setLocation(vidX, vidY);
 
@@ -99,9 +105,6 @@ public class ComputerView extends JDesktopPane implements ActionListener {
 
         int casX = kybX + keyboard.getWidth() + 10, casY = maxY - cassette.getHeight();
         cassette.setLocation(casX, casY);
-
-        int macX = maxX - machine.getWidth(), macY = 0;
-        machine.setLocation(macX, macY);
 
         Dimension size = new Dimension(maxX, maxY);
         setPreferredSize(size);

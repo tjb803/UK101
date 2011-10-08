@@ -16,14 +16,14 @@ It had a 6502 processor running at 1Mhz and a small amount of RAM,
 usually 4K or 8K bytes.</p>  
 <p>There was a full size, reasonable quality proper keyboard for input;
 video output, as was common for hobby computers at the time, was got
-by hooking up to a standard TV set and program storage via a 300
+by hooking up to a standard TV set and program storage was via a 300
 baud cassette tape interface. 
 The machine was essentially a clone of the 
 <a href="operation.html#osi">Ohio Superboard II</a> from the 
 US company OSI but was modified to work rather better with the UK TV 
 standard.</p>
 <p>Like most machines of the time it had a BASIC interpreter available
-in ROM and and additional &quot;monitor&quot; ROM with provided the 
+in ROM and an additional &quot;monitor&quot; ROM with provided the 
 bootstrap functions and basic I/O facilities.
 <p>The Compukit UK101 was sold by as a kit from the Compshop in New Barnet
 and originally cost about &pound;219.00.  
@@ -52,9 +52,9 @@ was memory-mapped into that address space:</p>
 <td>Start of RAM
 <p>The standard machine came with 4K of RAM but there were sockets on
 the PCB to allow up to 8K to be installed (in 1K increments).  
-Since the next thing in memory was at address 0xA000 in theory,
+Since the next thing in memory was at address 0xA000, in theory,
 with a suitable expansion board, you could have up to 40K of RAM
-installed.</p></td></tr>
+installed - this would have been rather expensive in 1979!</p></td></tr>
 <tr><td>0xA000<br>to<br>0xBFFF</td>
 <td>The BASIC ROM 
 <p>This was 8K and was actually in 4 2K ROMs (as a single 8K ROM wasn't
@@ -88,9 +88,9 @@ No interrupts were used so you had to poll the status port when reading
 or writing the cassette to see when data was available.</p></td></tr>
 <tr><td>0xF800<br>to<br>0xFFFF</td>
 <td>The Monitor ROM
-<p>The monitor contained some basic machine operating routines, such as 
-reading and decoding they keyboard and reading and writing characters 
-to and from the cassette interface.</p></td></tr> 
+<p>The top 2K was the monitor which contained some basic machine operating 
+routines - such as reading and decoding they keyboard and reading and 
+writing characters to and from the cassette interface.</p></td></tr> 
 </table>
 <h3>Modifications</h3>
 <p>Because of the simple nature of the hardware, it was very easy to 
@@ -107,7 +107,7 @@ power supply.</p></li>
 <p>The 6502 had a 1&mu;s cycle time and used a 1MHz external clock to
 generate it, however most CPUs could run quite happily at faster clock
 speeds.  
-Sine the UK101 had all its clock signals derived from a single 8MHz 
+Since the UK101 had all its clock signals derived from a single 8MHz 
 timer it was easy to find a 2MHz signal and attach it to the CPU 
 clock pin, effectively doubling the machine speed.</p></li>
 <li>Improving the video

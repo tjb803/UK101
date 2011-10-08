@@ -49,7 +49,7 @@ Latest Improvements
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
 
-v1.0.1
+v1.1.0
  - "baud.rate" property to allow correct ACIA timing signals
  - greatly reduced CPU usage 
  - keyboard window doesn't need to be selected to type
@@ -67,7 +67,7 @@ Release History
 v0.5.0  December 2010  First public release
 v0.6.0  January 2011   Bug fixes 
 v1.0.0  February 2011  Add Ohio Superboard support
-v1.0.1  April 2011     ACIA support for 8K Super Invaders
+v1.1.0  October 2011   ACIA support for 8K Super Invaders
 
 ===========
 Tim Baldwin

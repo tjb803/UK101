@@ -49,7 +49,7 @@ player used for saving and loading programs to and from storage tapes.</p>
 the complete RAM memory contents, the system configuration and the size, 
 position any layout of all the application windows.</p>
 <p>The image can be provided as a parameter when starting the application
-or it may be loader later using the <a href=#opctl>machine control panel</a>
+or it may be loaded later using the <a href=#opctl>machine control panel</a>
 window.
 If no image is provided a default window layout will be used.</p>
 <p>To close the system just close the main window.
@@ -77,7 +77,7 @@ Pressing the <i>Dump</i> button will produce a
 be formatted and displayed using the
 <a href="utilities.html#pdump">dump file formatter</a> utility).
 Toggling the <i>Trace</i> button will turn on and off the
-<a href=extras.html#trace">system instruction trace</a> (this can
+<a href="extras.html#trace">system instruction trace</a> (this can
 be formatted and displayed using the 
 <a href="utilities.html#ptrace">trace file formatter</a> utility).
 Pressing the <i>Reset</i> button will perform a hardware reset of 
@@ -97,12 +97,10 @@ display being common.
 <p>A number of aspects of the video display can be changed using 
 the <a href="config.html#video">video configuration</a> properties,
 including the number of lines displayed, the physical size of the 
-video output and the screen colour, which can be set to:
-<table frame="void">
-<tr><td><img src="image/vidwhite.jpg" alt="White"/><td>
-<td><img src="image/vidgreen.jpg" alt="Green"/><td>
-<td><img src="image/vidamber.jpg" alt="Amber"/><td></tr>
-</table></td>
+video output and the screen colour, which can be set to:</p>
+<p><img src="image/vidwhite.jpg" alt="White"/>
+<img src="image/vidgreen.jpg" alt="Green"/>
+<img src="image/vidamber.jpg" alt="Amber"/></td>
 </tr></table>
 <hr>
 <h2 id="opkbd">The Keyboard</h2>
@@ -126,14 +124,14 @@ keyboard layout is not identical.
 For example on the UK101 the <i>shift-8</i> key gives an open parenthesis,
 not an asterisk, and <i>shift-9</i> gives the close parenthesis. 
 This can make keyboard input in the simulator a little difficult.
-To try to overcome the problem I allow the keyboard to work in two different
+To try to overcome this problem the keyboard can work in two different
 &quot;modes:&quot;, selected by the checkbox in the bottom right-hand
 corner: <img src="image/kbmode.jpg" align="top"/>.
 <ul>
 <li>In the <b>default</b> mode (checkbox unticked) the simulator will 
 attempt to interpret the keys typed on the PC keyboard and provide the 
 correct key presses to the UK101 so that the characters typed on the
-PC are seen by the UK101.
+PC are those seen by the UK101.
 So, for example, if you type an open square-bracket on the PC the 
 simulator will press the <i>shift-K</i> key to produce a correct
 open square-bracket keystroke on the UK101.

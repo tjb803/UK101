@@ -13,7 +13,7 @@
 correspond with typical hardware and software changes that
 would have been made to real machines.</p>
 <p>This configuration is controlled by a set of system properties
-that are processed when the program starts up.
+that are processed when the simulator starts up.
 There are a number of different ways in which these properties 
 may be provided.
 Combinations of these methods can also be used, with properties
@@ -32,13 +32,13 @@ placed in the same directory as the program JAR file.
 This can be useful if you always want to set some specific 
 property values.</li>
 <li><i>Additional properties file</i>.
-The command line parameter <code>-configuration</code> (or simply
+The command line parameter <code>-configuration</code> (or
 <code>-c</code>) can be used to point to an alternative properties
 file.
 This is useful if you want to keep a number of different
 configurations available.</li>
 <li><i>Command line overrides</i>.
-The command line parameter <code>-properties</code> (or simply
+The command line parameter <code>-properties</code> (or
 <code>-p</code>) can be used to apply one or more property
 overrides from the command line. 
 If more than one property is required a semicolon should be used
