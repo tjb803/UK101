@@ -106,3 +106,12 @@ src/uk101/view/component/SmallButton.java -text
 src/uk101/view/component/SmallToggle.java -text
 src/uk101/view/component/TapeFormat.java -text
 src/uk101/view/component/VideoScreen.java -text
+test/UK101[!!-~]Main.launch -text
+test/src/uk101/data/TestUK101Streams.java -text
+test/src/uk101/hardware/TestALU.java -text
+test/src/uk101/view/BaseViewTest.java -text
+test/src/uk101/view/TestCassetteView.java -text
+test/src/uk101/view/TestKeyboardView.java -text
+test/src/uk101/view/TestMachinelView.java -text
+test/src/uk101/view/TestVideoView.java -text
+test/src/uk101/view/component/BaseComponentTest.java -text
