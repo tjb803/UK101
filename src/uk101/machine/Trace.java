@@ -1,0 +1,165 @@
+/**
+ * Compukit UK101 Simulator
+ *
+ * (C) Copyright Tim Baldwin 2010
+ */
+package uk101.machine;
+
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
+
+/**
+ * Capture and record a CPU instruction trace.
+ *
+ * @author Baldwin
+ */
+public class Trace implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    static final int BUFFER_SIZE = 8192;
+
+    /*
+     * Trace entry
+     */
+    public static class Entry implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        public short PC;
+        public byte A, X, Y, S, P;
+        public byte[] instruction;
+        public int length;
+        public int addr;
+
+        public Entry(short pc, byte a, byte x, byte y, byte s, byte p) {
+            PC = pc;
+            A = a;  X = x;  Y = y;
+            S = s;
+            P = p;
+            instruction = new byte[3];
+            length = 0;
+        }
+
+        // Update current entry with decoded instruction details
+        public void addByte(byte b) {
+            instruction[length++] = b;
+        }
+
+        public void addWord(short w) {
+            instruction[length++] = Data.getLoByte(w);
+            instruction[length++] = Data.getHiByte(w);
+        }
+
+        public void addAddr(int i) {
+            addr = i;
+        }
+    }
+
+    // Identification
+    public String name;         // System name;
+    public String version;      // System version
+    public Date timestamp;      // Time-stamp of dump
+
+    transient Entry[] traceLog;
+    transient int maximum;
+    transient int position;
+
+    transient ObjectOutputStream out;
+    transient ObjectInputStream in;
+
+    public Trace(Computer computer) {
+        name = computer.name;
+        version = computer.version;
+        timestamp = new Date();
+
+        maximum = BUFFER_SIZE;
+        position = 0;
+        traceLog = new Entry[maximum];
+    }
+
+    // Log a new trace entry
+    public Entry trace(short pc, byte a, byte x, byte y, byte s, byte p) {
+        if (position == maximum) {
+            flush(false);
+            position = 0;
+        }
+        Entry entry = new Entry(pc, a, x, y, s, p);
+        traceLog[position++] = entry;
+        return entry;
+    }
+
+    // Write and close the trace file
+    public void write() {
+        flush(true);
+    }
+
+    // Flush buffer to disk
+    void flush(boolean close) {
+        if (out == null) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss-SSS");
+            String filename = "uk101-" + df.format(timestamp) + ".trace";
+            try {
+                FileOutputStream fout = new FileOutputStream(filename);
+                DeflaterOutputStream zout = new DeflaterOutputStream(fout);
+                out = new ObjectOutputStream(zout);
+                out.writeObject(this);
+            } catch (IOException e) {
+                System.err.println(e);
+            }
+        }
+        if (out != null) {
+            try {
+                for (int i = 0; i < position; i++) {
+                    out.writeObject(traceLog[i]);
+                }
+                if (close) {
+                    out.close();
+                    out = null;
+                }
+            } catch (IOException e) {
+                System.err.println(e);
+            }
+        }
+    }
+
+    // Return trace entries from saved trace file
+    public Entry nextEntry() {
+        Entry entry = null;
+        if (in != null) {
+            try {
+                entry = (Entry)in.readObject();
+            } catch (EOFException e) {
+                // Assume end of file reached
+            } catch (Exception e) {
+                System.err.println(e);
+            }
+        }
+        return entry;
+    }
+
+    /*
+     * Read a trace file
+     */
+    public static Trace readTrace(File file) {
+        Trace trace = null;
+        try {
+            InputStream stream = new InflaterInputStream(new FileInputStream(file));
+            ObjectInputStream in = new ObjectInputStream(stream);
+            trace = (Trace)in.readObject();
+            trace.in = in;
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        return trace;
+    }
+}
