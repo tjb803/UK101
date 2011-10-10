@@ -1,5 +1,6 @@
 * text=auto !eol
 /.classpath -text
+/.project -text
 .settings/org.eclipse.jdt.core.prefs -text
 build/UK101[!!-~]build.launch -text
 build/bugs.txt -text
