@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Compukit UK101 Simulator - History</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="5" width="100%">
+<tr align="center"><td><img src="image/uk101.gif" alt="UK101"/></td></tr>
+</table>
+<h1>Some History</h1>
+<p><img src="image/board1.jpg" alt="main board" align="left"/>
+The Compukit UK101 was a single-board computer from the early days
+of hobby computing in the late 1970's and early 1980's.
+It had a 6502 processor running at 1Mhz and a small amount of RAM,
+usually 4K or 8K bytes.</p>  
+<p>There was a full size, reasonable quality proper keyboard for input;
+video output, as was common for hobby computers at the time, was got
+by hooking up to a standard TV set and program storage was via a 300
+baud cassette tape interface. 
+The machine was essentially a clone of the 
+<a href="operation.html#osi">Ohio Superboard II</a> from the 
+US company OSI but was modified to work rather better with the UK TV 
+standard.</p>
+<p>Like most machines of the time it had a BASIC interpreter available
+in ROM and an additional &quot;monitor&quot; ROM with provided the 
+bootstrap functions and basic I/O facilities.
+<p>The Compukit UK101 was sold by as a kit from the Compshop in New Barnet
+and originally cost about &pound;219.00.  
+It was first published and described as a series of articles in the 
+magazine <i>Practical Electronics</i> starting in June 1979 and was 
+supported by the magazine for a good few years.  
+<p>The Compukit UK101 was the first computer I owned and I still have it
+somewhere in my loft.
+One day I will get it out and get it working again.
+<br clear="left">
+<hr>
+<h2>Machine Architecture</h2>
+<p>The UK101 was a very simple machine, apart from the 6502 processor,
+a 6850 asynchronous communications controller and RAM and ROM chips,
+just about everything was built from standard TTL logic - there were
+no custom ICs at all.
+The was an 'expansion' socket on the PCB (the big empty socket on the 
+right above the keyboard in the picture above) that provided access 
+to all the address bus and data bus lines plus various other control 
+signals, allowing, in theory, a range of additional hardware to be
+plugged in.</p>
+<p>The 6502 could address 64kB of RAM and everything on the machine 
+was memory-mapped into that address space:</p>
+<table frame="box" rules="all" cellpadding="5">
+<tr valign="top"><td>0x0000<br>onwards</td>
+<td>Start of RAM
+<p>The standard machine came with 4K of RAM but there were sockets on
+the PCB to allow up to 8K to be installed (in 1K increments).  
+Since the next thing in memory was at address 0xA000, in theory,
+with a suitable expansion board, you could have up to 40K of RAM
+installed - this would have been rather expensive in 1979!</p></td></tr>
+<tr><td>0xA000<br>to<br>0xBFFF</td>
+<td>The BASIC ROM 
+<p>This was 8K and was actually in 4 2K ROMs (as a single 8K ROM wasn't
+available at any reasonable price).  
+However the PCB could support a single 8K ROM if one became available 
+leaving 3 empty sockets for potential use by other ROM software.</p></td></tr> 
+<tr><td>0xD000<br>to<br>0xD3FF</td>
+<td>The video RAM
+<p>The standard machine had 1K of video RAM arranged as 16 rows of 64
+characters, although due to the simple video display circuitry (there
+was no custom video chip remember) not all those 64 characters could be 
+seen on a standard TV.
+You normally got about 48 characters displayed which curiously were not 
+the first or last 48 from the line but 48 starting from somewhere in
+the middle, usually starting at about 13 characters in.</p></td></tr>
+<tr><td>0xDF00</td>
+<td>The Keyboard
+<p>The keyboard was mapped as a single byte. 
+The keys were arranged in an 8x8 matrix and to read the keyboard you 
+had to write a 'column' byte to the keyboard port and read back a
+'row' byte.
+Using the written 'column' value and the returned 'row' value you
+could determine which key or keys was pressed.  
+The monitor contained routines to do this and decode the key to 
+its ASCII character value.</p></td></tr>
+<tr><td>0xF000<br>and<br>0xF001</td>
+<td>The Cassette port
+<p>This was actually the status and data ports of the 6850 ACIA, which
+was used to drive the simple cassette interface.
+No interrupts were used so you had to poll the status port when reading
+or writing the cassette to see when data was available.</p></td></tr>
+<tr><td>0xF800<br>to<br>0xFFFF</td>
+<td>The Monitor ROM
+<p>The top 2K was the monitor which contained some basic machine operating 
+routines - such as reading and decoding they keyboard and reading and 
+writing characters to and from the cassette interface.</p></td></tr> 
+</table>
+<h3>Modifications</h3>
+<p>Because of the simple nature of the hardware, it was very easy to 
+modify the machine.
+Some very common modifications included:
+<ul>
+<li>External power supply
+<p>There was an on-board power supply (it just needed an external
+transformer), but it was under-rated and the voltage regulator chip
+was prone to failing.
+So it was quite common to remove it and use a rather better external
+power supply.</p></li>
+<li>Overclocking the the CPU
+<p>The 6502 had a 1&mu;s cycle time and used a 1MHz external clock to
+generate it, however most CPUs could run quite happily at faster clock
+speeds.  
+Since the UK101 had all its clock signals derived from a single 8MHz 
+timer it was easy to find a 2MHz signal and attach it to the CPU 
+clock pin, effectively doubling the machine speed.</p></li>
+<li>Improving the video
+<p>It was relatively simple to double the video RAM to 2K and then
+display 32 lines instead of the standard 16, which was a very useful
+extension.</p></li>
+<li>Increasing the cassette baud rate
+<p>The standard cassette interface ran at 300 baud which was reliable
+but pretty slow.  
+It was simple to double this to 600 and even double again to 1200,
+as long as you used a decent quality tape recorder  - running the 
+CPU at 2MHz also helped a lot when trying to get 1200 baud to work
+reliably.</p></li>
+</ul>
+<hr>
+<h2>Further information</h2>
+<p>Quite a lot of additional information can be found by searching
+the internet for &quot;Compukit UK101&quot;.
+A few good starting places include:</p>
+<ul compact>
+<li><a href="http://en.wikipedia.org/wiki/Compukit_UK101">
+http://en.wikipedia.org/wiki/Compukit_UK101</a> - the Wikipedia entry 
+(still a little brief).</li>
+<li><a href="http://en.wikipedia.org/wiki/Ohio_Scientific">
+http://en.wikipedia.org/wiki/Ohio_Scientific</a> - the Ohio Scientific on which
+the UK101 was based.
+<li><a href="http://www.gifford.co.uk/~coredump/uk101.htm">
+http://www.gifford.co.uk/~coredump/uk101.htm</a> - John Honniball's 
+excellent UK101 pages.</li>
+<li><a href="http://www.compukit.org/">
+http://www.compukit.org/</a> - Ian McLaughlin's UK101 pages and links.</li>
+<li><a href="http://compukituk101.blogspot.com/2009/01/compukit-uk101-revisited.html">
+http://compukituk101.blogspot.com/2009/01/compukit-uk101-revisited.html</a> - a
+blog article about bringing a 30-year old UK101 back to life.</li>
+</ul>
+<p>By the way, although the UK101 was the first machine I owned, the first
+machine I did any programming on was an Elliott 803.
+You can find my simulation of that machine 
+<a href="http://elliott803.sourceforge.net">here</a>.</p>
+<br><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>February 2011
+<br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
+<td align="right">Return to <a href="index.html">index</a>
+<br><br>&copy; Tim Baldwin 2010,2011</td></tr>
+</table>
+</body>
+</html>

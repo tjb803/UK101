@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Compukit UK101 Simulator - System Configuration</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="5" width="100%">
+<tr align="center"><td><img src="image/uk101.gif" alt="UK101"/></td></tr>
+</table>
+<h1>System Configuration</h1>
+<p>A number of aspects of the simulation can be changed to
+correspond with typical hardware and software changes that
+would have been made to real machines.</p>
+<p>This configuration is controlled by a set of system properties
+that are processed when the simulator starts up.
+There are a number of different ways in which these properties 
+may be provided.
+Combinations of these methods can also be used, with properties
+from later in the list taking precedence over those earlier in
+the list:
+<ol>
+<li><i>Do nothing</i>.
+A default set of properties corresponding to a
+standard machine configuration will be used.</li>
+<li><i>Load a <a href="operation.html#start">machine image</a></i>.
+The properties saved as part of the machine image will be 
+applied.
+<li><i>Default properties file</i>.
+A Java properties file called <code>uk101.properties</code> can be 
+placed in the same directory as the program JAR file.
+This can be useful if you always want to set some specific 
+property values.</li>
+<li><i>Additional properties file</i>.
+The command line parameter <code>-configuration</code> (or
+<code>-c</code>) can be used to point to an alternative properties
+file.
+This is useful if you want to keep a number of different
+configurations available.</li>
+<li><i>Command line overrides</i>.
+The command line parameter <code>-properties</code> (or
+<code>-p</code>) can be used to apply one or more property
+overrides from the command line. 
+If more than one property is required a semicolon should be used
+to separate them.
+This can be useful to temporarily try the effect of an 
+individual property or two. 
+</ol>  
+<p>As an example the following start-up command could be used
+to start up the simulation temporarily with a large size, green 
+display and a 2MHz CPU:</p>
+<blockquote><pre>
+java -jar uk101-n.n.n.jar -p cpu.speed=2;screen.size=2;screen.colour=green
+</pre></blockquote>
+<p>An example of a Java properties file that contains 
+the default configuration can be found in the file:
+<blockquote><pre>
+<a href="../samples/properties/uk101.properties">samples/properties/uk101.properties</a>
+</pre></blockquote>
+<p>An example of a Java properties file that contains settings
+suitable for emulating an 
+<a href="operation.html#osi">Ohio Scientific Superboard II</a> can be 
+found in the file:
+<blockquote><pre>
+<a href="../samples/properties/superboard.properties">samples/properties/superboard.properties</a>
+</pre></blockquote>
+<p>The following sections list all the property names and property
+values that can be used.
+Note that property names and values are case-sensitive.</p>
+<hr>
+<h2 id="cpu">CPU</h2>
+<p>This setting controls details of the CPU.</p>
+<table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
+<tr><th width="15%">Name</th><th width="15%">Values</th>
+<th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>cpu.speed</code></td>
+<td><code>0</code>,&nbsp;<code>1</code>&nbsp;or&nbsp;<code>2</code></td>
+<td align="center"><code>1</code></td>
+<td>This defines the maximum simulated CPU speed in MHz.
+A standard 6502 ran at 1Mhz but most could be over-clocked to 2Mhz quite
+successfully, which doubles the speed of the machine (although some
+games may then run too fast).
+<p>Setting a value of <code>0</code> will cause the simulation to
+run as fast as it can.</p></td></tr>
+</table>
+<p><i>Note: </i>This setting represents a maximum simulation speed.  
+It is possible that an older or slower PC will not be able reach 
+the maximum requested.</p>
+<hr>
+<h2 id="memory">RAM and ROM</h2>
+<p>These settings control details of the installed RAM and ROMs.</p>
+<table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
+<tr><th width="15%">Name</th><th width="15%">Values</th>
+<th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>ram.size</code></td>
+<td>from <code>4</code> to <code>40</code></td>
+<td align="center"><code>8</code></td>
+<td>This defines amount of RAM installed in KBytes.
+the standard machine came with 4KB and there were sockets on the 
+board to allow up to 8KB to be installed.
+In theory, with an expansion board, up to another 32KB could be
+installed giving an absolute maximum contiguous RAM of 40KB.</td></tr>
+<tr><td><code>rom.monitor</code></td>
+<td><code>MONUK02.ROM</code><br>or <code>filename</code></td><td/>
+<td>This defines the monitor ROM that is installed.
+The value can be the built-in name <code>MONUK02.ROM</code> or it can
+be the name of a file containing a replacement ROM.
+Several better replacement ROMs were available for the UK101, the 
+most popular being the CEGMON ROM.</td>
+<tr><td><code>rom.basic</code></td>
+<td><code>BASUK101.ROM</code><br>or <code>filename</code></td><td/>
+<td>This defines the BASIC ROM that is installed.
+The value can be the built-in name <code>BASUK101.ROM</code> or it can
+be the name of a file containing a replacement ROM.</td>
+<tr><td><code>rom.charset</code></td>
+<td><code>CHGUK101.ROM</code><br>or <code>filename</code></td><td/>
+<td>This defines the video character generator ROM that is installed.
+The value can be the built-in name <code>CHGUK101.ROM</code> or it can
+be the name of a file containing a replacement ROM.</td>
+</table>
+<p/>
+<hr>
+<h2 id="acia">ACIA Baud Rate</h2>
+<p>This setting controls the default baud rate for the ACIA.</p>
+<table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
+<tr><th width="15%">Name</th><th width="15%">Values</th>
+<th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>baud.rate</code></td>
+<td>from <code>110</code> to <code>115200</code></td>
+<td align="center"><code>300</code></td>
+<td>This defines default baud rate of the ACIA. 
+<p>Some programs (in particular some games) relied on the ACIA control
+signals to generate accurate timings that were independent of the CPU 
+speed.</p></td></tr>
+</table>
+<p><i>Note:</i> The ACIA baud rate setting is ignored when reading or 
+writing to a simulated cassette tape, these operations simply run as fast
+as they can.</p>
+<hr>
+<h2 id="keyboard">Keyboard</h2>
+<p>This settings controls the keyboard layout and available keys.</p>
+<table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
+<tr><th width="15%">Name</th><th width="15%">Values</th>
+<th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>keyboard</code></td>
+<td><code>uk</code> or <code>us</code></td>
+<td align="center"><code>uk</code></td>
+<td>This defines keyboard layout and the available keys.
+The setting <code>uk</code> gives a UK101 keyboard and the setting
+<code>us</code> gives an Ohio Scientific Superboard II keyboard.</td></tr>
+</table>
+<p/>
+<hr>
+<h2 id="video">Video Hardware</h2>
+<p>These settings control the details of the video hardware.</p>
+<table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
+<tr><th width="15%">Name</th><th width="15%">Values</th>
+<th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>video.rows</code></td>
+<td>from <code>16</code> to <code>32</code></td>
+<td align="center"><code>16</code></td>
+<td>This defines the number of rows in the video buffer.</td>
+<tr><td><code>video.cols</code></td>
+<td>from <code>32</code> to <code>64</code></td>
+<td align="center"><code>64</code></td>
+<td>This defines the number of columns in the video buffer.</td></tr>
+</table>
+<p><i>Note:</i> The settings of the video hardware define the amount of 
+video RAM (rows x columns rounded up to the nearest 1K boundary) and 
+the geometry of screen buffer.
+This is not quite the same as what gets displayed on the screen as 
+real UK101's simple video hardware was not able to scan all of the
+memory locations to the TV output.
+Some characters we &quot;lost&quot; from the beginning and end of
+each scan line.
+The <a href="#screen">screen display</a> section configures this.</p> 
+<hr>
+<h2 id="screen">Screen Display</h2>
+<p>These settings control the appearance of the video output.</p>
+<table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
+<tr><th width="15%">Name</th><th width="15%">Values</th>
+<th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>screen.width</code></td>
+<td>from <code>16</code> to <code>64</code></td>
+<td align="center"><code>48</code></td>
+<td>This defines the number of characters visible on each screen line.</td>
+<tr><td><code>screen.offset</code></td>
+<td>from <code>0</code> to <code>63</code></td>
+<td align="center"><code>13</code></td>
+<td>This defines the offset of the first visible character on 
+each row of the hardware video buffer.</td>
+<tr><td><code>screen.size</code></td>
+<td><code>1</code> or <code>2</code></td>
+<td align="center"><code>1</code></td>
+<td>This defines the size of the video display: <code>1</code> is 
+a smaller display, <code>2</code> is a larger display.</td>
+<tr><td><code>screen.colour</code><br><code>screen.color</code></td>
+<td><code>white</code>, <code>green</code> or <code>amber</code></td>
+<td align="center"><code>white</code></td>
+<td>This defines the colour of the screen display.</td>
+<tr><td><code>screen.update</code></td>
+<td><code>async</code> or <code>sync</code></td>
+<td align="center"><code>async</code></td>
+<td>This defines how screen updates are performed.
+<table frame="void">
+<tr valign="top"><td><code>async&nbsp;</code></td> 
+<td>performs all updates via the Java Swing event dispatch thread.
+This is a more correct way to update the screen but can give slower
+results on older PCs.</td></tr>
+<tr valign="top"><td><code>sync&nbsp;</code></td>
+<td>performs updates to each character cell as they are written
+by the simulation - this may give faster output but can lead to 
+some screen corruption if there are windows overlapping the video
+window.</td></tr>
+</table></td>
+</table>
+<p><i>Note:</i> On any modern PC, especially anything with a dual
+or multicore processor, the default <i>async</i> screen update option
+is likely to produce the best results.
+On older hardware the <i>sync</i> option may result in faster and/or
+smoother operation.</p>
+<br><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>April 2011
+<br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
+<td align="right">Return to <a href="index.html">index</a>
+<br><br>&copy; Tim Baldwin 2010,2011</td></tr>
+</table>
+</body>
+</html>

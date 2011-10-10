@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Compukit UK101 Simulator - Operation Guide</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="5" width="100%">
+<tr align="center"><td><img src="image/uk101.gif" alt="UK101"/></td></tr>
+</table>
+<h1>Operation Guide</h1>
+<p>The UK101 interface can be started by running the simulator JAR file or by
+running the <code>uk101.Main</code> class within the JAR.</p>
+<h3>Command</h3>
+<blockquote><pre>
+   <code>java -jar uk101-n.n.n.jar [options] [machine]</code> 
+or <code>java <b>uk101.Main</b> [options] [machine]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>machine</code></dt><dd>A previously saved machine image.</dd>
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-look <i>lookandfeel</i></code></dt><dd>The name of the Java GUI 
+look-and-feel to use.
+By default the standard platform look-and-feel will be used.
+Other look-and-feels that may be available (depending on operating system
+and Java version) include: <code>metal</code>, <code>windows</code>, 
+<code>classic</code>, <code>motif</code>, <code>gtk</code> and <code>nimbus</code>.</dd>
+<dt><code>-c, -configuration <i>configFile</i></code></dt><dd>The name of a 
+properties file containing system configuration properties.</dd>
+<dt><code>-p, -properties <i>systemProps</i></code></dt><dd>One or more 
+system configuration properties.
+Configuration properties are described in 
+<a href="config.html">system configuration</a>.</dd>
+</dl></blockquote>
+<p>The GUI interface displays a main window containing several smaller internal
+windows representing the various hardware and devices that form the UK101
+simulation.
+These windows can be moved around and resized (or minimized) as required.
+The current layout can be saved as part of a machine image and restored 
+in a later run.</p>
+<p>Most interaction will take place with the keyboard and with the cassette
+player used for saving and loading programs to and from storage tapes.</p> 
+<hr>
+<h2 id="start">Start Up and Shut Down</h2>
+<p>When the simulator starts up it can load a pre-saved machine image containing
+the complete RAM memory contents, the system configuration and the size, 
+position any layout of all the application windows.</p>
+<p>The image can be provided as a parameter when starting the application
+or it may be loaded later using the <a href=#opctl>machine control panel</a>
+window.
+If no image is provided a default window layout will be used.</p>
+<p>To close the system just close the main window.
+Make sure you save anything you want to keep before you do this.</p>
+<hr> 
+<h2 id="opctl">The Machine Control Panel</h2>
+<table frame="void"><tr>
+<td valign="top"><img src="image/opctl.jpg" alt="Machine Control"/></td>
+<td valign="top">The machine control panel provides details of the 
+current machine configuration, provides the buttons to load and save 
+complete machine images and provides some simple debugging functions.
+<p>The <i>Load...</i> and <i>Save...</i> buttons are used to save the 
+current machine image or restore a previously saved machine image.
+A machine image consists of the complete RAM memory and may also include the 
+system configuration and the the size, position and layout of all the windows 
+on the screen.
+They are typically saved as files with an extension of 
+&quot;<code>.uk101</code>&quot;.
+Loading and saving a machine image is much faster and a lot simpler
+than saving programs to cassette tapes.</p></td>
+</tr></table>
+<p>At the bottom of the window are a number of debug buttons.
+Pressing the <i>Dump</i> button will produce a
+<a href="extras.html#dump">system memory dump</a> (this can 
+be formatted and displayed using the
+<a href="utilities.html#pdump">dump file formatter</a> utility).
+Toggling the <i>Trace</i> button will turn on and off the
+<a href="extras.html#trace">system instruction trace</a> (this can
+be formatted and displayed using the 
+<a href="utilities.html#ptrace">trace file formatter</a> utility).
+Pressing the <i>Reset</i> button will perform a hardware reset of 
+the CPU.
+Pressing the <i>NMI</i> or <i>IRQ</i> buttons will raise the 
+corresponding CPU interrupt.</p>
+<hr>
+<h2 id="opvid">The Video Display</h2>
+<table frame="void"><tr>
+<td valign="top"><img src="image/opvid.jpg" alt="Video Display"/></td>
+<td valign="top">The video display shows the computer output.
+By default this displays 16 lines of 48 characters which was 
+typically what was seen on a normal TV plugged into a standard
+UK101.
+Machines were often modified to improve the video with a 32-line
+display being common.
+<p>A number of aspects of the video display can be changed using 
+the <a href="config.html#video">video configuration</a> properties,
+including the number of lines displayed, the physical size of the 
+video output and the screen colour, which can be set to:</p>
+<p><img src="image/vidwhite.jpg" alt="White"/>
+<img src="image/vidgreen.jpg" alt="Green"/>
+<img src="image/vidamber.jpg" alt="Amber"/></td>
+</tr></table>
+<hr>
+<h2 id="opkbd">The Keyboard</h2>
+<table frame="void"><tr>
+<td valign="top"><img src="image/opkbd.jpg" alt="Keyboard"/></td>
+<td valign="top">The keyboard shows an image of the keys, key-markings 
+and the key-layout from the real machine.
+You can operate the keyboard either by clicking the appropriate keys with
+the mouse, or by typing on the PC keyboard.
+<p>In general the UK101 needs all its characters in UPPERCASE, so it is 
+important to ensure that the <tt>SHIFT LOCK</tt> key is always locked in
+the down position.  
+This should be the default when the system is started up.</p></td>
+</tr></table>
+<p>Note that the machine reads the keyboard by polling and quite a lot of 
+instructions need to be executed to decode any one keypress - if you type
+too fast you may find some keystrokes get missed.</p>
+<h3 id="kbmode">The Keyboard Mode</h3> 
+The keyboard layout, although very similar to a standard UK or US PC
+keyboard layout is not identical.  
+For example on the UK101 the <i>shift-8</i> key gives an open parenthesis,
+not an asterisk, and <i>shift-9</i> gives the close parenthesis. 
+This can make keyboard input in the simulator a little difficult.
+To try to overcome this problem the keyboard can work in two different
+&quot;modes:&quot;, selected by the checkbox in the bottom right-hand
+corner: <img src="image/kbmode.jpg" align="top"/>.
+<ul>
+<li>In the <b>default</b> mode (checkbox unticked) the simulator will 
+attempt to interpret the keys typed on the PC keyboard and provide the 
+correct key presses to the UK101 so that the characters typed on the
+PC are those seen by the UK101.
+So, for example, if you type an open square-bracket on the PC the 
+simulator will press the <i>shift-K</i> key to produce a correct
+open square-bracket keystroke on the UK101.
+In general this works very well and makes typing of programs 
+much easier.<p/></li>
+<li>In the <b>raw</b> mode (checkbox ticked) the keyboard is mapped
+much more closely to the original - so, for example a <i>shift-K</i>
+on the PC would produce an open square-bracket and a <i>shift-8</i> 
+an open parenthesis.</li>
+</ul>
+<p>Raw mode may be needed when running programs that interact directly
+with the keyboard, most games for example, as the mapping done in the
+default mode is likely to confuse things.</p>  
+<h3>Using the Reset Keys</h3>
+<p>To the right of the <tt>SHIFT LOCK</tt> are two keys marked <tt>RESET</tt>.
+These are used to perform a hardware reset on the CPU and on a real UK101
+you need to press both keys together to reset (the idea being that you
+don't press one accidentally while stabbing for the <tt>RETURN</tt> key).
+To emulate this in the simulator you can only do a reset by clicking
+one of the <tt>RESET</tt> keys (either one) with both mouse buttons 
+at once.</p>
+<hr>
+<h2 id="opcas">The Cassette Recorder</h2>
+<table frame="void"><tr>
+<td valign="top"><img src="image/opcas.jpg" align="left"/></td>
+<td valign="top">The cassette recorder allows programs to be loaded 
+from and saved to cassette tapes.
+In this simulation &quot;cassette tapes&quot; are simply files on the
+PC containing the bytes that would have been stored on a cassette.
+<p>To use the cassette recorder first press the <i>Open...</i> button and
+select a tape to load or enter a new file name if you going to be 
+saving a program.
+To start the tape playing (ready for loading) press the <i>Play</i>
+button; to start the tape recording (ready for saving) press the
+<i>Rec</i> button; to stop playing or recording press the 
+<i>Stop</i> button.</p></td>
+</tr></table>
+<p>You don't have to be too careful about when you press the <i>Play</i>,
+<i>Rec</i> or <i>Stop</i> buttons.
+For example you can press <i>Play</i> and wait as long as you like
+before you type the <code>LOAD</code> command in BASIC, data will 
+not be read from the cassette player until the machine needs
+it - a definite advantage over a real system.
+Similarly if you press <i>Rec</i> nothing will actually be saved
+until the <code>SAVE</code> command lists data to the output.</p> 
+<p><img src="image/tapemode.jpg" align="left"/>
+When opening a new tape you will need to select the correct 
+<a href="samples.html#format">tape format</a> to be used for 
+reading and/or writing.</p>
+<p>The default setting for input tapes is <i>Automatic</i> which will
+allow the system to pick the correct format based on the contents 
+of the tape.
+Most of the time this works well and is exactly what you want.</p>
+<p>The default setting for output tapes is <i>ASCII</i> which is the
+best setting for saving BASIC programs as it is a format which can
+be easily viewed and safely edited on the PC.
+If you are saving raw data or saving machine code programs you 
+may want to select the <i>Binary</i> output format.</p>
+<p>When a tape is playing or recording the format selected 
+will be displayed to the right of the tape name.</p>
+<br clear="left"/><hr>
+<h2 id="osi">Ohio Scientific Superboard II Emulation</h2>
+<p>The UK101 was very heavily based on the Ohio Superboard II from the
+US and has an almost identical machine architecture and design.
+This means that, by using the Monitor, BASIC and Character Generator
+ROMs from the Superboard machine, the simulator can emulate the 
+Superboard II just as well as the UK101.</p>
+<p>The two main differences are:
+<table frame="box" rules="all" cellspacing="0" cellpadding="5">
+<tr valign="top"><td width="50%"><center><img src="image/opsbvd.jpg"></center>
+<p>The video display on the Superboard was arranged as 32 rows by 
+32 columns (rather than 16 x 64) and a typical TV would probably show
+around 24 characters per line.</p></td>
+<td width="50%"><center><img src="image/opsbkb.jpg"></center>
+<p>The keyboard included a couple of extra keys (marked <tt>ESC</tt>
+and <tt>REPEAT</tt>) and the key to the left of the <tt>RETURN</tt> key was 
+marked <tt>LINE FEED</tt>.</p>
+<p>When running with the Superboard keyboard layout, the <tt>LINE FEED</tt>
+is mapped to the PC <i>backslash</i> key (which is in approximately 
+the right place on a US keyboard) and the <tt>REPEAT</tt> key is mapped 
+to the PC <i>Insert</i> key.</p>
+</td></tr>
+</table>
+<p>These differences, together with the necessary ROM files, can be 
+set in the system <a href="config.html">configuration</a>.
+A sample set of ROMs and a sample 
+<a href="../samples/properties/superboard.properties">Superboard 
+configuration</a> properties file can be found in the 
+<code>samples/properties</code> directory.</p>
+<br clear="left"/><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>April 2011
+<br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
+<td align="right">Return to <a href="index.html">index</a>
+<br><br>&copy; Tim Baldwin 2010,2011</td></tr>
+</table>
+</body>
+</html>

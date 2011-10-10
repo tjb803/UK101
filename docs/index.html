@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Compukit UK101 Simulator - Contents</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="5" width="100%">
+<tr align="center"><td><img src="image/uk101.gif" alt="UK101"/></td></tr>
+</table>
+<h1>Documentation Contents</h1>
+<p>The documentation for the Compukit UK101 simulator consists of the
+following pages:</p>
+<ul>
+<li><a href="#intro">Contents and Introduction.</a>
+Project introduction - this page.</li>
+<li><a href="history.html">History.</a>
+A brief introduction and history of the Compukit UK101 computer.</li>
+<li><a href="quickstart.html">Quick Start.</a>
+Using the simulator to run a simple program.</li>
+<li><a href="operation.html">Operation.</a>
+More detailed operating instructions.</li>
+<li><a href="config.html">System Configuration.</a>
+How to change some of the simulator settings.</li>
+<li><a href="samples.html">Sample Programs and Tapes.</a>
+Some details about the sample programs and tapes supplied with the simulator.</li>
+<li><a href="utilities.html">Utility Applications.</a>
+Details of the utility applications supplied with the simulator.</li>
+<li><a href="extras.html">Additional Functions.</a>
+Details for extra function unique to the simulator.</li>
+</ul>
+<p>For programmers interested in understanding or changing the Java source
+code for the simulator, some extra documentation is available:</p>
+<ul>
+<li><a href="prognotes.html">Source code details</a>.
+Some comments and notes about the source code for the simulator.</li>
+</ul>
+<hr>
+<h2>Project Home Page</h2>
+<p>The project itself is available from SourceForge:</p>
+<blockquote><pre>
+<a href="http://uk101.sourceforge.net">http://uk101.sourceforge.net</a>
+</pre></blockquote>
+<hr>
+<h2 id=intro>Introduction</h2>
+<h3>Project Aims</h3>
+<p>The aim of this project is to produce a simulation of the Compukit
+UK101 computer that is capable of running original UK101 programs (provided 
+they can be made available as system files rather than cassette tapes).
+In particular it is an aim to be able to run the Premier Publications
+<i>Invaders</i> space invaders game, which ought to be a good
+test of a working system.</p>
+<table frame="void">
+<tr><td><img src="image/init1.gif"/></td>
+<td><img src="image/inv1.gif"/></td>
+<td><img src="image/inv2.gif"/></td></tr>
+</table>
+<p>The project has been written in Java to enable it to run easily 
+on most systems and the user interface elements have been written as 
+simple Java Swing interfaces.
+<h3>Current Status</h3>
+<p>The project provides a fairly complete emulation of a standard UK101.
+The default configuration has 8KB of RAM and an original 16 row by 48
+column video display.
+It is fitted with the original BASIC ROMs and the 
+<a href="http://uk101.sourceforge.net/docs/pdf/newmon.pdf">New Monitor</a>
+(or MONUK02) monitor ROM.
+Many of these parameters can be changed via a set of 
+<a href="config.html">configuration properties</a>.</p>
+<hr>
+<h2>Ohio Scientific Superboard II</h2>
+<p>The UK101 was heavily based on and very similar to the US Ohio Scientific
+Superboard II machine. 
+By using the ROM images from the <a href="operation.html#osi">Superboard II</a>
+and setting the correct keyboard and video configuration this simulation 
+will work as an OSI machine and run programs for the Superboard.
+A suitable set of ROMs and a sample set of configuration properties
+can be be found in the <code>samples/properties</code> directory.</p>
+<hr>
+<h2>Additional Documentation</h2>
+<ul>
+<li><a href="http://uk101.sourceforge.net/docs/pdf/manual.pdf">UK101 Manual</a> -
+a scan of the original Compukit UK101 manual.</li>
+<li><a href="http://uk101.sourceforge.net/docs/pdf/newmon.pdf">The New
+Monitor</a> - a scan of the information sheet about the &quot;new monitor&quot;
+supplied with later machines.</li>
+<li><a href="http://uk101.sourceforge.net/docs/pdf/exmon.pdf">The Extended
+Monitor</a> - a scan of the information sheet about the 
+<a href="samples.html#exmon">extended monitor</a> provided on cassette
+tape with original systems.</li>  
+</ul>
+<hr>
+<h2>Acknowledgements</h2>
+<p>Although I don't know any of these people, I think they all deserve an
+honourable mention for starting me down a path which still continues!</p>
+<ul>
+<li><b>Dr A A Berk</b> - listed as the author of the UK101 manual and the 
+original series of <i>Practical Electronics</i> artiles, so I guess largely
+responsible for the machine.</li>
+<li><b>Mr David Fine</b> - whose name and phone number were in the manual 
+for when you needed &quot;technical advice&quot;.  
+As someone who soldered their kit together a little too quickly and then 
+found it didn't quite work first time, I phoned him and he got me up and 
+running.</li>
+<li><b>Phil Reeve</b> - listed as the author of the 
+<a href="samples.html#invade">Invaders</a> game - many a happy hour.</li>  
+</ul> 
+<p>I'm sure there are many others too.</p>
+<br><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>April 2011
+<br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
+<td align="right">
+<br><br>&copy; Tim Baldwin 2010,2011</td></tr>
+</table>
+</body>
+</html>

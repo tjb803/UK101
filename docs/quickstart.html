@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Compukit UK101 Simulator - Quick Start</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="5" width="100%">
+<tr align="center"><td><img src="image/uk101.gif" alt="UK101"/></td></tr>
+</table>
+<h1>Quick Start</h1>
+<p>This is a quick overview of how to run a simple program using the simulator.
+There is a lot more detail in the <a href="operation.html">operation guide</a>
+and in the 
+<a href="http://uk101.sourceforge.net/docs/pdf/manual.pdf">Compukit UK101 Manual</a>.</p>
+<p>In this example we'll just run a trivial BASIC program that prints a message
+onto the screen.</p>
+<hr>
+<h2>Installation</h2>
+<p>If you haven't already done so install the simulator and the related sample
+programs and documentation by unzipping the rumtime package into a 
+subdirectory on your machine.
+Make sure you have Java 5 (or later) installed and working - try typing the 
+command &quot;<kbd>java&nbsp;&#8209;version</kbd>&quot; at a terminal or command prompt 
+if you are not sure.</p>
+<p>After unzipping the runtime package you will find these files and directories:</p>
+<blockquote><table frame="void" rules="none" cellpadding="0">
+<tr><td><code>uk101-n.n.n.jar</code></td><td/><td>The program JAR file</td></tr>
+<tr><td><code>readme.txt</code></td><td width="15"/><td>Latest information</td></tr>
+<tr><td><code>license.txt</code></td><td/><td>The BSD license file</td></tr>
+<tr><td><code>docs/</code></td><td/><td>A copy of the latest documentation</td></tr>
+<tr><td><code>icons/</code></td><td/><td>Some icons that can be associated with the 
+program if required</td></tr>
+<tr><td><code>samples/</code></td><td/><td>Sample programs, tapes and properties
+files.</td></tr>
+</table></blockquote>
+<hr>
+<h2>Start Up</h2>
+To start the simulator enter the following command at a terminal or command
+prompt:
+<blockquote><pre>
+<code>java -jar uk101-n.n.n.jar</code>
+</pre></blockquote>    
+<p>on some systems (such as Windows) you should also be able to double-click
+on the JAR file to to launch the application.</p>
+<p>The simulator should start and display a window containing several smaller
+windows something like this:</p>
+<table frame="void" rules="none">
+<tr>
+<td valign="middle" width="100"><b>Top left is video display</b></td>
+<td rowspan="3"><img src="image/qs1.jpg" alt="Main Frame"/></td>
+<td align="right" valign="middle" width="100"><b>Top right is the machine control
+and configuration panel</b></td>
+</tr>
+<tr><td><br><br><br></td></tr>
+<tr>
+<td valign="middle" width="100"><b>Bottom left is keyboard for typing into the 
+machine</b></td>
+<td align="right" valign="middle" width="100"><b>Bottom right is the cassette
+recorder for loading and saving programs</b></td>
+</tr> 
+</table>
+<hr>
+<h2>A Note About the Keyboard</h2>
+<p>The keyboard window displays the layout of the real UK101 keyboard - 
+you will notice that the layout is not identical to a standard PC keyboard,
+the most noticeable difference being the symbols for the top-row numeric 
+keys. 
+The simulation attempts to hide most of these differences, so that typing 
+on the PC keyboard operates the UK101 correctly.
+See the <a href=operation.html#opkbd>keyboard operation</a> pages for more details.</p>
+<p>You can also operate the keyboard by clicking on keys with the mouse but
+this is rather tedious!</p>  
+<hr>
+<h2 id="boot">Booting the System</h2>
+<p>When the system starts or when it is <a href="#reset">reset</a> the screen 
+will display a bootstrap start-up message and waits for a key to be pressed.
+With the monitor ROM installed by default (known as the &quot;New Monitor&quot;
+or &quot;MONUK02&quot;) the initial screen will look something like the left 
+hand screen-shot below.</p>
+<p>The system is waiting for one of the keys <i>M</i> (for <i>Monitor</i>),
+<i>C</i> (for <i>Cold Start</i>) or <i>W</i> (for <i>Warm Start</i>) to be
+pressed.
+<dl compact>
+<dt><i>Cold Start</i></dt>
+<dd>A cold start completely resets the system and clears
+the memory, it then enters the BASIC interpreter.</dd>
+<dt><i>Warm Start</i>
+</dt><dd>A warm start recovers from a reset without clearing 
+memory.
+Normally this re-enters BASIC with the previous program still loaded.</dd>
+<dt><i>Monitor</i>
+</dt><dd>The monitor is a low-level machine mode monitor 
+function.</dd> 
+</dl>
+<p>Ensure that the <i>SHIFT LOCK</i> key in the keyboard window is pressed
+(which should be the default at start up, so you shouldn't have to do
+anything) and press the <i>C</i> key to perform a Cold Start.
+The system will then prompt for <code>MEMORY SIZE?</code> followed by
+<code>TERMINAL WIDTH?</code>.
+Press the <i>RETURN</i> key to accept default values for both these 
+prompts and the system should respond with some messages and an <code>OK</code>
+prompt from the BASIC interpreter - see right hand screen-shot.</p>
+<table frame="void">
+<tr><td><img src="image/qsr.gif" alt="Boot Screen"/></td>
+<td><img src="image/qsb.gif" alt="BASIC Prompt"/></td></tr>
+</table>
+<p>You are now ready for some authentic 1979-vintage BASIC programming!</p>
+<p>You could try typing a simple program such as <code>10 PRINT "HELLO!"</code>
+followed by <code>LIST</code> to list it or <code>RUN</code> to 
+execute it.</p>
+<hr>
+<h2>Loading and Running a Program</h2>
+<p>Programs would normally be loaded from cassette tapes.
+To see how this works, first type the command <code>LOAD</code> at the 
+BASIC <code>OK</code> prompt then press <i>RETURN</i>.
+Not much appears to happen - you may notice the cursor has stopped
+flashing - but the system is now waiting for input from the 
+cassette player.</p>
+<p>Press the <i>Open</i> button on the cassette player window, and in
+the file selection dialog choose the <i>samples</i> folder, then the 
+<i>basic</i> folder and then select the file called <i>hello.basic</i>.
+With the tape loaded in the cassette player press the <i>Play</i> button
+and you will see the program load into the machine, just as if it had 
+been typed.</p>
+<p>When the program finishes loading (<i>hello.basic</i> is just a two-line
+program) you need to press <i>Stop</i> on the cassette player, then press 
+the <i>SPACE</i> bar on the keyboard.
+Pressing the <i>SPACE</i> bar will end the loading mode and return to 
+accepting input from the keyboard - you should see the cursor flashing again.
+Type <code>RUN</code> to execute the newly loaded program.
+<table frame="void">
+<tr><td><img src="image/qsl.gif" alt="Loaded Program"/></td>
+<td><img src="image/qsh.gif" alt="Hello World"/></td></tr>
+</table>
+<hr>
+<h2 id="reset">Resetting the Machine</h2>
+<p>If things go wrong you can <i>reset</i> the machine and return to the 
+boot-up prompt.
+Another <i>C</i> for a <i>Cold Start</i> should get it all working again
+although a cold-start will always wipe out the contents of the memory.
+<p>To perform a reset you can either press the <i>Reset</i> button 
+in the <b>Debug</b> section of the 
+<a href="operation.html#opctl">machine control panel</a>, or you can use 
+the <i>RESET</i> keys on the keyboard. 
+On a real UK101 you had to press both <i>RESET</i> keys together to do the 
+reset, on the simulator keyboard you simulate this by clicking on either one
+of the two keys but using both mouse buttons at once.</p>
+<br><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>April 2011
+<br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
+<td align="right">Return to <a href="index.html">index</a>
+<br><br>&copy; Tim Baldwin 2010,2011</td></tr>
+</table>
+</body>
+</html>
