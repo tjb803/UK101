@@ -41,3 +41,15 @@ docs/prognotes.html -text
 docs/quickstart.html -text
 docs/samples.html -text
 docs/utilities.html -text
+samples/basic/charset.basic -text
+samples/basic/hectic.basic -text
+samples/basic/hello.basic -text
+samples/basic/nytaxi.basic -text
+samples/machines/invaders.uk101 -text
+samples/properties/BASOSI.ROM -text
+samples/properties/CHGOSI.ROM -text
+samples/properties/MONOSI.ROM -text
+samples/properties/superboard.properties -text
+samples/properties/uk101.properties -text
+samples/tapes/exmon.tape -text
+samples/tapes/invaders.tape -text
