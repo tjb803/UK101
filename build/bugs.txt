@@ -1,0 +1,35 @@
+Compukit UK101 Simulation - Bug fixes and known bugs
+====================================================
+
+v0.5.0
+------
+  First release
+   
+v0.6.0
+------
+  Improvements:
+   - Add 'video.update=async/sync' option to improve performance on slower 
+     machines
+   - Better simulation of CPU correct speed
+   - Include indication of actual processor speed
+   - Better special debug processor opcodes
+   
+  Main bug fixes:
+   - Page-0 indexed addresses not wrapping around 0xFF, which caused 
+     division in BASIC to give incorrect results 
+   - Bug with utility programs parsing command line parameters  
+   
+v1.0.0
+------ 
+  Improvements:
+   - Add support for Ohio Scientific Superboard II emulation  
+   
+v1.1.0
+------ 
+  Improvements:
+   - Add correct timing to ACIA to allow 8K Super Invaders to run! 
+   - Keyboard window no longer needs to be selected to type 
+   
+  Main bug fixes:
+   - Reduce Java CPU usage  
+    

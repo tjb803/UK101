@@ -1,2 +1,7 @@
 * text=auto !eol
 .settings/org.eclipse.jdt.core.prefs -text
+build/UK101[!!-~]build.launch -text
+build/bugs.txt -text
+build/build.xml -text
+build/license.txt -text
+build/readme.txt -text
