@@ -24,8 +24,8 @@ import java.util.List;
  *   
  * Some special cases for the option value are:
  *   null - option is a flag, either present or absent
- *   ends with a '+' - usage summary shows next option on the same line
- *   ends with a '-' - option is a synonym for another option  
+ *   starts with '+' - usage summary shows next option on the same line
+ *   starts with '=' - option is a synonym for another option  
  *
  * @author Baldwin
  */
@@ -55,10 +55,13 @@ public class Args {
             String arg = args[i];
             if (arg.startsWith("-")) {
                 arg = arg.substring(1);
+                if (arg.equals("?")) {
+                    usage();
+                }
                 if (opts != null && opts.containsKey(arg)) {
                     String remap = opts.get(arg);
-                    if (remap != null && remap.endsWith("-"))
-                        arg = remap.substring(0, remap.length()-1);
+                    if (remap != null && remap.startsWith("="))
+                        arg = remap.substring(1);
                 }
                 if (opts != null && opts.containsKey(arg)) {
                     if (opts.get(arg) != null && i < args.length-1)
@@ -68,7 +71,9 @@ public class Args {
                 } else {
                     error("Incorrect option", arg, true);
                 }
-            } else {
+            } else if (arg.equals("?")) {
+                usage();
+            } else {    
                 parameters.add(arg);
             }
         }
@@ -216,23 +221,31 @@ public class Args {
             System.err.println("  " + name + " [options] " + parms + "\n");
             String hdr = "options:";
             for (String opt : opts.keySet()) {
-                System.err.print(hdr + " -" + opt);
-                hdr = "        ";
-                String value = opts.get(opt);
-                if (value != null) {
-                    if (value.endsWith("-")) {
-                        hdr = ",";
-                    } else {
-                        if (value.endsWith("+")) {
-                            value = value.substring(0, value.length()-1);
-                            hdr = "";
+                if (!opts.values().contains("="+opt)) {
+                    System.err.print(hdr + " -" + opt);
+                    hdr = "        ";
+                    String value = opts.get(opt);
+                    if (value != null) {
+                        if (value.startsWith("=")) {
+                            String remap = value.substring(1);
+                            String reval = opts.get(remap);
+                            value = ", -" + remap;
+                            if (reval != null) {
+                                value += " " + reval;
+                            }
+                        } else {
+                            if (value.startsWith("+")) {
+                                value = value.substring(1);
+                                hdr = null;
+                            }
+                            value = " " + value;
                         }
-                        System.err.print(" " + value);
+                        System.err.print(value);
                     }
-                }
-                if (hdr.length() > 1) {
-                    System.err.println();
-                }
+                    if (hdr != null) {
+                        System.err.println();
+                    }
+                }    
             }
         }
         System.exit(1);

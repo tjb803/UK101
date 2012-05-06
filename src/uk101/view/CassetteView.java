@@ -167,7 +167,7 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
             }
         }
         if (out != null) {
-            format.setValue((out instanceof UK101OutputStream) ? TapeFormat.MODE_ASCII : TapeFormat.MODE_BINARY);
+            format.setValue((Stream.getFormat(out) == Stream.STREAM_ASCII) ? TapeFormat.MODE_ASCII : TapeFormat.MODE_BINARY);
             recorder.setOutputTape(out);
         }
     }
@@ -175,7 +175,7 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
     void playTape() {
         InputStream in = Stream.getInputStream(tapeFile, inFormat);
         if (in != null) {
-            format.setValue((in instanceof UK101InputStream) ? TapeFormat.MODE_ASCII : TapeFormat.MODE_BINARY);
+            format.setValue((Stream.getFormat(in) == Stream.STREAM_ASCII) ? TapeFormat.MODE_ASCII : TapeFormat.MODE_BINARY);
             recorder.setInputTape(in);
         }
     }

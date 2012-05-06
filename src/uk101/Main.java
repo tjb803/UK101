@@ -28,15 +28,15 @@ import uk101.view.MachineImage;
  * view of computer and allow it to be operated.
  *
  * Usage:
- *   Main [options] [machine]
+ *   uk101.Main [options] [machine]
  *
  * where:
  *   machine: a previously saved machine image
  *
  * options:
- *   -look lookAndFeel: the Java UI look-and-feel (defaults to system look and feel)
- *   -c, -configuration configFile: a properties file containing the system configuration
- *   -p, -properties systemProps: one or more system configuration properties
+ *   -look <lookAndFeel>: the Java UI look-and-feel (defaults to system look and feel)
+ *   -c, -configuration <configFile>: a properties file containing the system configuration
+ *   -p, -properties <systemProps>: one or more system configuration properties
  *
  * @author Baldwin
  */
@@ -46,9 +46,11 @@ public class Main implements Runnable {
         // Handle parameters
         Args.Map options = Args.optionMap();
         options.put("look", "lookAndFeel");
-        options.put("c", "configuration-");  options.put("configuration", "configFile");
-        options.put("p", "properties-");  options.put("properties", "systemProps");
-        Args parms = new Args("View", "[machine]", args, options);
+        options.put("c", "=configuration");  
+        options.put("configuration", "configFile");
+        options.put("p", "=properties");  
+        options.put("properties", "systemProps");
+        Args parms = new Args("uk101.Main", "[machine]", args, options);
 
         // Set the Swing look and feel
         setLookAndFeel(parms.getOption("look"));

@@ -66,6 +66,7 @@ public class Stream {
     /*
      * Check a file format to try to determine if it is binary or ASCII.  Assume
      * binary if the file contains any non-ASCII character bytes.
+     * Note: only checks first 128 bytes of the file.
      */
     public static int checkFormat(File file) throws IOException {
         int format = STREAM_ASCII;
@@ -80,5 +81,16 @@ public class Stream {
         }
         in.close();
         return format;
+    }
+    
+    /*
+     * Return the format of an input/output stream 
+     */
+    public static int getFormat(InputStream stream) {
+        return (stream instanceof UK101InputStream) ? STREAM_ASCII : STREAM_BINARY;
+    }
+    
+    public static int getFormat(OutputStream stream) {
+        return (stream instanceof UK101OutputStream) ? STREAM_ASCII : STREAM_BINARY;
     }
 }
