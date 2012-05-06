@@ -43,6 +43,7 @@ docs/prognotes.html -text
 docs/quickstart.html -text
 docs/samples.html -text
 docs/utilities.html -text
+samples/basic/blackbox.basic -text
 samples/basic/charset.basic -text
 samples/basic/hectic.basic -text
 samples/basic/hello.basic -text
