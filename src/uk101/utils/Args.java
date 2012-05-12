@@ -236,13 +236,13 @@ public class Args {
                         } else {
                             if (value.startsWith("+")) {
                                 value = value.substring(1);
-                                hdr = null;
+                                hdr = "";
                             }
                             value = " " + value;
                         }
                         System.err.print(value);
                     }
-                    if (hdr != null) {
+                    if (hdr.length() > 0) {
                         System.err.println();
                     }
                 }    
