@@ -133,7 +133,7 @@ class ALU6502 {
      * Mainly for debugging
      */
     public String toString() {
-        StringBuffer s = new StringBuffer("ALU: ");
+        StringBuilder s = new StringBuilder("ALU: ");
         s.append(isDecimal ? "BCD" : "BIN");
         return s.toString();
     }

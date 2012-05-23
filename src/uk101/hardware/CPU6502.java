@@ -71,8 +71,9 @@ public class CPU6502 {
     boolean sigRESET, sigNMI, sigIRQ;
 
     // Timing control
+    boolean useSleep;
     int speed, cpuCycles;
-    long cpuStart, nanoInterval;
+    long cpuStart, spinInterval, sleepInterval;
 
     // Debugging
     Trace trace;
@@ -81,24 +82,17 @@ public class CPU6502 {
     public CPU6502(int mhz, DataBus bus) {
         this.alu = new ALU6502();
         this.bus = bus;
-        reset();
-        calibrate();
         setMHz(mhz);
+        calibrate();
+        reset();
     }
 
     /*
      * Set/get the required processor clock speed.
      */
     public void setMHz(int mhz) {
-        // speed = cycle time in nanoseconds (or zero)
+        // speed = cycle time in nanoseconds
         speed = (mhz == 0) ? 0 : 1000/mhz;
-
-        // cycle time ought to be 1000/mhz, but due to the way the timing
-        // loops work this causes the CPU to run very slightly slow.  So
-        // the cycle time is reduced by 0.5% to try to compensate.
-        if (speed != 0) {
-            speed -= speed/200;
-        }
     }
 
     public int getMHz() {
@@ -114,8 +108,8 @@ public class CPU6502 {
      */
     public float getSpeed() {
         // Calculate speed
-        long cpuTime = System.currentTimeMillis() - cpuStart;
-        float mhz = (float)cpuCycles/(float)(cpuTime*1000);
+        float cpuTime = System.currentTimeMillis() - cpuStart;
+        float mhz = (float)cpuCycles/(cpuTime*1000);
 
         // Reset counters ready for next call
         cpuStart = System.currentTimeMillis();
@@ -124,15 +118,26 @@ public class CPU6502 {
         return mhz;
     }
 
-    // This method makes an attempt to determine the time taken to read
-    // and the granularity of the results of the System.nanoTime() timer.
+    // This method tries to determine if timing can be managed using a 
+    // Thread.sleep() (which is best for CPU usage) or if spin loops need
+    // to be used.
     void calibrate() {
-        long l1 = System.nanoTime();
-        long l2 = System.nanoTime();
-        l2 = System.nanoTime();
-        l2 = System.nanoTime();
-        l2 = System.nanoTime();
-        nanoInterval = (l2-l1)/4;
+        long nt = 0, st = 0;
+        for (int i = 0; i < 5; i++) {
+            long t1 = System.nanoTime();
+            long t2 = System.nanoTime();
+            try { Thread.sleep(0, 1); } catch (InterruptedException e) { }
+            long t3 = System.nanoTime();
+            nt += t2-t1;
+            st += t3-t2;
+        }
+        spinInterval = nt/5;
+        sleepInterval = st/5;
+        
+        // If the Thread.sleep interval is short enough for a few hundred typical
+        // instructions (assume 5 cycles per instruction) we can do timing using
+        // sleeps.  Otherwise we'll have to do it using spin loops.
+        useSleep = (sleepInterval < 500*5*speed);
     }
 
     /*
@@ -166,12 +171,18 @@ public class CPU6502 {
                         end = now;
                     }
                 }
-                while (end-now > nanoInterval) {
-                    try {
-                        Thread.sleep(0, Math.min((int)(end-now), 999999));
-                    } catch (InterruptedException e) {
+                if (useSleep) {
+                    long pause = end-now;
+                    if (pause > sleepInterval) {
+                        try {
+                            Thread.sleep(pause/1000000, (int)(pause%1000000));
+                        } catch (InterruptedException e) { }
+                        now = System.nanoTime();
                     }
-                    now = System.nanoTime();
+                } else {
+                    while (end-now > spinInterval) {
+                        now = System.nanoTime();
+                    }
                 }
             }
         }
