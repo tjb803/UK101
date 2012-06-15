@@ -22,6 +22,9 @@ import uk101.hardware.bus.DataBus;
  * @author Baldwin
  */
 public class Computer extends Thread implements DataBus {
+    
+    // General debug flag
+    public static boolean debug = false;
 
     // Version
     public String name;

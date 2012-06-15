@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2011
+ * (C) Copyright Tim Baldwin 2010,2012
  */
 package uk101;
 
@@ -37,6 +37,7 @@ import uk101.view.MachineImage;
  *   -look <lookAndFeel>: the Java UI look-and-feel (defaults to system look and feel)
  *   -c, -configuration <configFile>: a properties file containing the system configuration
  *   -p, -properties <systemProps>: one or more system configuration properties
+ *   -debug: print out debug information
  *
  * @author Baldwin
  */
@@ -50,7 +51,10 @@ public class Main implements Runnable {
         options.put("configuration", "configFile");
         options.put("p", "=properties");  
         options.put("properties", "systemProps");
+        options.put("debug", null);
         Args parms = new Args("uk101.Main", "[machine]", args, options);
+        
+        Computer.debug = parms.getFlag("debug");
 
         // Set the Swing look and feel
         setLookAndFeel(parms.getOption("look"));
@@ -77,14 +81,15 @@ public class Main implements Runnable {
     // Try to set the Swing look and feel
     private static void setLookAndFeel(String look) throws Exception {
         String lafClass = null;
+        
+        if (Computer.debug) {
+            System.out.println("Look:");
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+                System.out.println("  " + info.getName());
+        }
 
         // Look for an exact match first, then a likely match
         if (look != null) {
-            if (look.equals("LIST")) {
-                for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
-                    System.err.println("look: " + info.getName());
-            }
-
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if (info.getName().equals(look)) {
                     lafClass = info.getClassName();

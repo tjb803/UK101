@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2012
  */
 package uk101.hardware;
 
@@ -71,9 +71,9 @@ public class CPU6502 {
     boolean sigRESET, sigNMI, sigIRQ;
 
     // Timing control
-    boolean useSleep;
+    boolean useSpin;
     int speed, cpuCycles;
-    long cpuStart, spinInterval, sleepInterval;
+    long cpuStart, spinPause, sleepPause;
 
     // Debugging
     Trace trace;
@@ -85,6 +85,13 @@ public class CPU6502 {
         setMHz(mhz);
         calibrate();
         reset();
+        
+        if (Computer.debug) {
+            System.out.println("CPU:");
+            System.out.println("  sleep time:   " + sleepPause);
+            System.out.println("  spin time:    " + spinPause);
+            System.out.println("  pause method: " + (useSpin ? "spin" : "sleep"));
+        }
     }
 
     /*
@@ -118,26 +125,26 @@ public class CPU6502 {
         return mhz;
     }
 
-    // This method tries to determine if timing can be managed using a 
-    // Thread.sleep() (which is best for CPU usage) or if spin loops need
-    // to be used.
+    // Attempt to calibrate the CPU timing controls
     void calibrate() {
+        // We need to know roughly how long it takes to read the nanosecond
+        // timer and what the typical minimum Thread.sleep() period is.
         long nt = 0, st = 0;
         for (int i = 0; i < 5; i++) {
             long t1 = System.nanoTime();
             long t2 = System.nanoTime();
             try { Thread.sleep(0, 1); } catch (InterruptedException e) { }
             long t3 = System.nanoTime();
-            nt += t2-t1;
-            st += t3-t2;
-        }
-        spinInterval = nt/5;
-        sleepInterval = st/5;
+            nt += (t2-t1);
+            st += (t3-t2);
+        }    
+        spinPause = nt/5;
+        sleepPause = st/5;
         
         // If the Thread.sleep interval is short enough for a few hundred typical
         // instructions (assume 5 cycles per instruction) we can do timing using
         // sleeps.  Otherwise we'll have to do it using spin loops.
-        useSleep = (sleepInterval < 500*5*speed);
+        useSpin = (sleepPause > 500*5*speed);
     }
 
     /*
@@ -150,7 +157,7 @@ public class CPU6502 {
 
         long now = System.nanoTime();
         long end = now;
-        long sync = now;
+        
         while (running) {
             int cycles = execute();
             cpuCycles += cycles;
@@ -161,28 +168,18 @@ public class CPU6502 {
             // when we have accumulated enough excess time for a delay to be
             // worthwhile - this means individual instructions won't be at the
             // exact correct speed, but on average the CPU should be close.
-            // However just in case we start to run too slow the clock is
-            // re-synchronised every 1/5th of a second or so.
             if (speed > 0) {
                 end += cycles*speed;
-                if (end-sync > 200000000) {
-                    sync = now = System.nanoTime();
-                    if (now > end) {
-                        end = now;
-                    }
-                }
-                if (useSleep) {
-                    long pause = end-now;
-                    if (pause > sleepInterval) {
-                        try {
-                            Thread.sleep(pause/1000000, (int)(pause%1000000));
-                        } catch (InterruptedException e) { }
+                long pause = end-now;
+                if (pause > sleepPause) {
+                    try { 
+                        Thread.sleep(pause/1000000, (int)pause%1000000);
+                    } catch (InterruptedException e) { }
+                    now = System.nanoTime();
+                } else if (useSpin) {
+                    while (end-now > spinPause) { 
                         now = System.nanoTime();
-                    }
-                } else {
-                    while (end-now > spinInterval) {
-                        now = System.nanoTime();
-                    }
+                    }    
                 }
             }
         }

@@ -27,8 +27,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import uk101.io.Stream;
-import uk101.io.UK101InputStream;
-import uk101.io.UK101OutputStream;
 import uk101.machine.TapeRecorder;
 import uk101.view.component.CassetteButton;
 import uk101.view.component.DisplayText;
