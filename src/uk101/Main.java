@@ -16,6 +16,9 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.plaf.metal.DefaultMetalTheme;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.OceanTheme;
 
 import uk101.machine.Computer;
 import uk101.machine.Configuration;
@@ -81,15 +84,26 @@ public class Main implements Runnable {
     // Try to set the Swing look and feel
     private static void setLookAndFeel(String look) throws Exception {
         String lafClass = null;
+        String lafTheme = null;
         
         if (Computer.debug) {
             System.out.println("Look:");
-            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
-                System.out.println("  " + info.getName());
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                String name = info.getName();
+                if (name.equals("Metal"))
+                    name += "/Steel/Ocean";
+                System.out.println("  " + name);
+            }    
         }
 
         // Look for an exact match first, then a likely match
         if (look != null) {
+            // "Steel" and "Ocean" are themes for "Metal"
+            if (look.equalsIgnoreCase("Steel") || look.equalsIgnoreCase("Ocean")) {
+                lafTheme = look;
+                look= "Metal";
+            }
+            
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if (info.getName().equals(look)) {
                     lafClass = info.getClassName();
@@ -110,6 +124,14 @@ public class Main implements Runnable {
         // No match, so use the system default
         if (lafClass == null) {
             lafClass = UIManager.getSystemLookAndFeelClassName();
+        }
+        
+        // Set Metal theme if needed
+        if (lafTheme != null) {
+            if (lafTheme.equalsIgnoreCase("Steel"))
+                MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
+            else if (lafTheme.equalsIgnoreCase("Ocean")) 
+                MetalLookAndFeel.setCurrentTheme(new OceanTheme());
         }
 
         UIManager.setLookAndFeel(lafClass);

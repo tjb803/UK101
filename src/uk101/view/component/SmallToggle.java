@@ -19,7 +19,12 @@ public class SmallToggle extends JToggleButton {
     
     public SmallToggle(String text, ActionListener listener) {
         super(text);
+        // Margin and font work in most look and feels ...
         setMargin(SmallButton.MARGIN);
+        setFont(SmallButton.FONT);
+        // ... size property works for Nimbus
+        putClientProperty("JComponent.sizeVariant", "mini");
+        updateUI();
         addActionListener(listener);
     }
 }
