@@ -90,7 +90,7 @@ public class CPU6502 {
             System.out.println("CPU:");
             System.out.println("  sleep time:   " + sleepPause);
             System.out.println("  spin time:    " + spinPause);
-            System.out.println("  pause method: " + (useSpin ? "spin" : "sleep"));
+            System.out.println("  pause method: " + (speed == 0 ? "none" : useSpin ? "spin" : "sleep"));
         }
     }
 
@@ -400,9 +400,8 @@ public class CPU6502 {
         case 0x22: debug();  break;
         }
 
-        if (trace != null) {
-            traceEntry = null;
-        }    
+        // Ensure tracing disabled until next instruction
+        traceEntry = null;
 
         return cycles + bc;
     }
