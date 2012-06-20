@@ -1,10 +1,11 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2012
  */
 package uk101.view.component;
 
+import java.awt.Color;
 import java.awt.event.ItemListener;
 
 import javax.swing.Box;
@@ -23,16 +24,20 @@ public class CassetteButton extends JPanel {
 
     public JToggleButton button;
 
-    public CassetteButton(String text, String label, ItemListener action) {
+    public CassetteButton(String text, String label, Color color, ItemListener action) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentY(BOTTOM_ALIGNMENT);
 
-        add(new JLabel(label));
+        JLabel title = new JLabel(label);
+        title.setAlignmentX(CENTER_ALIGNMENT);
+        add(title);
         add(Box.createVerticalStrut(5));
 
         button = new JToggleButton(text);
-        button.addItemListener(action);
-        button.setAlignmentX(LEFT_ALIGNMENT);
+        button.setAlignmentX(CENTER_ALIGNMENT);
+        button.setForeground(color);
         add(button);
+        
+        button.addItemListener(action);
     }
 }

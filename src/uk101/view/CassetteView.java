@@ -6,6 +6,7 @@
 package uk101.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,9 +67,9 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
         JPanel bp = new JPanel();
         bp.setLayout(new BoxLayout(bp, BoxLayout.X_AXIS));
         bp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        record = new CassetteButton("\u25CF", "Rec", this);
-        play = new CassetteButton("\u25BA", "Play", this);
-        stop = new CassetteButton("\u25A0", "Stop", this);
+        record = new CassetteButton("\u25CF", "Rec", Color.RED, this);
+        play = new CassetteButton("\u25BA", "Play", Color.BLACK, this);
+        stop = new CassetteButton("\u25A0", "Stop", Color.BLACK, this);
         bp.add(record);
         bp.add(Box.createHorizontalStrut(5));
         bp.add(play);

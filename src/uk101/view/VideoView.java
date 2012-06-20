@@ -29,7 +29,7 @@ public class VideoView extends JInternalFrame {
     int srows, scols, sstart;
 
     public VideoView(Video video, Configuration cfg) {
-        super("Video", false, false, false, true);
+        super("Video", false, false, false, false);
 
         video.setView(this);
 

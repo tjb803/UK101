@@ -105,7 +105,7 @@ public class Main implements Runnable {
             }
             
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if (info.getName().equals(look)) {
+                if (info.getName().equalsIgnoreCase(look)) {
                     lafClass = info.getClassName();
                     break;
                 }
@@ -119,22 +119,24 @@ public class Main implements Runnable {
                     }
                 }
             }
-        }
-
-        // No match, so use the system default
-        if (lafClass == null) {
+        } else {
+            // No look parameter, so force system look and feel
             lafClass = UIManager.getSystemLookAndFeelClassName();
         }
         
-        // Set Metal theme if needed
-        if (lafTheme != null) {
-            if (lafTheme.equalsIgnoreCase("Steel"))
-                MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-            else if (lafTheme.equalsIgnoreCase("Ocean")) 
-                MetalLookAndFeel.setCurrentTheme(new OceanTheme());
+        // Set requested look and feel.  Leave as default if no match found
+        if (lafClass != null) {
+            // Set Metal theme if needed
+            if (lafTheme != null) {
+                if (lafTheme.equalsIgnoreCase("Steel"))
+                    MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
+                else if (lafTheme.equalsIgnoreCase("Ocean")) 
+                    MetalLookAndFeel.setCurrentTheme(new OceanTheme());
+            }
+    
+            UIManager.setLookAndFeel(lafClass);
         }
-
-        UIManager.setLookAndFeel(lafClass);
+        
         JFrame.setDefaultLookAndFeelDecorated(true);
     }
 
