@@ -104,7 +104,7 @@ public class Trace implements Serializable {
     }
 
     // Flush buffer to disk
-    void flush(boolean close) {
+    synchronized void flush(boolean close) {
         if (out == null) {
             SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss-SSS");
             String filename = "uk101-" + df.format(timestamp) + ".trace";
