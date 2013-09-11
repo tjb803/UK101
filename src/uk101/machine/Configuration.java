@@ -17,7 +17,9 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import uk101.Main;
 import uk101.utils.Args;
@@ -55,7 +57,7 @@ public class Configuration implements Serializable {
         new Item("screenWidth", "screen.width", 16, 64),
         new Item("screenOffset", "screen.offset", 0, 63),
         new Item("screenColour", "screen.colour", colours),
-        new Item("screenColour", "screen.color", colours, true),
+        new Item("screenColour", "screen.color", colours),
         new Item("screenUpdate", "screen.update", updates),
         new Item("keyboard", "keyboard", keyboards),
     };
@@ -130,9 +132,11 @@ public class Configuration implements Serializable {
      * Print configuration
      */
     public String toString() {
+        Set<String> vars = new HashSet<String>();
         String s = "";
         for (Item item : items) {
-            if (!item.alt) {
+            if (!vars.contains(item.var)) {
+                vars.add(item.var);
                 s += "  " + item.key + "=" + item.value(this) + "\n";
             }    
         }
@@ -148,7 +152,6 @@ public class Configuration implements Serializable {
         String var, key;
         int min, max;
         Collection<String> range;
-        boolean alt;
         
         Item(String var, String key, int min, int max) {
             this.type = INT;
@@ -160,11 +163,6 @@ public class Configuration implements Serializable {
             this.type = STR;
             this.var = var;  this.key = key;
             this.range = range;
-        }
-        
-        Item(String var, String key, Collection<String> range, boolean alt) {
-            this(var, key, range);
-            this.alt = alt;
         }
 
         void init(Configuration initial, Configuration cfg) {

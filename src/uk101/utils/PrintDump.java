@@ -35,8 +35,8 @@ public class PrintDump {
         // Handle parameters
         Args.Map options = Args.optionMap();
         options.put("output", "outputfile");
-        options.put("hex", null);
-        options.put("code", null);
+        options.put("hex");
+        options.put("code");
         Args parms = new Args("PrintDump", "dumpfile", args, options);
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile("output");

@@ -37,8 +37,8 @@ public class PrintMachine {
     public static void main(String[] args) throws Exception {
         // Handle parameters
         Args.Map options = Args.optionMap();
-        options.put("hex", null);
-        options.put("code", null);
+        options.put("hex");
+        options.put("code");
         Args parms = new Args("PrintMachine", "machine [outputfile]", args, options);
         
         File inputFile = parms.getInputFile(1);

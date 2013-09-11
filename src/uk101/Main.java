@@ -54,7 +54,7 @@ public class Main implements Runnable {
         options.put("configuration", "configFile");
         options.put("p", "=properties");  
         options.put("properties", "systemProps");
-        options.put("debug", null);
+        options.put("debug");
         Args parms = new Args("uk101.Main", "[machine]", args, options);
         
         Computer.debug = parms.getFlag("debug");
@@ -101,7 +101,7 @@ public class Main implements Runnable {
             // "Steel" and "Ocean" are themes for "Metal"
             if (look.equalsIgnoreCase("Steel") || look.equalsIgnoreCase("Ocean")) {
                 lafTheme = look;
-                look= "Metal";
+                look = "Metal";
             }
             
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {

@@ -35,6 +35,7 @@ public class TestUK101Streams extends TestCase {
         UK101OutputStream out = new UK101OutputStream(sw);
 
         out.write(makeBytes(lines1));
+        out.close();
         System.out.println(sw);
 
         assertTrue(sw.toString().equals(text1));
@@ -49,6 +50,7 @@ public class TestUK101Streams extends TestCase {
         byte[] b2 = new byte[size];
         System.arraycopy(b1, 0, b2, 0, size);
         new PrintBytes(System.out).print(0, new ByteArrayInputStream(b2));
+        in.close();
 
         assertTrue(Arrays.equals(b2, makeBytes(lines1)));
     }
