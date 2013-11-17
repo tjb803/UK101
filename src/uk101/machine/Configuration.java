@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2011
+ * (C) Copyright Tim Baldwin 2010,2013
  */
 package uk101.machine;
 
@@ -13,13 +13,10 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Set;
 
 import uk101.Main;
 import uk101.utils.Args;
@@ -29,8 +26,24 @@ import uk101.utils.Args;
  * 
  * @author Baldwin
  */
-public class Configuration implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Configuration extends Properties {
+    private static final long serialVersionUID = 2L;
+    
+    public static final String CPU_SPEED = "cpu.speed";
+    public static final String BAUD_RATE = "baud.rate";
+    public static final String RAM_SIZE = "ram.size";
+    public static final String ROM_MONITOR = "rom.monitor";
+    public static final String ROM_BASIC = "rom.basic";
+    public static final String ROM_CHARSET = "rom.charset";
+    public static final String KEYBOARD = "keyboard";
+    public static final String VIDEO_ROWS = "video.rows";
+    public static final String VIDEO_COLS = "video.cols";
+    public static final String SCREEN_SIZE = "screen.size";
+    public static final String SCREEN_WIDTH = "screen.width";
+    public static final String SCREEN_OFFSET = "screen.offset";
+    public static final String SCREEN_COLOUR = "screen.colour";
+    public static final String SCREEN_UPDATE = "screen.update";
+    public static final String ROM = "rom.";
     
     public static final String WHITE = "white";
     public static final String GREEN = "green";
@@ -40,44 +53,16 @@ public class Configuration implements Serializable {
     public static final String UK = "uk";
     public static final String US = "us";
     
-    // Property processing
-    static Collection<String> colours = Arrays.asList(new String[] {WHITE, GREEN, AMBER});
-    static Collection<String> updates = Arrays.asList(new String[] {SYNC, ASYNC});
-    static Collection<String> keyboards = Arrays.asList(new String[] {UK, US});
-    static Item[] items = {
-        new Item("cpuSpeed", "cpu.speed", 0, 2),
-        new Item("ramSize", "ram.size", 4, 40),
-        new Item("baudRate", "baud.rate", 110, 115200),
-        new Item("romBASIC", "rom.basic", null),
-        new Item("romMonitor", "rom.monitor", null),
-        new Item("romCharset", "rom.charset", null),
-        new Item("videoRows", "video.rows", 16, 32),
-        new Item("videoCols", "video.cols", 32, 64),
-        new Item("screenSize", "screen.size", 1, 2),
-        new Item("screenWidth", "screen.width", 16, 64),
-        new Item("screenOffset", "screen.offset", 0, 63),
-        new Item("screenColour", "screen.colour", colours),
-        new Item("screenColour", "screen.color", colours),
-        new Item("screenUpdate", "screen.update", updates),
-        new Item("keyboard", "keyboard", keyboards),
-    };
+    // Additional ROMs have an address and a filename
+    public static class ROM {
+        public int address;
+        public String name;
+        private ROM(String addr, String value) {
+            address = Integer.parseInt(addr, 16);
+            name = value;
+        }
+    }
     
-    // Default hardware configuration
-    public int cpuSpeed = 1;
-    public int ramSize = 8;
-    public int baudRate = 300;
-    public int videoRows = 16, videoCols = 64;
-    public String romBASIC = "BASUK101.ROM";
-    public String romMonitor = "MONUK02.ROM";
-    public String romCharset = "CHGUK101.ROM";
-    public String keyboard = UK;
-   
-    // Default view configuration
-    public int screenSize = 1;
-    public int screenWidth = 48, screenOffset = 13;
-    public String screenColour = WHITE;
-    public String screenUpdate = ASYNC;
- 
     public Configuration(Args parms, Configuration initial) throws IOException {
         // Load a properties file, if specified, and apply any command line
         // overrides.  Then update the default configuration from the property
@@ -96,18 +81,114 @@ public class Configuration implements Serializable {
         }
         String s = parms.getOption("properties");
         if (s != null) {
-            in = new ByteArrayInputStream(s.replace(';', '\n').getBytes("ISO8859_1"));
+            s = s.replace("\\", "\\\\").replace(";", "\n");
+            in = new ByteArrayInputStream(s.getBytes("ISO8859_1"));
             props.load(in);
             in.close();
         }
 
-        // Apply any settings found in the initial config or the properties
-        for (Item item : items) {
-            if (initial != null) 
-                item.init(initial, this);
-            if (props.containsKey(item.key))
-                item.parse(props, this);
-        }    
+        // Load the default property set and apply any user defined changes
+        load(Main.class.getResourceAsStream("rom/uk101.properties"));
+        if (initial != null)
+            applyProperties(initial);
+        applyProperties(props);
+    }
+    
+    private void applyProperties(Properties props) {
+        applyInt(props, CPU_SPEED, 0, 2);
+        applyStr(props, BAUD_RATE, "110", "300", "600", "1200", "2400", "4800", "9600");
+        applyInt(props, RAM_SIZE, 4, 40);
+        applyStr(props, ROM_MONITOR);
+        applyStr(props, ROM_BASIC);
+        applyStr(props, ROM_CHARSET);
+        applyStr(props, KEYBOARD, UK, US);
+        applyInt(props, VIDEO_ROWS, 16, 32);
+        applyInt(props, VIDEO_COLS, 32, 64);
+        applyInt(props, SCREEN_SIZE, 1, 2);
+        applyInt(props, SCREEN_WIDTH, 16, 64);
+        applyInt(props, SCREEN_OFFSET, 0, 63);
+        applyStr(props, SCREEN_COLOUR, WHITE, GREEN, AMBER);
+        apply(props, SCREEN_COLOUR, "screen.color", 0, 0, WHITE, GREEN, AMBER);
+        applyStr(props, SCREEN_UPDATE, SYNC, ASYNC);
+        applyROM(props);
+    }
+    
+    private void applyInt(Properties props, String key, int min, int max) {
+        try {
+            apply(props, key, key, min, max);
+        } catch (NumberFormatException e) { // Ignore bad numeric values
+        }
+    }
+    
+    private void applyStr(Properties props, String key, String... range) {
+        apply(props, key, key, 0, 0, range);
+    }
+    
+    private void apply(Properties props, String key, String ukey, int min, int max, String... range) {
+        String value = props.getProperty(ukey);
+        if (value != null) {
+            value = value.trim();
+            if (max > 0) {
+                int i = Integer.parseInt(value);
+                if (i >= min && i <= max) 
+                    setProperty(key, Integer.toString(i));
+            } else if (range.length > 0) {
+                String s = value.toLowerCase();
+                for (int i = 0; i < range.length; i++) {
+                    if (s.equals(range[i]))
+                        setProperty(key, s);
+                }    
+            } else {
+                setProperty(key, value);
+            }
+        }
+    }
+    
+    private void applyROM(Properties props) {
+        for (Enumeration<?> k = props.propertyNames(); k.hasMoreElements(); ) {
+            String key = (String)k.nextElement();
+            String addr = hasAddr(key);
+            if (addr != null) {
+                setProperty(ROM+addr, props.getProperty(key).trim());
+            }
+        }
+    }
+    
+    private String hasAddr(String key) {
+        String addr = null;
+        if (key.startsWith(ROM)) {
+            String hex = key.substring(ROM.length()).toUpperCase();
+            if (hex.matches("[0-9A-F]{4}")) {
+                addr = hex;
+            }
+        }
+        return addr;
+    }
+  
+    /*
+     * Return config values either as integers or strings
+     */
+    public int getInt(String key) {
+        return Integer.parseInt(getProperty(key));
+    }
+    
+    public String getValue(String key) {
+        return getProperty(key);
+    }
+    
+    /*
+     * Return any additional ROMs listed
+     */
+    public Collection<ROM> getROMs() {
+        Collection<ROM> roms = new ArrayList<ROM>();
+        for (Enumeration<?> k = propertyNames(); k.hasMoreElements(); ) {
+            String key = (String)k.nextElement();
+            String addr = hasAddr(key);
+            if (addr != null) {
+                roms.add(new ROM(addr, getProperty(key)));
+            }
+        }
+        return roms;
     }
     
     /*
@@ -132,76 +213,11 @@ public class Configuration implements Serializable {
      * Print configuration
      */
     public String toString() {
-        Set<String> vars = new HashSet<String>();
-        String s = "";
-        for (Item item : items) {
-            if (!vars.contains(item.var)) {
-                vars.add(item.var);
-                s += "  " + item.key + "=" + item.value(this) + "\n";
-            }    
+        StringBuilder s = new StringBuilder();
+        for (Enumeration<?> k = propertyNames(); k.hasMoreElements(); ) {
+            String key = (String)k.nextElement();
+            s.append(key).append("=").append(getProperty(key)).append("\n");
         }
-        return s;
-    }
-
-    // Configuration item
-    private static class Item {
-        static final int INT = 0;
-        static final int STR = 1;
-
-        int type;
-        String var, key;
-        int min, max;
-        Collection<String> range;
-        
-        Item(String var, String key, int min, int max) {
-            this.type = INT;
-            this.var = var;  this.key = key;
-            this.min = min;  this.max = max;
-        }
-        
-        Item(String var, String key, Collection<String> range) {
-            this.type = STR;
-            this.var = var;  this.key = key;
-            this.range = range;
-        }
-
-        void init(Configuration initial, Configuration cfg) {
-            try {
-                Field f = Configuration.class.getField(var);
-                f.set(cfg, f.get(initial));
-            } catch (Exception e) {     // Ignore all errors
-            }
-        }
-        
-        void parse(Properties props, Configuration cfg) {
-            try {
-                if (type == INT) {
-                    int i = Integer.parseInt(props.getProperty(key).trim());
-                    if (i >= min && i <= max) {
-                        Configuration.class.getField(var).setInt(cfg, i);
-                    }
-                } else if (type == STR) {
-                    String s = props.getProperty(key).trim();
-                    if (range == null) {
-                        Configuration.class.getField(var).set(cfg, s);
-                    } else {
-                        s = s.toLowerCase();
-                        if (range.contains(s)) {
-                            Configuration.class.getField(var).set(cfg, s);   
-                        }    
-                    }
-                }
-            } catch (Exception e) {     // Ignore all errors
-            }
-        }
-        
-        String value(Configuration cfg) {
-            String value = null;
-            try {
-                value = Configuration.class.getField(var).get(cfg).toString();
-            } catch (Exception e) {     // Ignore all errors
-            }
-            return value;
-        }
+        return s.toString();
     }
 }

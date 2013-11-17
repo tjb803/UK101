@@ -106,7 +106,7 @@ installed giving an absolute maximum contiguous RAM of 40KB.</td></tr>
 The value can be the built-in name <code>MONUK02.ROM</code> or it can
 be the name of a file containing a replacement ROM.
 Several better replacement ROMs were available for the UK101, the 
-most popular being the CEGMON ROM.</td>
+most popular being "CEGMON".</td>
 <tr><td><code>rom.basic</code></td>
 <td><code>BASUK101.ROM</code><br>or <code>filename</code></td><td/>
 <td>This defines the BASIC ROM that is installed.
@@ -116,9 +116,17 @@ be the name of a file containing a replacement ROM.</td>
 <td><code>CHGUK101.ROM</code><br>or <code>filename</code></td><td/>
 <td>This defines the video character generator ROM that is installed.
 The value can be the built-in name <code>CHGUK101.ROM</code> or it can
-be the name of a file containing a replacement ROM.</td>
+be the name of a file containing a replacement ROM.</td></tr>
+<tr><td><code>rom.XXXX</code></td>
+<td><code>filename</code></td><td/>
+<td>This allows additional ROMs to be installed.
+The ROM is installed at address <code>XXXX</code> which must be a valid
+four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
+and the value should be the name of a file containing the ROM code.</td></tr>
 </table>
-<p/>
+<p><i>Note:</i> The additional ROMs are processed and installed after the 
+system monitor and BASIC ROMs, so they can be used to replace some or all of 
+the system ROM address spaces.<p/>
 <hr>
 <h2 id="acia">ACIA Baud Rate</h2>
 <p>This setting controls the default baud rate for the ACIA.</p>
@@ -126,7 +134,8 @@ be the name of a file containing a replacement ROM.</td>
 <tr><th width="15%">Name</th><th width="15%">Values</th>
 <th width="8%">Default</th><th width="62%">Notes</th></tr>
 <tr><td><code>baud.rate</code></td>
-<td>from <code>110</code> to <code>115200</code></td>
+<td><code>110</code>, <code>300</code>, <code>600</code>, <code>1200</code>,
+<code>2400</code>, <code>4800</code> or <code>9600</code></td>
 <td align="center"><code>300</code></td>
 <td>This defines default baud rate of the ACIA. 
 <p>Some programs (in particular some games) relied on the ACIA control
@@ -212,8 +221,10 @@ results on older PCs.</td></tr>
 by the simulation - this may give faster output but can lead to 
 some screen corruption if there are windows overlapping the video
 window.</td></tr>
-</table></td>
+</table></td></tr>
 </table>
+<p><i>Note:</i> If running with the CEGMON monitor the screen offset 
+may need to be set to 12 (rather than the default 13).</p>
 <p><i>Note:</i> On any modern PC, especially anything with a dual
 or multicore processor, the default <i>async</i> screen update option
 is likely to produce the best results.
@@ -223,7 +234,7 @@ smoother operation.</p>
 <tr><td align="left">Tim Baldwin<br>April 2011
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2010,2011</td></tr>
+<br><br>&copy; Tim Baldwin 2010,2013</td></tr>
 </table>
 </body>
 </html>

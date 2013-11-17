@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2011
+ * (C) Copyright Tim Baldwin 2010,2013
  */
 package uk101.machine;
 
@@ -66,24 +66,30 @@ public class Computer extends Thread implements DataBus {
         config = cfg;
         
         // A 6502 CPU
-        cpu = new CPU6502(cfg.cpuSpeed, this);
+        cpu = new CPU6502(cfg.getInt(Configuration.CPU_SPEED), this);
 
         // Address space is 64K.  Assumption here is that any ROM/RAM or any
         // memory-mapped devices are mapped in BLKSIZE sections.
         memory = new Memory[Memory.toBlocks(Memory.K64)];
 
         // Install the system ROMs and RAM
-        ram = new RAM(cfg.ramSize);
-        basic = new ROM(cfg.romBASIC);
-        monitor = new ROM(cfg.romMonitor);
+        ram = new RAM(cfg.getInt(Configuration.RAM_SIZE));
+        basic = new ROM(cfg.getValue(Configuration.ROM_BASIC));
+        monitor = new ROM(cfg.getValue(Configuration.ROM_MONITOR));
         addMemory(0, ram);
         addMemory(0xA000, basic);
         addMemory(0xF800, monitor);
+        
+        // Install any additional ROMs
+        for (Configuration.ROM rom : cfg.getROMs()) {
+            addMemory(rom.address, new ROM(rom.name));
+        }    
 
         // Keyboard, screen and ACIA are memory mapped.
-        keyboard = new Keyboard(cfg.keyboard);
-        video = new Video(cfg.videoRows, cfg.videoCols, new ROM(cfg.romCharset));
-        acia = new ACIA6850(cfg.baudRate, getPriority());
+        ROM charset = new ROM(cfg.getValue(Configuration.ROM_CHARSET));
+        keyboard = new Keyboard(cfg.getValue(Configuration.KEYBOARD));
+        video = new Video(cfg.getInt(Configuration.VIDEO_ROWS), cfg.getInt(Configuration.VIDEO_COLS), charset);
+        acia = new ACIA6850(cfg.getInt(Configuration.BAUD_RATE), getPriority());
         addMemory(0xDF00, keyboard);
         addMemory(0xD000, video);
         addMemory(0xF000, acia);

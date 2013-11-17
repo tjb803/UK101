@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2011
+ * (C) Copyright Tim Baldwin 2010,2013
  */
 package uk101.view;
 
@@ -39,13 +39,15 @@ public class VideoView extends JInternalFrame {
         // height (ie 16 scan lines for each character, even though there are
         // only 8 rows in the character generator ROM bitmaps).
         vrows = video.rows;  vcols = video.cols;
-        srows = vrows;  scols = cfg.screenWidth;  sstart = cfg.screenOffset;
+        srows = vrows;  
+        scols = cfg.getInt(Configuration.SCREEN_WIDTH);  
+        sstart = cfg.getInt(Configuration.SCREEN_OFFSET);
         int vscale = (vrows > 16) ? 1 : 2;
         int hscale = (vcols > 32) ? 1 : 2;
-        int ssize = (cfg.screenSize < 2) ? 1 : 2;
-        Color colour = getScreenColour(cfg.screenColour);
+        int ssize = (cfg.getInt(Configuration.SCREEN_SIZE) < 2) ? 1 : 2;
+        Color colour = getScreenColour(cfg.getValue(Configuration.SCREEN_COLOUR));
         screen = new VideoScreen(video, srows, scols, hscale, vscale, ssize, colour);
-        screen.setUpdateMode(getScreenUpdate(cfg.screenUpdate));
+        screen.setUpdateMode(getScreenUpdate(cfg.getValue(Configuration.SCREEN_UPDATE)));
 
         // Surround the screen by a small border (about half a character cell wide).
         Dimension cell = screen.getCellSize();
