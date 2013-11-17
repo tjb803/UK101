@@ -16,8 +16,10 @@
 <li><a href="#nytaxi">New York Taxi</a></li>
 <li><a href="#hectic">Hectic</a></li>
 <li><a href="#bbox">Black Box</a></li>
+<li><a href="#lepasse">Le Passe Temps</a></li>
 <li><a href="#exmon">Extended Monitor</a></li>
 <li><a href="#invade">Space Invaders</a></li>
+<li><a href="#astero">Asteroids</a></li>
 </ul>
 <p>In addition this page provides some notes about the 
 <a href="#format">binary and ASCII tape formats</a> used by the 
@@ -39,7 +41,9 @@ anything that should not be here.</i></p>
 <p>This is a very simple &quot;hello world&quot; BASIC program.
 This program is used in the <a href="quickstart.html">quick start guide</a>.</p>
 <p>This should be loaded as a BASIC program by typing the <code>LOAD</code> 
-command in BASIC and playing the tape.</p>
+command in BASIC and playing the tape.
+Press the <i>SPACE</i> bar when the program has loaded to regain control of
+the keyboard then type <code>RUN</code>.</p>
 <hr>
 <h2 id="charset">Character Set</h2>
 <table frame="box" rules="all" cellspacing="0" cellpadding="4">
@@ -53,7 +57,9 @@ It is not quite the same as the listing in the manual, as that listing
 actually contains a couple of bugs and also needed some changes to work
 correctly with the New Monitor.</p>
 <p>This should be loaded as a BASIC program by typing the <code>LOAD</code> 
-command in BASIC and playing the tape.</p>
+command in BASIC and playing the tape.
+Press the <i>SPACE</i> bar when the program has loaded to regain control of
+the keyboard then type <code>RUN</code>.</p>
 <hr>
 <h2 id="nytaxi">New York Taxi</h2>
 <table frame="void"><tr valign="top">
@@ -65,10 +71,12 @@ command in BASIC and playing the tape.</p>
 </table>
 </td></tr></table>
 <br clear="left">
-<p>This is a game that was provided on a sample tape that came with the original
-machine.</p>
+This is a game that was provided on a sample tape that came with the original
+machine.
 <p>This should be loaded as a BASIC program by typing the <code>LOAD</code> 
 command in BASIC and playing the tape.
+Press the <i>SPACE</i> bar when the program has loaded to regain control of
+the keyboard then type <code>RUN</code>.
 You should set the keyboard to <a href="operation.html#kbmode">raw mode</a>
 to play the game.</p>
 <hr>
@@ -83,10 +91,12 @@ to play the game.</p>
 </table>
 </td></tr></table>
 <br clear="left">
-<p>This is a game that was provided on a sample tape that came with the original
-machine.</p>
+This is a game that was provided on a sample tape that came with the original
+machine.
 <p>This should be loaded as a BASIC program by typing the <code>LOAD</code> 
 command in BASIC and playing the tape.
+Press the <i>SPACE</i> bar when the program has loaded to regain control of
+the keyboard then type <code>RUN</code>.
 You should set the keyboard to <a href="operation.html#kbmode">raw mode</a>
 to play the game.</p>
 <hr>
@@ -107,6 +117,27 @@ As it happened Chic (who bought one of those very first machines) was also
 a young engineer working in that very factory - so not surprisingly managed
 to get hold of a set of ROMs ahead of anyone else.</p>
 <hr>
+<h2 id="lepasse">Le Passe-Temps</h2>
+<table frame="void"><tr valign="top">
+<td><img src="image/tapelpt.jpg" alt="Passe Temp Tape" align="left"/></td>
+<td>
+<table frame="box" rules="all" cellspacing="0" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/basic/passetemp.basic"><samp>samples/basic/passetemp.basic</samp></a></td></tr>
+</table>
+</td></tr></table>
+<br clear="left">
+This game was published in Practical Electronics n July 1980, athough the 
+copy here is a slightly later version that I bought on cassette.
+It is a version of the <i>Connect 4</i> game.
+<p>This should be loaded as a BASIC program by typing the <code>LOAD</code> 
+command in BASIC and playing the tape.
+Press the <i>SPACE</i> bar when the program has loaded to regain control of
+the keyboard then type <code>RUN</code>.
+The program should give some instructions on how to use it.
+You should set the keyboard to <a href="operation.html#kbmode">raw mode</a>
+to play the game.</p>
+<hr>
 <h2 id="exmon">Extended Monitor</h2>
 <table frame="void"><tr valign="top">
 <td><img src="image/tapeex.jpg" alt="Sample Tape" align="left"/></td>
@@ -118,10 +149,10 @@ to get hold of a set of ROMs ahead of anyone else.</p>
 </table>
 </td></tr></table>
 <br clear="left">
-<p>This is the <i>Extended Monitor</i> that was provided on a sample tape 
+This is the <i>Extended Monitor</i> that was provided on a sample tape 
 that came with the original machine.
 The extended monitor provided some extra function to help with writing 
-and debugging simple machine code programs.</p>
+and debugging simple machine code programs.
 <p>Details of the extended monitor can be found on its 
 <a href="http://uk101.sourceforge.net/docs/pdf/exmon.pdf">instruction sheet</a>.</p>
 <p>The extended monitor is a machine code program and needs to be loaded
@@ -141,8 +172,8 @@ loads the rest of itself in checksum format.</p>
 </table>
 </td></tr></table>
 <br clear="left">
-<p>This is a copy of Premier Publication's excellent <i>Invaders</i>
-space invaders game.</p>
+This is a copy of Premier Publication's excellent <i>Invaders</i>
+space invaders game.
 <p>Invaders is a machine code program and needs to be loaded
 through the Monitor, not as a BASIC program.
 To do this first reset the machine then select <i>M</i> to enter the 
@@ -164,6 +195,36 @@ Unfortunately these keys are the other way up on a PC keyboard so
 this is not ideal!
 I once knew some locations to patch to change these keys, but I can no
 longer find those notes - sorry! 
+You should set the keyboard to <a href="operation.html#kbmode">raw mode</a>
+to play the game.</p>
+<hr>
+<h2 id="astero">Asteroids</h2>
+<table frame="void"><tr valign="top">
+<td><img src="image/tapeastr.jpg" alt="Asteroids Tape" align="left"/></td>
+<td>
+<table frame="box" rules="all" cellspacing="0" cellpadding="4">
+<tr><td><b>Program Tape</b></td>
+<td><a href="../samples/tapes/asteroids.tape"><samp>samples/tapes/asteroids.tape</samp></a></td></tr>
+</table>
+</td></tr></table>
+<br clear="left">
+This is a copy of Arcadia's <i>Asteroids</i> game, another
+really well done game given the limitations of the UK101's simple 
+character set graphics.
+<p>Asteroids is actually a BASIC program with a large section of 
+additional machine code.
+To load it, restart the machine with a 
+<a href="quickstart.html#boot">cold start</a> into BASIC and type
+<code>LOAD</code>, then play the tape.  
+The BASIC section will load and automatically run then it will continue 
+to load the machine that follows on the tape.
+Once that has loaded the game will start.
+If you do a warm start you can restart it just by typing <code>RUN</code>.
+<p>To rotate the laser press the <i>left-SHIFT</i> to rotate anti-clockwise  
+or press the <i>right-SHIFT</i> to rotate clockwise.
+Press the <i>SPACE</i> bar to fire.  
+The laser does seem to rotate rather fast - I'm not sure if it always did 
+this or if it is related to the simulation!
 You should set the keyboard to <a href="operation.html#kbmode">raw mode</a>
 to play the game.</p>
 <hr>

@@ -26,8 +26,10 @@ docs/image/qsb.gif -text
 docs/image/qsh.gif -text
 docs/image/qsl.gif -text
 docs/image/qsr.gif -text
+docs/image/tapeastr.jpg -text
 docs/image/tapeex.jpg -text
 docs/image/tapeinv.jpg -text
+docs/image/tapelpt.jpg -text
 docs/image/tapemode.jpg -text
 docs/image/tapesamp.jpg -text
 docs/image/uk101.gif -text
@@ -48,12 +50,14 @@ samples/basic/charset.basic -text
 samples/basic/hectic.basic -text
 samples/basic/hello.basic -text
 samples/basic/nytaxi.basic -text
+samples/basic/passetemp.basic -text
 samples/machines/invaders.uk101 -text
 samples/properties/BASOSI.ROM -text
 samples/properties/CHGOSI.ROM -text
 samples/properties/MONOSI.ROM -text
 samples/properties/superboard.properties -text
 samples/properties/uk101.properties -text
+samples/tapes/asteroids.tape -text
 samples/tapes/exmon.tape -text
 samples/tapes/invaders.tape -text
 src/uk101/Main.java -text
