@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2013
  */
 package uk101.machine;
 
@@ -11,6 +11,7 @@ import java.io.OutputStream;
 
 import uk101.hardware.bus.IOBus;
 import uk101.hardware.bus.IODevice;
+import uk101.view.CassetteView;
 
 /**
  * Program storage via 'tapes'.  This simple implementation just reads
@@ -78,6 +79,9 @@ public class TapeRecorder implements IOBus {
             } catch (IOException e) {
                 System.err.println(e);
             }
+            if (view != null) {
+                view.setActive();
+            }
         }
         return b;
     }
@@ -89,9 +93,23 @@ public class TapeRecorder implements IOBus {
             } catch (IOException e) {
                 System.err.println(e);
             }
+            if (view != null) {
+                view.setActive();
+            }
         }
     }
 
+    /*
+     * GUI visualisation
+     */
+
+    CassetteView view;
+
+    public void setView(CassetteView view) {
+        this.view = view;
+    }
+
+    
     /*
      * Mainly for debugging
      */

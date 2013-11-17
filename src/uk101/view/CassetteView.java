@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2013
  */
 package uk101.view;
 
@@ -26,6 +26,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import uk101.io.Stream;
 import uk101.machine.TapeRecorder;
@@ -47,6 +48,7 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
     DisplayText format;
     CassetteButton record, play, stop;
     JFileChooser select;
+    Timer autoStop;
 
     File tapeFile;
     int inFormat, outFormat;
@@ -54,6 +56,11 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
     public CassetteView(TapeRecorder recorder) {
         super("Cassette Recorder", false, false, false, true);
         this.recorder = recorder;
+ 
+        // Create an auto-stop timer.  Stops the cassette player if it has
+        // not been used for 10 seconds.
+        autoStop = new Timer(10000, this);
+        autoStop.setRepeats(false);
 
         name = new JLabel(" ");
         format = new DisplayText(null, TapeFormat.MODE_UNSET, true);
@@ -100,17 +107,21 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
     }
 
     /*
-     * Open button to select a file
+     * Open button to select a file or autoStop timer fired
      */
 
     public void actionPerformed(ActionEvent e) {
-        TapeFormat tf = new TapeFormat();
-        select.setAccessory(tf);
-        if (select.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            tapeFile = select.getSelectedFile();
-            inFormat = tf.getInputFormat();
-            outFormat = tf.getOutputFormat();
-            loadTape();
+        if (e.getSource() == autoStop) {
+            stop.button.doClick();
+        } else {    // Must be the Open... button
+            TapeFormat tf = new TapeFormat();
+            select.setAccessory(tf);
+            if (select.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                tapeFile = select.getSelectedFile();
+                inFormat = tf.getInputFormat();
+                outFormat = tf.getOutputFormat();
+                loadTape();
+            }
         }
     }
 
@@ -122,15 +133,18 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
         if (e.getStateChange() == ItemEvent.SELECTED) {
             if (e.getItem() == record.button) {
                 play.button.setEnabled(false);
+                autoStop.start();
                 if (tapeFile != null)
                     recordTape();
             } else if (e.getItem() == play.button) {
                 record.button.setEnabled(false);
+                autoStop.start();
                 if (tapeFile != null)
                     playTape();
             } else if (e.getItem() == stop.button) {
                 play.button.setEnabled(true);
                 record.button.setEnabled(true);
+                autoStop.stop();
                 if (tapeFile != null)
                     stopTape();
             }
@@ -183,5 +197,12 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
         format.setValue(TapeFormat.MODE_UNSET);
         recorder.setInputTape(null);
         recorder.setOutputTape(null);
+    }
+    
+    /*
+     * Called when tapes are being actively read or written
+     */
+    public void setActive() {
+        autoStop.restart();
     }
 }
