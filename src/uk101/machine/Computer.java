@@ -98,19 +98,11 @@ public class Computer extends Thread implements DataBus {
         recorder = new TapeRecorder(acia);
     }
 
-    // Add some memory into the address space, removing anything previously
-    // mapped at the same starting address.
-    private void addMemory(int base, Memory mb) {
-        Memory m = memory[base/Memory.BLKSIZE];
-        if (m != null) {
-            for (int i = 0; i < m.blocks; i++) {
-                memory[base/Memory.BLKSIZE + i] = null;
-            }
-        }
-
-        mb.base = base;
-        for (int i = 0; i < mb.blocks; i++) {
-            memory[base/Memory.BLKSIZE + i] = mb;
+    // Add some memory into the address space
+    private void addMemory(int base, Memory m) {
+        m.base = base;
+        for (int i = 0; i < m.blocks; i++) {
+            memory[Memory.asBlock(base) + i] = m;
         }
     }
 
@@ -136,7 +128,7 @@ public class Computer extends Thread implements DataBus {
      */
     public byte readByte(int addr) {
         byte b = 32;
-        Memory m = memory[addr/Memory.BLKSIZE];
+        Memory m = memory[Memory.asBlock(addr)];
         if (m != null) {
             b = m.readByte(addr-m.base);
         }
@@ -145,7 +137,7 @@ public class Computer extends Thread implements DataBus {
 
     public short readWord(int addr) {
         byte bl = 32, bh = 32;
-        Memory m = memory[addr/Memory.BLKSIZE];
+        Memory m = memory[Memory.asBlock(addr)];
         if (m != null) {
             bl = m.readByte(addr-m.base);
             bh = m.readByte(addr-m.base+1);
@@ -154,14 +146,14 @@ public class Computer extends Thread implements DataBus {
     }
 
     public void writeByte(int addr, byte value) {
-        Memory m = memory[addr/Memory.BLKSIZE];
+        Memory m = memory[Memory.asBlock(addr)];
         if (m != null) {
             m.writeByte(addr-m.base, value);
         }
     }
 
     public void writeWord(int addr, short value) {
-        Memory m = memory[addr/Memory.BLKSIZE];
+        Memory m = memory[Memory.asBlock(addr)];
         if (m != null) {
             m.writeByte(addr-m.base, Data.getLoByte(value));
             m.writeByte(addr-m.base+1, Data.getHiByte(value));

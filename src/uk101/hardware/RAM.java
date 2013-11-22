@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2013
  */
 package uk101.hardware;
 
@@ -13,10 +13,10 @@ package uk101.hardware;
 public class RAM extends Memory {
 
     /*
-     * RAM is just an area of read/write bytes.
+     * RAM is just an area of read/write bytes.  Size is in Kbytes.
      */
     public RAM(int k) {
-        setStore(new byte[k*K1]);
+        super(new byte[k*K1]);
     }
     
     // Allow RAM to restored from a saved image
@@ -28,6 +28,6 @@ public class RAM extends Memory {
      * Mainly for debugging
      */
     public String toString() {
-        return "RAM" + super.toString() + " (" + kBytes() + "K)";
+        return "RAM" + super.toString() + ": " + kBytes() + "K";
     }
 }

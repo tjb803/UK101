@@ -69,7 +69,9 @@ on the screen.
 They are typically saved as files with an extension of 
 &quot;<code>.uk101</code>&quot;.
 Loading and saving a machine image is much faster and a lot simpler
-than saving programs to cassette tapes.</p></td>
+than saving programs to cassette tapes.</p>
+<p>Some sample machine images for some of the games are provided
+in the <code>samples/machines</code> directory.</p></td>
 </tr></table>
 <p>At the bottom of the window are a number of debug buttons.
 Pressing the <i>Dump</i> button will produce a
@@ -171,12 +173,14 @@ button; to start the tape recording (ready for saving) press the
 </tr></table>
 <p>You don't have to be too careful about when you press the <i>Play</i>,
 <i>Rec</i> or <i>Stop</i> buttons.
-For example you can press <i>Play</i> and wait as long as you like
-before you type the <code>LOAD</code> command in BASIC, data will 
-not be read from the cassette player until the machine needs
-it - a definite advantage over a real system.
+For example you can press <i>Play</i> before you type the 
+<code>LOAD</code> command in BASIC and data will not be read from the 
+cassette player until the machine needs it - a definite advantage 
+over a real system.
 Similarly if you press <i>Rec</i> nothing will actually be saved
-until the <code>SAVE</code> command lists data to the output.</p> 
+until the <code>SAVE</code> command lists data to the output.
+The cassette player will automatically stop if it is left 
+doing nothing in <i>Play</i> or <i>Rec</i> mode for about 15 seconds.</p> 
 <p><img src="image/tapemode.jpg" align="left"/>
 When opening a new tape you will need to select the correct 
 <a href="samples.html#format">tape format</a> to be used for 
@@ -187,7 +191,7 @@ of the tape.
 Most of the time this works well and is exactly what you want.</p>
 <p>The default setting for output tapes is <i>ASCII</i> which is the
 best setting for saving BASIC programs as it is a format which can
-be easily viewed and safely edited on the PC.
+be easily viewed and edited on the PC.
 If you are saving raw data or saving machine code programs you 
 may want to select the <i>Binary</i> output format.</p>
 <p>When a tape is playing or recording the format selected 
@@ -222,10 +226,10 @@ A sample set of ROMs and a sample
 configuration</a> properties file can be found in the 
 <code>samples/properties</code> directory.</p>
 <br clear="left"/><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>April 2011
+<tr><td align="left">Tim Baldwin<br>December 2013
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2010,2011</td></tr>
+<br><br>&copy; Tim Baldwin 2010,2013</td></tr>
 </table>
 </body>
 </html>

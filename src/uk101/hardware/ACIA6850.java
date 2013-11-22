@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2013
  */
 package uk101.hardware;
 
@@ -43,7 +43,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
     IOBus txBus, rxBus;
 
     public ACIA6850(int baud, int priority) {
-        blocks = 1;                 // Fills a complete block
+        super(256);                 // Decodes to 256 bytes of store
 
         statusReg = STATUS_TDRE;    // Initial state - ready to transmit
         

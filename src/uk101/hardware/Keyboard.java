@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2011
+ * (C) Copyright Tim Baldwin 2010,2013
  */
 package uk101.hardware;
 
@@ -84,7 +84,7 @@ public class Keyboard extends Memory {
     byte kbport;
 
     public Keyboard(String type) {
-        blocks = toBlocks(K1);      // Decodes to a 1K block
+        super(K1);                  // Decodes to 1K of store
         kbport = (byte)0xFF;        // Default is to return nothing
         
         // UK or US keyboard?
