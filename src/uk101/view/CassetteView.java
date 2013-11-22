@@ -60,8 +60,8 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
         recorder.setView(this);
  
         // Create an auto-stop timer.  Stops the cassette player if it has
-        // not been used for 10 seconds.
-        autoStop = new Timer(10000, this);
+        // not been used for 15 seconds.
+        autoStop = new Timer(15000, this);
         autoStop.setRepeats(false);
 
         name = new JLabel(" ");
