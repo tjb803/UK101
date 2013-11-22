@@ -51,6 +51,7 @@ samples/basic/hectic.basic -text
 samples/basic/hello.basic -text
 samples/basic/nytaxi.basic -text
 samples/basic/passetemp.basic -text
+samples/machines/asteroids.uk101 -text
 samples/machines/invaders.uk101 -text
 samples/properties/BASOSI.ROM -text
 samples/properties/CHGOSI.ROM -text
