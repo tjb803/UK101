@@ -15,8 +15,7 @@ class ALU6502 {
     // ALU status flags
     boolean isOverflow;
     boolean isCarry;
-
-    private boolean isDecimal;
+    boolean isDecimal;
 
     ALU6502() {
         isOverflow = isCarry = false;

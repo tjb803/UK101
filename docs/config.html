@@ -191,13 +191,13 @@ The <a href="#screen">screen display</a> section configures this.</p>
 <th width="8%">Default</th><th width="62%">Notes</th></tr>
 <tr><td><code>screen.width</code></td>
 <td>from <code>16</code> to <code>64</code></td>
-<td align="center"><code>48</code></td>
+<td align="center"><code>50</code></td>
 <td>This defines the number of characters visible on each screen line.</td>
 <tr><td><code>screen.offset</code></td>
 <td>from <code>0</code> to <code>63</code></td>
-<td align="center"><code>13</code></td>
+<td align="center"><code>12</code></td>
 <td>This defines the offset of the first visible character on 
-each row of the hardware video buffer.</td>
+each row from the hardware video buffer.</td>
 <tr><td><code>screen.size</code></td>
 <td><code>1</code> or <code>2</code></td>
 <td align="center"><code>1</code></td>
@@ -223,8 +223,6 @@ some screen corruption if there are windows overlapping the video
 window.</td></tr>
 </table></td></tr>
 </table>
-<p><i>Note:</i> If running with the CEGMON monitor the screen offset 
-may need to be set to 12 (rather than the default 13).</p>
 <p><i>Note:</i> On any modern PC, especially anything with a dual
 or multicore processor, the default <i>async</i> screen update option
 is likely to produce the best results.
