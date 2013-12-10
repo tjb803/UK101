@@ -5,6 +5,9 @@
  */
 package uk101.hardware;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+
 import uk101.hardware.bus.DataBus;
 import uk101.machine.Computer;
 import uk101.machine.Data;
@@ -67,13 +70,16 @@ public class CPU6502 {
     DataBus bus;
 
     // Execution control
-    boolean running;
+    AtomicBoolean running;
     boolean sigRESET, sigNMI, sigIRQ;
 
     // Timing control
     boolean useSpin;
-    int speed, cpuCycles;
-    long cpuStart, spinPause, sleepPause;
+    int speed;
+    long spinPause, sleepPause;
+    
+    // Relative speed calculation
+    AtomicLong cpuStart, cpuCycles;
 
     // Debugging
     Trace trace;
@@ -82,6 +88,9 @@ public class CPU6502 {
     public CPU6502(int mhz, DataBus bus) {
         this.alu = new ALU6502();
         this.bus = bus;
+        running = new AtomicBoolean();
+        cpuStart = new AtomicLong();
+        cpuCycles = new AtomicLong();
         setMHz(mhz);
         calibrate();
         reset();
@@ -115,12 +124,12 @@ public class CPU6502 {
      */
     public float getSpeed() {
         // Calculate speed
-        float cpuTime = System.currentTimeMillis() - cpuStart;
-        float mhz = (float)cpuCycles/(cpuTime*1000);
+        float cpuTime = System.currentTimeMillis() - cpuStart.get();
+        float mhz = (float)cpuCycles.get()/(cpuTime*1000);
 
         // Reset counters ready for next call
-        cpuStart = System.currentTimeMillis();
-        cpuCycles = 0;
+        cpuStart.set(System.currentTimeMillis());
+        cpuCycles.set(0);
 
         return mhz;
     }
@@ -151,42 +160,44 @@ public class CPU6502 {
      * Normal processor execution
      */
     public void run() {
-        running = true;
-        cpuStart = System.currentTimeMillis();
-        cpuCycles = 0;
+        running.set(true);
+        cpuStart.set(System.currentTimeMillis());
+        cpuCycles.set(0);
 
         long now = System.nanoTime();
         long end = now;
         
-        while (running) {
-            int cycles = execute();
-            cpuCycles += cycles;
+        while (running.get()) {
+            synchronized (this) {
+                int cycles = execute();
+                cpuCycles.addAndGet(cycles);
 
-            // It is difficult to get timings exactly right in Java.  This logic
-            // assumes we are running too fast (which should be true most of the
-            // time on anything except a very slow machine) and adds some delays
-            // when we have accumulated enough excess time for a delay to be
-            // worthwhile - this means individual instructions won't be at the
-            // exact correct speed, but on average the CPU should be close.
-            if (speed > 0) {
-                end += cycles*speed;
-                long pause = end-now;
-                if (pause > sleepPause) {
-                    try { 
-                        Thread.sleep(pause/1000000, (int)pause%1000000);
-                    } catch (InterruptedException e) { }
-                    now = System.nanoTime();
-                } else if (useSpin) {
-                    while (end-now > spinPause) { 
+                // It is difficult to get timings exactly right in Java.  This logic
+                // assumes we are running too fast (which should be true most of the
+                // time on anything except a very slow machine) and adds some delays
+                // when we have accumulated enough excess time for a delay to be
+                // worthwhile - this means individual instructions won't be at the
+                // exact correct speed, but on average the CPU should be close.
+                if (speed > 0) {
+                    end += cycles*speed;
+                    long pause = end-now;
+                    if (pause > sleepPause) {
+                        try { 
+                            Thread.sleep(pause/1000000, (int)pause%1000000);
+                        } catch (InterruptedException e) { }
                         now = System.nanoTime();
-                    }    
+                    } else if (useSpin) {
+                        while (end-now > spinPause) { 
+                            now = System.nanoTime();
+                        }    
+                    }
                 }
             }
         }
     }
 
     public void stop() {
-        running = false;
+        running.set(false);
     }
 
     /*
@@ -705,7 +716,7 @@ public class CPU6502 {
     /*
      * Additional simulator instructions
      */
-    synchronized void halt() {
+    void halt() {
         try {
             wait();
         } catch (InterruptedException e) {
@@ -824,7 +835,7 @@ public class CPU6502 {
     }
 
     // Enable/disable tracing
-    public void trace(Trace trace) {
+    public synchronized void trace(Trace trace) {
         this.trace = trace;
     }
 
