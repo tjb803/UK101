@@ -80,15 +80,29 @@ public class ComputerView extends JDesktopPane implements ActionListener {
 
     // Layout all the windows in their default positions
     public boolean defaultLayout() {
+        // First some messiness related to the GTK+ look and feel on Linux.  This seems
+        // to want to add some sort of TaskBar at the bottom in a layer that overlays
+        // our windows (in the default layer).  If we can find something resembling this
+        // bar (in a non-default layer) we need to adjust our size to allow for it.
+        int extraY = 0, extraHeight = 0;
+        for (Component c: getComponents()) {
+            if (getLayer(c) != DEFAULT_LAYER) {
+                if (c.getY() == 0)      // TaskBar is at the top
+                    extraY = Math.max(extraY, c.getHeight());
+                else if (c.getY() < 0)  // TaskBar is at the bottom
+                    extraHeight = Math.max(extraHeight, c.getHeight()-1);
+            }
+        }
+        
         int maxX1 = video.getWidth() + machine.getWidth() + 5;
         int maxX2 = keyboard.getWidth() + cassette.getWidth() + 10;
         int maxX = Math.max(maxX1, maxX2);
         int maxY = keyboard.getHeight() + video.getHeight();
         
-        int macX = maxX - machine.getWidth(), macY = 0;
+        int macX = maxX - machine.getWidth(), macY = extraY;
         machine.setLocation(macX, macY);
 
-        int vidX = 0, vidY = 0;
+        int vidX = 0, vidY = extraY;
         if (video.getWidth() < keyboard.getWidth()) {
             vidX = (keyboard.getWidth() - video.getWidth())/2;
             if (vidX + video.getWidth() > macX) {
@@ -106,7 +120,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         int casX = kybX + keyboard.getWidth() + 10, casY = maxY - cassette.getHeight();
         cassette.setLocation(casX, casY);
 
-        Dimension size = new Dimension(maxX, maxY);
+        Dimension size = new Dimension(maxX, maxY+extraY+extraHeight);
         setPreferredSize(size);
 
         return false;       // Layout is incomplete (frame is unsized)

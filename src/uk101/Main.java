@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.JFrame;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -121,7 +122,9 @@ public class Main implements Runnable {
             }
         } else {
             // No look parameter, so force system look and feel
-            lafClass = UIManager.getSystemLookAndFeelClassName();
+            LookAndFeel laf = UIManager.getLookAndFeel();
+            if (laf == null || laf.getID().equals("Metal"))
+                lafClass = UIManager.getSystemLookAndFeelClassName();
         }
         
         // Set requested look and feel.  Leave as default if no match found
