@@ -33,7 +33,7 @@ public class KeyboardKey extends JButton {
     static Border KEY_BORDER;
     static Dimension KEY_SIZE;
     static {
-        KEY_FONT = Font.decode("Dialog-bold-10");
+        KEY_FONT = Font.decode("Dialog-bold-9");
         KEY_BORDER = BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(3,0,3,0));
         int kw = new JLabel().getFontMetrics(KEY_FONT).stringWidth(" RESET ");
         KEY_SIZE = new Dimension(kw, kw);
