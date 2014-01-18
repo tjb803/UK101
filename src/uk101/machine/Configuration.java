@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2013
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.machine;
 
@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import uk101.Main;
+import uk101.io.KansasCityFormat;
 import uk101.utils.Args;
 
 /**
@@ -43,6 +44,10 @@ public class Configuration extends Properties {
     public static final String SCREEN_OFFSET = "screen.offset";
     public static final String SCREEN_COLOUR = "screen.colour";
     public static final String SCREEN_UPDATE = "screen.update";
+    public static final String KCS_RATE = "kcs.rate";
+    public static final String KCS_BITS = "kcs.bits";
+    public static final String KCS_BAUD = "kcs.baud";
+    public static final String KCS_LEAD = "kcs.lead";
     public static final String ROM = "rom.";
     
     public static final String WHITE = "white";
@@ -110,6 +115,10 @@ public class Configuration extends Properties {
         applyStr(props, SCREEN_COLOUR, WHITE, GREEN, AMBER);
         apply(props, SCREEN_COLOUR, "screen.color", 0, 0, WHITE, GREEN, AMBER);
         applyStr(props, SCREEN_UPDATE, SYNC, ASYNC);
+        applyInt(props, KCS_RATE, 8000, 96000);
+        applyStr(props, KCS_BITS, "8", "16");
+        applyStr(props, KCS_BAUD, "300", "600", "1200");
+        applyInt(props, KCS_LEAD, 0, 10);
         applyROM(props);
     }
     
@@ -174,6 +183,17 @@ public class Configuration extends Properties {
     
     public String getValue(String key) {
         return getProperty(key);
+    }
+    
+    /*
+     * Return combined KCS audio format 
+     */
+    public KansasCityFormat getAudioFormat() {
+        int rate = getInt(KCS_RATE);
+        int bits = getInt(KCS_BITS);
+        int baud = getInt(KCS_BAUD);
+        int lead = getInt(KCS_LEAD)*1000;
+        return new KansasCityFormat(rate, bits, baud, lead, lead);
     }
     
     /*

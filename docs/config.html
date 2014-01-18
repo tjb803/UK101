@@ -228,6 +228,35 @@ or multicore processor, the default <i>async</i> screen update option
 is likely to produce the best results.
 On older hardware the <i>sync</i> option may result in faster and/or
 smoother operation.</p>
+<hr>
+<h2 id="kcs">Kansas City Audio Encoding</h2>
+<p>These settings control the audio encoding when creating Kansas City
+Standard data files.</p>
+<table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
+<tr><th width="15%">Name</th><th width="15%">Values</th>
+<th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>kcs.rate</code></td>
+<td>from <code>8000</code> to <code>96000</code></td>
+<td align="center"><code>44100</code></td>
+<td>This defines the audio sample rate.
+Higher sample values give higher quality sound but larger files.</td></tr>
+<tr><td><code>kcs.bits</code></td>
+<td><code>8</code> or <code>16</code></td>
+<td align="center"><code>16</code></td>
+<td>This defines the number of bits for each sample.
+Higher bits values give higher quality sound but larger files.</td></tr>
+<tr><td><code>kcs.baud</code></td>
+<td><code>300</code>, <code>600</code> or <code>1200</code></td>
+<td align="center"><code>300</code></td>
+<td>This defines the audio baud rate rate.
+Kansas City standard defines the rate as 300, but it was common to try
+to increase this to 600 or even 1200.</td></tr>
+<tr><td><code>kcs.lead</code></td>
+<td>from <code>0</code> to <code>10</code></td>
+<td align="center"><code>5</code></td>
+<td>This is the number of seconds of carrier tone played before the
+start and after the end of the data.</td></tr>
+</table>
 <br><table border="1" frame="above" rules="none" width="100%">
 <tr><td align="left">Tim Baldwin<br>January 2014
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>

@@ -28,15 +28,15 @@ import javax.sound.sampled.AudioSystem;
 public class WaveOutputStream extends OutputStream {
  
     OutputStream outputStream;
-    KansasCityFormat kcFormat;
-    KansasCityEncoder kcEncoder;
-    ByteArrayOutputStream rawOutput;
+    KansasCityFormat audioFormat;
+    KansasCityEncoder audioEncoder;
+    ByteArrayOutputStream audioStream;
 
     public WaveOutputStream(OutputStream out, KansasCityFormat format) {
         outputStream = out;
-        kcFormat = format;
-        kcEncoder = new KansasCityEncoder(kcFormat);
-        rawOutput = new ByteArrayOutputStream();
+        audioFormat = format;
+        audioEncoder = new KansasCityEncoder(audioFormat);
+        audioStream = new ByteArrayOutputStream();
     }
     
     /*
@@ -44,18 +44,18 @@ public class WaveOutputStream extends OutputStream {
      */
 
     public void write(int b) throws IOException {
-        if (rawOutput.size() == 0)
-            kcEncoder.encodeTone(kcFormat.getLeadIn(), rawOutput);
-        kcEncoder.encodeByte(b, rawOutput);
+        if (audioStream.size() == 0)
+            audioEncoder.encodeTone(audioFormat.getLeadIn(), audioStream);
+        audioEncoder.encodeByte(b, audioStream);
     }
     
     public void close() throws IOException {
-        if (rawOutput.size() != 0) {
-            kcEncoder.encodeTone(kcFormat.getLeadOut(), rawOutput);
-            kcEncoder.encodeEnd(rawOutput);
-            ByteArrayInputStream raw = new ByteArrayInputStream(rawOutput.toByteArray());
-            int frames = raw.available() / kcFormat.getFrameSize();
-            AudioInputStream audioIn = new AudioInputStream(raw, kcFormat, frames);
+        if (audioStream.size() != 0) {
+            audioEncoder.encodeTone(audioFormat.getLeadOut(), audioStream);
+            audioEncoder.encodeEnd(audioStream);
+            ByteArrayInputStream in = new ByteArrayInputStream(audioStream.toByteArray());
+            int frames = in.available() / audioFormat.getFrameSize();
+            AudioInputStream audioIn = new AudioInputStream(in, audioFormat, frames);
             AudioSystem.write(audioIn, Type.WAVE, outputStream);
             audioIn.close();
         }

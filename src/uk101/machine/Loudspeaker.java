@@ -31,6 +31,7 @@ public class Loudspeaker extends OutputStream {
     
     public void open() throws LineUnavailableException {
         sound.open();
+        sound.start();          
     }
     
     public void close() {
@@ -41,10 +42,9 @@ public class Loudspeaker extends OutputStream {
     
     public void write(byte[] b) {
         sound.write(b, 0, b.length);
-        sound.start();  
     }
 
     public void write(int b) throws IOException {
-        throw new IOException();    // Cannot write single bytes
+        throw new IOException("Cannot write single bytes of sound");
     }
 }

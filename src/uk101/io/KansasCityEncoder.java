@@ -35,8 +35,8 @@ public class KansasCityEncoder {
     KansasCityFormat format;
     byte[] bit0, bit1, zero;
     
-    public KansasCityEncoder(KansasCityFormat fmt) {
-        format = fmt;
+    public KansasCityEncoder(KansasCityFormat kcs) {
+        format = kcs;
         int n = 4/(format.getBaudRate()/KansasCityFormat.BAUD300);
         bit0 = getSamples(n, LO_TONE);      // n cycles of 1200Hz
         bit1 = getSamples(2*n, HI_TONE);    // 2n cycles of 2400Hz

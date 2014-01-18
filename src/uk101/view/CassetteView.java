@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2013
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.view;
 
@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import uk101.io.KansasCityFormat;
 import uk101.io.Stream;
 import uk101.machine.TapeRecorder;
 import uk101.view.component.CassetteButton;
@@ -52,12 +53,14 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
 
     File tapeFile;
     int inFormat, outFormat;
+    KansasCityFormat audioFormat;
 
-    public CassetteView(TapeRecorder recorder) {
+    public CassetteView(TapeRecorder recorder, KansasCityFormat kcs) {
         super("Cassette Recorder", false, false, false, true);
         this.recorder = recorder;
-        
+
         recorder.setView(this);
+        audioFormat = kcs;
  
         // Create an auto-stop timer.  Stops the cassette player if it has
         // not been used for 15 seconds.
@@ -163,7 +166,7 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
     void recordTape() {
         OutputStream out = null;
         if (!tapeFile.exists()) {
-            out = Stream.getOutputStream(tapeFile, outFormat);
+            out = Stream.getOutputStream(tapeFile, outFormat, audioFormat);
         } else { 
             String[] msg = {
                 "File " + tapeFile.getPath() + " already exists.",
@@ -176,13 +179,13 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
             if (JOptionPane.showInternalOptionDialog(this, 
                     msg, getTitle(), JOptionPane.YES_NO_OPTION, 
                     JOptionPane.WARNING_MESSAGE, null, opts, opts[0]) == JOptionPane.NO_OPTION) {
-                out = Stream.getOutputStream(tapeFile, outFormat);  
+                out = Stream.getOutputStream(tapeFile, outFormat, audioFormat);  
             } else {
                 stop.button.doClick();
             }
         }
         if (out != null) {
-            format.setValue((Stream.getFormat(out) == Stream.STREAM_ASCII) ? TapeFormat.MODE_ASCII : TapeFormat.MODE_BINARY);
+            format.setValue(tapeFormat(Stream.getFormat(out)));
             recorder.setOutputTape(out);
         }
     }
@@ -190,7 +193,7 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
     void playTape() {
         InputStream in = Stream.getInputStream(tapeFile, inFormat);
         if (in != null) {
-            format.setValue((Stream.getFormat(in) == Stream.STREAM_ASCII) ? TapeFormat.MODE_ASCII : TapeFormat.MODE_BINARY);
+            format.setValue(tapeFormat(Stream.getFormat(in)));
             recorder.setInputTape(in);
         }
     }
@@ -199,6 +202,11 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
         format.setValue(TapeFormat.MODE_UNSET);
         recorder.setInputTape(null);
         recorder.setOutputTape(null);
+    }
+    
+    String tapeFormat(int format) {
+        return ((format == Stream.STREAM_ASCII) ? TapeFormat.MODE_ASCII : 
+                (format == Stream.STREAM_AUDIO) ? TapeFormat.MODE_AUDIO : TapeFormat.MODE_BINARY);
     }
     
     /*

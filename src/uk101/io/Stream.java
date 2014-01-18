@@ -24,17 +24,20 @@ public class Stream {
     public static final int STREAM_SELECT = 0;
     public static final int STREAM_ASCII = 1;
     public static final int STREAM_BINARY = 2;
+    public static final int STREAM_AUDIO = 3;
 
     /*
-     * Create an OutputStream in either ASCII or Binary format
+     * Create an OutputStream in either ASCII, Binary or Audio format
      */
-    public static OutputStream getOutputStream(File file, int format) {
+    public static OutputStream getOutputStream(File file, int format, KansasCityFormat kcs) {
         OutputStream out = null;
         try {
             if (format == STREAM_ASCII) {
                 out = new UK101OutputStream(new FileWriter(file));
             } else if (format == STREAM_BINARY) {
                 out = new FileOutputStream(file);
+            } else if (format == STREAM_AUDIO) {
+                out = new WaveOutputStream(new FileOutputStream(file), kcs);
             }
         } catch (IOException e) {
             System.err.println(e);
@@ -91,6 +94,7 @@ public class Stream {
     }
     
     public static int getFormat(OutputStream stream) {
-        return (stream instanceof UK101OutputStream) ? STREAM_ASCII : STREAM_BINARY;
+        return (stream instanceof UK101OutputStream) ? STREAM_ASCII : 
+                (stream instanceof WaveOutputStream) ? STREAM_AUDIO : STREAM_BINARY;
     }
 }

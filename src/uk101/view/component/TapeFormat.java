@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.view.component;
 
@@ -25,6 +25,7 @@ public class TapeFormat extends JPanel {
     public static final String MODE_AUTO = "Automatic";
     public static final String MODE_ASCII = "ASCII";
     public static final String MODE_BINARY = "Binary";
+    public static final String MODE_AUDIO = "Audio";
     public static final String MODE_UNSET = " ";
 
     ButtonGroup inputGroup, outputGroup;
@@ -53,12 +54,15 @@ public class TapeFormat extends JPanel {
         op.setBorder(BorderFactory.createTitledBorder("Output"));
         JRadioButton oa = new JRadioButton(MODE_ASCII, true);
         JRadioButton ob = new JRadioButton(MODE_BINARY);
+        JRadioButton ow = new JRadioButton(MODE_AUDIO);
         oa.setActionCommand(Integer.toString(Stream.STREAM_ASCII));
         ob.setActionCommand(Integer.toString(Stream.STREAM_BINARY));
+        ow.setActionCommand(Integer.toString(Stream.STREAM_AUDIO));
         outputGroup = new ButtonGroup();
-        outputGroup.add(oa);  outputGroup.add(ob);
+        outputGroup.add(oa);  outputGroup.add(ob);  outputGroup.add(ow);
         op.add(oa);  op.add(Box.createVerticalStrut(2));
-        op.add(ob);
+        op.add(ob);  op.add(Box.createVerticalStrut(2));
+        op.add(ow);
 
         add(ip);
         add(Box.createVerticalStrut(5));
