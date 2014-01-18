@@ -64,5 +64,6 @@ public class TapeRead {
         // Print the input to the output
         output.write(input);
         output.close();
+        input.close();
     }
 }

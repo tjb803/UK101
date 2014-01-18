@@ -18,6 +18,7 @@ various off-line tasks.</p>
 <li><a href="#ptrace">Trace File Formatter</a></li>
 <li><a href="#tread">Binary Tape Reader</a></li>
 <li><a href="#twrite">Binary Tape Writer</a></li>
+<li><a href="#tplay">Tape Player</a></li>
 </ul>
 <p>To run any of these utility programs you must ensure the simulator JAR
 file is on the Java CLASSPATH.</p>
@@ -28,15 +29,18 @@ file is on the Java CLASSPATH.</p>
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>bytesfile</code></dt><dd>A file containing the code to be disassembled.</dd>
-<dt><code>address</code></dt><dd>The code starting address.
+<dt><code>bytesfile</code></dt>
+<dd>A file containing the code to be disassembled.</dd>
+<dt><code>address</code></dt>
+<dd>The code starting address.
 Defaults to 0.
 This can be provided in hexadecimal by preceding the digits with 
 a <code>$</code> or <code>0x</code> characters.</dd>
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
-<dt><code>-output <i>outputfile</i></code></dt><dd>A file to save the output. 
+<dt><code>-output <i>outputfile</i></code></dt>
+<dd>A file to save the output. 
 Defaults to standard out.</dd>
 </dl></blockquote>
 <p>This command will disassemble a block of 6502 instruction code such as 
@@ -69,15 +73,18 @@ FFB9:  60         RTS
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>bytesfile</code></dt><dd>A file containing the data to be displayed.</dd>
-<dt><code>address</code></dt><dd>The data starting address.
+<dt><code>bytesfile</code></dt>
+<dd>A file containing the data to be displayed.</dd>
+<dt><code>address</code></dt>
+<dd>The data starting address.
 Defaults to 0.
 This can be provided in hexadecimal by preceding the digits with 
 a <code>$</code> or <code>0x</code> characters.</dd>
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
-<dt><code>-output <i>outputfile</i></code></dt><dd>A file to save the output. 
+<dt><code>-output <i>outputfile</i></code></dt>
+<dd>A file to save the output. 
 Defaults to standard out.</dd>
 </dl></blockquote>
 <p>This command will print a formatted hexadecimal dump of a block of 
@@ -107,15 +114,19 @@ FFF0:  02 6C 1C 02 6C 1E 02 6C 20 02 22 02 00 FF 25 02  [.l..l..l ."...%.]
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>dumpfile</code></dt><dd>The name of a simulator memory dump file.</dd>
+<dt><code>dumpfile</code></dt>
+<dd>The name of a simulator memory dump file.</dd>
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
-<dt><code>-output <i>outputfile</i></code></dt><dd>A file to save the output. 
+<dt><code>-output <i>outputfile</i></code></dt>
+<dd>A file to save the output. 
 Defaults to standard out.</dd>
-<dt><code>-hex</code></dt><dd>Format the dump as hex bytes.
+<dt><code>-hex</code></dt>
+<dd>Format the dump as hex bytes.
 This is the default format.</dd>
-<dt><code>-code</code></dt><dd>Format the dump as disassembled code.</dd>
+<dt><code>-code</code></dt>
+<dd>Format the dump as disassembled code.</dd>
 </dl></blockquote>
 <p>This will format and print the output of a simulator memory dump file.
 The memory dump files usually have a name like 
@@ -123,7 +134,7 @@ The memory dump files usually have a name like
 The memory dump can be formatted either as disassembled instructions or 
 as hexadecimal data display.
 <p>Memory dump files can be produced by using the special  
-<a href=extras.html#control">simulator control</a> instruction, or by pressing
+<a href="extras.html#control">simulator control</a> instruction, or by pressing
 the <i>Dump</i> button on the Machine view window.</p>
 <hr><h2 id="ptrace">Trace File Formatter</h2>
 <h3>Command</h3>
@@ -132,11 +143,13 @@ the <i>Dump</i> button on the Machine view window.</p>
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>tracefile</code></dt><dd>The name of a simulator instruction trace file.</dd>
+<dt><code>tracefile</code></dt>
+<dd>The name of a simulator instruction trace file.</dd>
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
-<dt><code>-output <i>outputfile</i></code></dt><dd>A file to save the output. 
+<dt><code>-output <i>outputfile</i></code></dt>
+<dd>A file to save the output. 
 Defaults to standard out.</dd>
 </dl></blockquote>
 <p>This will format and print the output of a simulator instruction trace file.
@@ -161,7 +174,7 @@ If the instruction addresses memory the effective address of the
 instruction operand is also given - this is the address after any
 indirection and indexing has been performed.</p>
 <p>Trace files can be produced by using the special  
-<a href=extras.html#control">simulator control</a> instructions, or by selecting
+<a href="extras.html#control">simulator control</a> instructions, or by selecting
 the <i>Trace</i> action on the CPU view window.</p>
 <hr><h2 id="tread">Binary Tape Reader</h2>
 <h3>Command</h3>
@@ -170,14 +183,16 @@ the <i>Trace</i> action on the CPU view window.</p>
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>inputtape</code></dt><dd>The name of a binary UK101 decoded cassette 
-tape input file.</dd>
-<dt><code>outputfile</code></dt><dd>The name of an output file.  
+<dt><code>inputtape</code></dt>
+<dd>The name of a binary UK101 decoded cassette tape input file.</dd>
+<dt><code>outputfile</code></dt>
+<dd>The name of an output file.  
 Defaults to standard out.</dd> 
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
-<dt><code>-encoding <i>encoding_name</i></code></dt><dd>The output file encoding. 
+<dt><code>-encoding <i>encoding_name</i></code></dt>
+<dd>The output file encoding. 
 Defaults to the standard platform encoding. 
 This option is rarely needed.</dd>
 </dl></blockquote>
@@ -194,27 +209,73 @@ of program tapes.</p>
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>inputfile</code></dt><dd>The name of an ASCII file representation  
-of a decoded cassette tape.</dd>
-<dt><code>outputtape</code></dt><dd>The name of a binary output file.</dd> 
+<dt><code>inputfile</code></dt>
+<dd>The name of an ASCII file representation of a decoded cassette tape.</dd>
+<dt><code>outputtape</code></dt>
+<dd>The name of a binary output file.</dd> 
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
-<dt><code>-encoding <i>encoding_name</i></code></dt><dd>The input file encoding. 
+<dt><code>-encoding <i>encoding_name</i></code></dt>
+<dd>The input file encoding. 
 Defaults to the standard platform encoding. 
 This option is rarely needed.</dd>
 </dl></blockquote>
 <p>This program will take an ASCII representation of a decoded cassette tape
 and write it in the original binary format, possibly for loading back
-inot a real UK101 machine.</p>
+into a real UK101 machine.</p>
 <p>See <a href="samples.html#format">binary and ASCII tape formats</a> for
  details on the differences between the &quot;binary&quot; and ASCII form 
  of program tapes.</p> 
+<hr><h2 id="tplay">Tape Player</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>uk101.utils.TapePlay</b> [options] inputfile [outputwav]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>inputfile</code></dt>
+<dd>The name of an ASCII or binary representation of a decoded cassette tape.</dd>
+<dt><code>outputwav</code></dt><dd>The optional name of an output WAV file.
+If no output file is specified the tape will be played to the PC speakers.</dd> 
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-binary</code> or <code>-ascii</code></dt>
+<dd>These options are not normally needed as the tape player should be able
+to determine the type of tape, but one or other can be specified to force
+a particular format if needed.</dd>
+<dt><code>-sampleRate <i>rate</i></code></dt>
+<dd>The sample rate for the resulting audio stream in samples-per-second.    
+Defaults to 44100Hz (CD quality).</dd>
+<dt><code>-sampleBits <i>8 or 16</i></code></dt>
+<dd>The number of bits in each sample, this must be either 8 or 16.
+Defaults to 16 bits (CD quality).</dd>
+<dt><code>-baudRate <i>300, 600 or 1200</i></code></dt>
+<dd>The baud rate of the encoded data stream.
+Defaults to the Kansas City standard of 300 baud.</dd>
+<dt><code>-leadIn <i>seconds</i></code></dt>
+<dd>The number of seconds of "lead-in" tone before the data starts.
+Defaults to 5 seconds.</dd>
+<dt><code>-leadOut <i>seconds</i></code></dt>
+<dd>The number of seconds of "lead-out" tone after the data ends.
+Defaults to the lead-in value.</dd>
+</dl></blockquote>
+<p>This program will take an <a href="samples.html#format">ASCII or 
+binary</a> representation of a decoded cassette tape and play it back in 
+Kansas City audio-encoded format, either directly to the PC soundcard or 
+stored as a WAV-encoded file.</p>
+<p>By default it will produce CD quality sound, but options are available 
+to reduce the quality if smaller audio files are required.</p>
+<p><b>Note: </b>If you <a href="samples.html#decode">recover programs</a>
+from old cassette tapes the Tape Player utility can be used to reconstruct a 
+perfect copy of the original audio source usually in a much higher quality form 
+than the original.</p>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>December 2010
+<tr><td align="left">Tim Baldwin<br>January 2014
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2010</td></tr>
+<br><br>&copy; Tim Baldwin 2010,2014</td></tr>
 </table>
 </body>
 </html>

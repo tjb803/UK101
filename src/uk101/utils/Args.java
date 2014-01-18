@@ -166,15 +166,19 @@ public class Args {
     }
 
     public int getInteger(int position) {
-        return getIntegerValue(getParameter(position));
+        return getIntegerValue(getParameter(position), -1);
     }
 
     public int getInteger(String option) {
-        return getIntegerValue(getOption(option));
+        return getIntegerValue(getOption(option), -1);
+    }
+    
+    public int getInteger(String option, int defaultValue) {
+        return getIntegerValue(getOption(option), defaultValue);
     }
 
-    private int getIntegerValue(String value) {
-        int result = -1;
+    private int getIntegerValue(String value, int defaultValue) {
+        int result = defaultValue;
         if (value != null) {
             try {
                 result = Integer.parseInt(value);

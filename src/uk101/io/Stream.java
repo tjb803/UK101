@@ -66,11 +66,11 @@ public class Stream {
     /*
      * Check a file format to try to determine if it is binary or ASCII.  Assume
      * binary if the file contains any non-ASCII character bytes.
-     * Note: only checks first 128 bytes of the file.
+     * Note: only checks first 256 bytes of the file.
      */
     public static int checkFormat(File file) throws IOException {
         int format = STREAM_ASCII;
-        byte[] b = new byte[128];
+        byte[] b = new byte[256];
         InputStream in = new FileInputStream(file);
         int size = in.read(b);
         for (int i = 0; i < size && format == STREAM_ASCII; i++) {

@@ -39,3 +39,4 @@ v1.2.0
    - Add support for additional plug-in ROMs
    - Cassette player stops when not in use
    - Slightly smaller keyboard window
+   - Add TapePlay utility to encode Kansas City audio

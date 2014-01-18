@@ -53,6 +53,7 @@ v1.2.0
  - "rom.XXXX" property to allow extra plug-in ROMs
  - Additional games: "Asteroids" and "Le Passe-Temp"
  - Default screen size to support CEGMON and MONUK02
+ - Add TapePlay utility to encode as Kansas City audio
 
 v1.1.0
  - "baud.rate" property to allow correct ACIA timing signals
@@ -73,7 +74,7 @@ v0.5.0  December 2010  First public release
 v0.6.0  January 2011   Bug fixes 
 v1.0.0  February 2011  Add Ohio Superboard support
 v1.1.0  October 2011   ACIA support for 8K Super Invaders
-v1.2.0  December 2013  Support additional plug-in ROMs
+v1.2.0  January 2014   Support additional plug-in ROMs, add TapePlay function
 
 ===========
 Tim Baldwin
