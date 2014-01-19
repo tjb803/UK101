@@ -7,7 +7,6 @@ package uk101.io;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Subclass of AudioEncoder that creates output in Kanasas City Standard
@@ -47,46 +46,46 @@ public class KansasCityEncoder extends AudioEncoder {
     /*
      * Encode a byte.
      */
-    public void encodeByte(int b, OutputStream out) throws IOException {
-        encodeBit(0, out);
+    public void encodeByte(int b) throws IOException {
+        encodeBit(0);
         for (int i = 0; i < 8; i++) {
-            encodeBit(b & 0x1, out);
+            encodeBit(b & 0x1);
             b >>= 1;
         }
-        encodeBit(1, out);
-        encodeBit(1, out);
+        encodeBit(1);
+        encodeBit(1);
     }
 
-    void encodeBit(int b, OutputStream out) throws IOException {
-        out.write((b == 0) ? bit0 : bit1);
+    void encodeBit(int b) throws IOException {
+        outputStream.write((b == 0) ? bit0 : bit1);
     }
     
     /*
      * Encode start and end.  Lead-in or lead-out tone is 2400Hz so can
      * be written as a sequence of '1' bits.  
      */
-    public void encodeStart(OutputStream out) throws IOException {
-        encodeTone(leadIn, out);
+    public void encodeStart() throws IOException {
+        encodeTone(leadIn);
     }
     
-    public void encodeEnd(OutputStream out) throws IOException {
-        encodeTone(leadOut, out);
-        out.write(bit0, 0, audioFormat.getFrameSize());
+    public void encodeEnd() throws IOException {
+        encodeTone(leadOut);
+        outputStream.write(bit0, 0, audioFormat.getFrameSize());
     }
     
-    void encodeTone(int millis, OutputStream out) throws IOException {
+    void encodeTone(int millis) throws IOException {
         int bits = (millis*baudRate)/1000;
         for (int i = 0; i < bits; i++) {
-            encodeBit(1, out);
+            encodeBit(1);
         }
     }
     
     /*
      * Encode all data from an InputStream
      */
-    public void encodeStream(InputStream in, OutputStream out) throws IOException {
+    public void encodeStream(InputStream in) throws IOException {
         for (int b = in.read(); b != -1; b = in.read()) {
-            encodeByte(b, out);
+            encodeByte(b);
         }
     }
 }

@@ -23,9 +23,9 @@ public abstract class AudioEncoder {
     public static final int BIT8 = 8;
     public static final int BIT16 = 16;
     public static final int WAVE_SINE = 1;
-    public static final int WAVE_HW = 2;
  
     protected AudioFormat audioFormat;
+    protected OutputStream outputStream;
     protected int waveForm;
     protected int leadIn, leadOut;
     
@@ -36,6 +36,10 @@ public abstract class AudioEncoder {
     protected AudioEncoder(int rate, int bits) {
         audioFormat = new AudioFormat(rate, bits, 1, (bits==BIT16), true);
         waveForm = WAVE_SINE;
+    }
+    
+    public void setOutputStream(OutputStream out) {
+        outputStream = out;
     }
 
     public AudioFormat getFormat() {
@@ -67,11 +71,12 @@ public abstract class AudioEncoder {
         return data;
     }
     
-    // Correct wave form should be a pure sine wave, but the UK101 hardware
-    // actually generated a square wave and integrated it via a simple passive
-    // low-pass filter with R=100k and C=10n.  Since the same filter was used for 
-    // both high and low frequencies this had the effect of making the high 
-    // frequency slightly quieter.
+    // Correct Kansas City wave function should be a pure sine wave, but the
+    // UK101 hardware actually generated a square wave and integrated it via a 
+    // simple passive low-pass filter with R=100k and C=10n which gives a 
+    // "capacitor charge/discharge" shape instead.  Since the same filter was used 
+    // for both high and low frequencies this also had the effect of making the 
+    // high frequency slightly quieter.
     // TODO: Implement the hardware wave function?
     double waveFn(double r) {
         return Math.sin(r);
@@ -81,13 +86,13 @@ public abstract class AudioEncoder {
      * Encoding methods need to be supplied by the concrete subclass
      */
     
-    public abstract void encodeStart(OutputStream out) throws IOException;
-    public abstract void encodeEnd(OutputStream out) throws IOException;
-    public abstract void encodeByte(int b, OutputStream out) throws IOException;
+    public abstract void encodeStart() throws IOException;
+    public abstract void encodeEnd() throws IOException;
+    public abstract void encodeByte(int b) throws IOException;
     
-    public void encodeStream(InputStream in, OutputStream out) throws IOException {
+    public void encodeStream(InputStream in) throws IOException {
         for (int b = in.read(); b != -1; b = in.read()) {
-            encodeByte(b, out);
+            encodeByte(b);
         }    
     }
 }

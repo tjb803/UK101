@@ -35,6 +35,7 @@ public class WaveOutputStream extends OutputStream {
         outputStream = out;
         audioEncoder = encoder;
         audioStream = new ByteArrayOutputStream();
+        audioEncoder.setOutputStream(audioStream);
     }
     
     /*
@@ -43,14 +44,14 @@ public class WaveOutputStream extends OutputStream {
 
     public void write(int b) throws IOException {
         if (audioStream.size() == 0) {
-            audioEncoder.encodeStart(audioStream);
+            audioEncoder.encodeStart();
         }    
-        audioEncoder.encodeByte(b, audioStream);
+        audioEncoder.encodeByte(b);
     }
     
     public void close() throws IOException {
         if (audioStream.size() != 0) {
-            audioEncoder.encodeEnd(audioStream);
+            audioEncoder.encodeEnd();
             ByteArrayInputStream in = new ByteArrayInputStream(audioStream.toByteArray());
             int frames = in.available() / audioEncoder.getFormat().getFrameSize();
             AudioInputStream audioIn = new AudioInputStream(in, audioEncoder.getFormat(), frames);
@@ -66,8 +67,8 @@ public class WaveOutputStream extends OutputStream {
     
     public void write(InputStream in) throws IOException {
         if (audioStream.size() == 0) {
-            audioEncoder.encodeStart(audioStream);
+            audioEncoder.encodeStart();
         } 
-        audioEncoder.encodeStream(in, audioStream); 
+        audioEncoder.encodeStream(in); 
     }
 }

@@ -84,9 +84,10 @@ public class TapePlay {
             // Playing to the speaker
             Loudspeaker speaker = new Loudspeaker(encoder.getFormat());
             speaker.open();
-            encoder.encodeStart(speaker);
-            encoder.encodeStream(input, speaker);
-            encoder.encodeEnd(speaker);
+            encoder.setOutputStream(speaker);
+            encoder.encodeStart();
+            encoder.encodeStream(input);
+            encoder.encodeEnd();
             speaker.close();
         }
         input.close();
