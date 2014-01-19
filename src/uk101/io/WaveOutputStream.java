@@ -17,7 +17,7 @@ import javax.sound.sampled.AudioSystem;
 
 /**
  * Utility class to create an output stream that can write an audio WAV
- * file in Kansas City encoded format.
+ * file in format defined by the AudioEncoder.
  *
  * To write a WAV file we need to know its total length, so we have to 
  * build the RAW audio data in a temporary byte buffer before writing the 
@@ -28,14 +28,12 @@ import javax.sound.sampled.AudioSystem;
 public class WaveOutputStream extends OutputStream {
  
     OutputStream outputStream;
-    KansasCityFormat audioFormat;
-    KansasCityEncoder audioEncoder;
+    AudioEncoder audioEncoder;
     ByteArrayOutputStream audioStream;
 
-    public WaveOutputStream(OutputStream out, KansasCityFormat format) {
+    public WaveOutputStream(OutputStream out, AudioEncoder encoder) {
         outputStream = out;
-        audioFormat = format;
-        audioEncoder = new KansasCityEncoder(audioFormat);
+        audioEncoder = encoder;
         audioStream = new ByteArrayOutputStream();
     }
     
@@ -44,18 +42,18 @@ public class WaveOutputStream extends OutputStream {
      */
 
     public void write(int b) throws IOException {
-        if (audioStream.size() == 0)
-            audioEncoder.encodeTone(audioFormat.getLeadIn(), audioStream);
+        if (audioStream.size() == 0) {
+            audioEncoder.encodeStart(audioStream);
+        }    
         audioEncoder.encodeByte(b, audioStream);
     }
     
     public void close() throws IOException {
         if (audioStream.size() != 0) {
-            audioEncoder.encodeTone(audioFormat.getLeadOut(), audioStream);
             audioEncoder.encodeEnd(audioStream);
             ByteArrayInputStream in = new ByteArrayInputStream(audioStream.toByteArray());
-            int frames = in.available() / audioFormat.getFrameSize();
-            AudioInputStream audioIn = new AudioInputStream(in, audioFormat, frames);
+            int frames = in.available() / audioEncoder.getFormat().getFrameSize();
+            AudioInputStream audioIn = new AudioInputStream(in, audioEncoder.getFormat(), frames);
             AudioSystem.write(audioIn, Type.WAVE, outputStream);
             audioIn.close();
         }
@@ -66,8 +64,10 @@ public class WaveOutputStream extends OutputStream {
      * Extra useful methods
      */
     
-    public void write(InputStream input) throws IOException {
-        for (int b = input.read(); b != -1; b = input.read())
-            write(b);
+    public void write(InputStream in) throws IOException {
+        if (audioStream.size() == 0) {
+            audioEncoder.encodeStart(audioStream);
+        } 
+        audioEncoder.encodeStream(in, audioStream); 
     }
 }

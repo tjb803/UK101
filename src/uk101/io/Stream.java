@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.io;
 
@@ -29,7 +29,7 @@ public class Stream {
     /*
      * Create an OutputStream in either ASCII, Binary or Audio format
      */
-    public static OutputStream getOutputStream(File file, int format, KansasCityFormat kcs) {
+    public static OutputStream getOutputStream(File file, int format, AudioEncoder enc) {
         OutputStream out = null;
         try {
             if (format == STREAM_ASCII) {
@@ -37,7 +37,7 @@ public class Stream {
             } else if (format == STREAM_BINARY) {
                 out = new FileOutputStream(file);
             } else if (format == STREAM_AUDIO) {
-                out = new WaveOutputStream(new FileOutputStream(file), kcs);
+                out = new WaveOutputStream(new FileOutputStream(file), enc);
             }
         } catch (IOException e) {
             System.err.println(e);
@@ -94,7 +94,7 @@ public class Stream {
     }
     
     public static int getFormat(OutputStream stream) {
-        return (stream instanceof UK101OutputStream) ? STREAM_ASCII : 
-                (stream instanceof WaveOutputStream) ? STREAM_AUDIO : STREAM_BINARY;
+        return (stream instanceof WaveOutputStream) ? STREAM_AUDIO : 
+                (stream instanceof UK101OutputStream) ? STREAM_ASCII : STREAM_BINARY;
     }
 }

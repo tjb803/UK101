@@ -43,6 +43,10 @@ public class Loudspeaker extends OutputStream {
     public void write(byte[] b) {
         sound.write(b, 0, b.length);
     }
+    
+    public void write(byte[] b, int offset, int length) {
+        sound.write(b, offset, length);
+    }
 
     public void write(int b) throws IOException {
         throw new IOException("Cannot write single bytes of sound");

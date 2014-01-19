@@ -9,10 +9,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import uk101.io.KansasCityEncoder;
-import uk101.io.KansasCityFormat;
-import uk101.io.Stream;
+import uk101.io.AudioEncoder;
 import uk101.io.WaveOutputStream;
+import uk101.io.KansasCityEncoder;
+import uk101.io.Stream;
 import uk101.machine.Loudspeaker;
 
 /**
@@ -73,20 +73,20 @@ public class TapePlay {
         InputStream input = Stream.getInputStream(inputFile, tapeFormat);
         
         // Encode and save or play the sound
-        KansasCityFormat format = new KansasCityFormat(rate, bits, baud, leadIn*1000, leadOut*1000);
+        AudioEncoder encoder = new KansasCityEncoder(rate, bits, baud);
+        encoder.setLeadInOut(leadIn*1000, leadOut*1000);
         if (outputFile != null) {
             // Saving the output to a WAV file
-            WaveOutputStream output = new WaveOutputStream(new FileOutputStream(outputFile), format);
+            WaveOutputStream output = new WaveOutputStream(new FileOutputStream(outputFile), encoder);
             output.write(input);
             output.close();
         } else {
             // Playing to the speaker
-            KansasCityEncoder encoder = new KansasCityEncoder(format);
-            Loudspeaker speaker = new Loudspeaker(format);
+            Loudspeaker speaker = new Loudspeaker(encoder.getFormat());
             speaker.open();
-            encoder.encodeTone(format.getLeadIn(), speaker);
+            encoder.encodeStart(speaker);
             encoder.encodeStream(input, speaker);
-            encoder.encodeTone(format.getLeadOut(), speaker);
+            encoder.encodeEnd(speaker);
             speaker.close();
         }
         input.close();

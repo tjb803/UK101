@@ -19,7 +19,8 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import uk101.Main;
-import uk101.io.KansasCityFormat;
+import uk101.io.AudioEncoder;
+import uk101.io.KansasCityEncoder;
 import uk101.utils.Args;
 
 /**
@@ -186,14 +187,12 @@ public class Configuration extends Properties {
     }
     
     /*
-     * Return combined KCS audio format 
+     * Return the KCS audio encoder based on configuration settings 
      */
-    public KansasCityFormat getAudioFormat() {
-        int rate = getInt(KCS_RATE);
-        int bits = getInt(KCS_BITS);
-        int baud = getInt(KCS_BAUD);
-        int lead = getInt(KCS_LEAD)*1000;
-        return new KansasCityFormat(rate, bits, baud, lead, lead);
+    public AudioEncoder getAudioEncoder() {
+        AudioEncoder kcs = new KansasCityEncoder(getInt(KCS_RATE), getInt(KCS_BITS), getInt(KCS_BAUD));
+        kcs.setLeadInOut(getInt(KCS_LEAD)*1000, getInt(KCS_LEAD)*1000); 
+        return kcs;        
     }
     
     /*

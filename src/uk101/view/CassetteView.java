@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import uk101.io.KansasCityFormat;
+import uk101.io.AudioEncoder;
 import uk101.io.Stream;
 import uk101.machine.TapeRecorder;
 import uk101.view.component.CassetteButton;
@@ -53,14 +53,14 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
 
     File tapeFile;
     int inFormat, outFormat;
-    KansasCityFormat audioFormat;
+    AudioEncoder audioEncoder;
 
-    public CassetteView(TapeRecorder recorder, KansasCityFormat kcs) {
+    public CassetteView(TapeRecorder recorder, AudioEncoder enc) {
         super("Cassette Recorder", false, false, false, true);
         this.recorder = recorder;
 
         recorder.setView(this);
-        audioFormat = kcs;
+        audioEncoder = enc;
  
         // Create an auto-stop timer.  Stops the cassette player if it has
         // not been used for 15 seconds.
@@ -166,7 +166,7 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
     void recordTape() {
         OutputStream out = null;
         if (!tapeFile.exists()) {
-            out = Stream.getOutputStream(tapeFile, outFormat, audioFormat);
+            out = Stream.getOutputStream(tapeFile, outFormat, audioEncoder);
         } else { 
             String[] msg = {
                 "File " + tapeFile.getPath() + " already exists.",
@@ -179,7 +179,7 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
             if (JOptionPane.showInternalOptionDialog(this, 
                     msg, getTitle(), JOptionPane.YES_NO_OPTION, 
                     JOptionPane.WARNING_MESSAGE, null, opts, opts[0]) == JOptionPane.NO_OPTION) {
-                out = Stream.getOutputStream(tapeFile, outFormat, audioFormat);  
+                out = Stream.getOutputStream(tapeFile, outFormat, audioEncoder);  
             } else {
                 stop.button.doClick();
             }
