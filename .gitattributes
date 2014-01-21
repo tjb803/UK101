@@ -38,6 +38,7 @@ docs/image/vidgreen.jpg -text
 docs/image/vidwhite.jpg -text
 docs/index.html -text
 docs/operation.html -text
+docs/pdf/cegmon.pdf -text
 docs/pdf/exmon.pdf -text
 docs/pdf/manual.pdf -text
 docs/pdf/newmon.pdf -text
@@ -61,6 +62,7 @@ samples/properties/uk101.properties -text
 samples/tapes/asteroids.tape -text
 samples/tapes/exmon.tape -text
 samples/tapes/invaders.tape -text
+samples/tapes/superinvaders.tape -text
 src/uk101/Main.java -text
 src/uk101/hardware/ACIA6850.java -text
 src/uk101/hardware/ALU6502.java -text
@@ -90,6 +92,7 @@ src/uk101/machine/Loudspeaker.java -text
 src/uk101/machine/TapeRecorder.java -text
 src/uk101/machine/Trace.java -text
 src/uk101/rom/BASUK101.ROM -text
+src/uk101/rom/CEGMONUK.ROM -text
 src/uk101/rom/CHGUK101.ROM -text
 src/uk101/rom/MONUK02.ROM -text
 src/uk101/rom/uk101.properties -text

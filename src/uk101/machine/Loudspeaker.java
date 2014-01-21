@@ -23,7 +23,7 @@ import javax.sound.sampled.SourceDataLine;
  */
 public class Loudspeaker extends OutputStream {
     
-    private SourceDataLine sound;
+    SourceDataLine sound;
     
     public Loudspeaker(AudioFormat format) throws LineUnavailableException {
         sound = AudioSystem.getSourceDataLine(format);

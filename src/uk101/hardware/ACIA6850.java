@@ -64,8 +64,12 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
     // problem when loading the extended monitor as at one point it ends up
     // setting an address in the monitor of F007 which gets interpreted as a 'read
     // character' and we lose an input character (this didn't happen on the real
-    // machine as presumably characters were delivered too slowly).  So I'm only 
-    // decoding the two addresses F000 and F001.
+    // machine as characters were delivered both slowly and asynchronously whereas
+    // here, to make loading fast, I'm attempting to deliver characters on demand). 
+    // So I'm only decoding the two addresses F000 and F001, which works for all
+    // cases encountered so far.
+    // TODO: Perhaps this really ought to be asynchronous and slowed to the 
+    //       correct baud rate? 
 
     public synchronized byte readByte(int offset) {
         byte b = 0;
@@ -104,6 +108,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
         
         baudRate = txClock / divide;
         txTime = (1000 * length * divide) / txClock;
+        txTime = (txTime*2)/3;  // Reduce a little for inaccuracies! 
     }
     
    /*

@@ -682,8 +682,8 @@ public class CPU6502 {
     }
 
     void pushWord(short w) {
-        bus.writeWord(STACK_BASE + Data.asAddr(S)-1, w);
-        S -= 2;
+        pushByte(Data.getHiByte(w));
+        pushByte(Data.getLoByte(w));
     }
 
     byte pullByte() {
@@ -692,8 +692,9 @@ public class CPU6502 {
     }
 
     short pullWord() {
-        S += 2;
-        return bus.readWord(STACK_BASE + Data.asAddr(S)-1);
+        byte bl = pullByte();
+        byte bh = pullByte();
+        return Data.getWord(bh, bl);
     }
 
     void flag(byte flag, boolean value) {

@@ -101,21 +101,24 @@ board to allow up to 8KB to be installed.
 In theory, with an expansion board, up to another 32KB could be
 installed giving an absolute maximum contiguous RAM of 40KB.</td></tr>
 <tr><td><code>rom.monitor</code></td>
-<td><code>MONUK02.ROM</code><br>or <code>filename</code></td><td/>
+<td><code>MONUK02</code><br><code>CEGMONUK</code><br>or <code>filename</code></td><td/>
 <td>This defines the monitor ROM that is installed.
-The value can be the built-in name <code>MONUK02.ROM</code> or it can
-be the name of a file containing a replacement ROM.
-Several better replacement ROMs were available for the UK101, the 
-most popular being "CEGMON".</td>
+The value can be one of the built-in names <code>MONUK02</code> or 
+<code>CEGMONUK</code>, or it can be the name of a file containing a 
+replacement ROM.
+MONUK02 was the standard <a href="pdf/newmon.pdf">New Monitor</a> 
+ROM, CEGMONUK is the UK101 version of the popular replacement
+<a href="pdf/cegmon.pdf">CEGMON</a>.
+</td>
 <tr><td><code>rom.basic</code></td>
-<td><code>BASUK101.ROM</code><br>or <code>filename</code></td><td/>
+<td><code>BASUK101</code><br>or <code>filename</code></td><td/>
 <td>This defines the BASIC ROM that is installed.
-The value can be the built-in name <code>BASUK101.ROM</code> or it can
-be the name of a file containing a replacement ROM.</td>
+The value can be the built-in name <code>BASUK101</code> or it can
+be the name of a file containing a replacement ROM.</td></tr>
 <tr><td><code>rom.charset</code></td>
-<td><code>CHGUK101.ROM</code><br>or <code>filename</code></td><td/>
+<td><code>CHGUK101</code><br>or <code>filename</code></td><td/>
 <td>This defines the video character generator ROM that is installed.
-The value can be the built-in name <code>CHGUK101.ROM</code> or it can
+The value can be the built-in name <code>CHGUK101</code> or it can
 be the name of a file containing a replacement ROM.</td></tr>
 <tr><td><code>rom.XXXX</code></td>
 <td><code>filename</code></td><td/>
