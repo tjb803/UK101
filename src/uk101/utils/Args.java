@@ -38,10 +38,10 @@ public class Args {
         }
     }
 
-    String name, parms;
-    Args.Map opts;
-    HashMap<String,String> options = new HashMap<String,String>();
-    List<String> parameters = new ArrayList<String>();
+    private String name, parms;
+    private Args.Map opts;
+    private HashMap<String,String> options = new HashMap<String,String>();
+    private List<String> parameters = new ArrayList<String>();
 
     public static Args.Map optionMap() {
         return new Args.Map();

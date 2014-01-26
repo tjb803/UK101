@@ -33,15 +33,15 @@ public class VideoScreen extends JPanel {
     public static final Color SCREEN_GREEN = Color.GREEN;
     public static final Color SCREEN_AMBER = Color.ORANGE;
 
-    int rows, cols;
+    private int rows, cols;
 
-    Image charset[];            // Character set images
-    byte[][] cells;             // Video cells
+    private Image charset[];            // Character set images
+    private byte[][] cells;             // Video cells
 
-    int cw, ch;                 // Character width and height
-    int sw, sh;                 // Scaled character width and height on screen
+    private int cw, ch;                 // Character width and height
+    private int sw, sh;                 // Scaled character width and height on screen
     
-    boolean syncPaint;          // Window update style
+    private boolean syncPaint;          // Window update style
 
     /*
      * Video size and character set can be found from the video hardware
@@ -148,7 +148,7 @@ public class VideoScreen extends JPanel {
     
     // Builds a set of Images, one per character based on the information from
     // the character generator ROM.
-    void makeCharacterSet(ROM chargen, Color colour) {
+    private void makeCharacterSet(ROM chargen, Color colour) {
         // The character generator ROM contains 8 bytes per character, with each
         // byte being 1-bit per pixel for each character row. To build Java Image
         // objects we need the pixel data as 1 byte per pixel.

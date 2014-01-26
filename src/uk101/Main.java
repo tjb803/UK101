@@ -146,10 +146,10 @@ public class Main implements Runnable {
     /*
      * Main code needs to run on the Swing dispatch thread
      */
-    JFrame frame;
-    Computer computer;
-    ComputerView computerView;
-    boolean layout;
+    private JFrame frame;
+    private Computer computer;
+    private ComputerView computerView;
+    private boolean layout;
 
     public Main(Computer comp, ComputerView view, MachineImage image) {
         this.computer = comp;

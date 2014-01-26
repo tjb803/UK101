@@ -78,11 +78,14 @@ src/uk101/hardware/bus/IODevice.java -text
 src/uk101/icon/uk101-32.png -text
 src/uk101/icon/uk101-48.png -text
 src/uk101/icon/uk101.ico -text
+src/uk101/io/AudioDecoder.java -text
 src/uk101/io/AudioEncoder.java -text
+src/uk101/io/KansasCityDecoder.java -text
 src/uk101/io/KansasCityEncoder.java -text
 src/uk101/io/Stream.java -text
 src/uk101/io/UK101InputStream.java -text
 src/uk101/io/UK101OutputStream.java -text
+src/uk101/io/WaveInputStream.java -text
 src/uk101/io/WaveOutputStream.java -text
 src/uk101/machine/Computer.java -text
 src/uk101/machine/Configuration.java -text
@@ -103,7 +106,6 @@ src/uk101/utils/PrintCode.java -text
 src/uk101/utils/PrintDump.java -text
 src/uk101/utils/PrintMachine.java -text
 src/uk101/utils/PrintTrace.java -text
-src/uk101/utils/TapePlay.java -text
 src/uk101/utils/TapeRead.java -text
 src/uk101/utils/TapeWrite.java -text
 src/uk101/view/CassetteView.java -text

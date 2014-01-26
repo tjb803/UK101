@@ -1,14 +1,13 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,9 +34,9 @@ public class UK101InputStream extends InputStream {
     static final String NEWLINE = "\r\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\n";
     static final Pattern ESCAPE = Pattern.compile("\\\\([0-9A-F]{2})");
 
-    BufferedReader inputReader;
-    String line;
-    int lineLen, linePos;
+    private BufferedReader inputReader;
+    private String line;
+    private int lineLen, linePos;
 
     // The reader needs to be wrapped in a BufferedReader (if it is not already
     // buffered) so complete lines can be read and the BufferedReader code can
@@ -92,14 +91,5 @@ public class UK101InputStream extends InputStream {
 
     public void close() throws IOException {
         inputReader.close();
-    }
-
-    /*
-     * Extra useful methods
-     */
-
-    public void read(OutputStream output) throws IOException {
-        for (int ch = read(); ch != -1; ch = read())
-            output.write(ch);
     }
 }

@@ -70,12 +70,12 @@ public class Trace implements Serializable {
     public String version;      // System version
     public Date timestamp;      // Time-stamp of dump
 
-    transient Entry[] traceLog;
-    transient int maximum;
-    transient int position;
+    transient private Entry[] traceLog;
+    transient private int maximum;
+    transient private int position;
 
-    transient ObjectOutputStream out;
-    transient ObjectInputStream in;
+    transient private ObjectOutputStream out;
+    transient private ObjectInputStream in;
 
     public Trace(Computer computer) {
         name = computer.name;

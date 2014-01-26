@@ -20,7 +20,7 @@ import javax.swing.JToggleButton;
 public class KeyboardLock extends JToggleButton {
     private static final long serialVersionUID = 1L;
 
-    int code;
+    private int code;
 
     /*
      * Ideally this would be a subclass of KeyboardKey, but we need this

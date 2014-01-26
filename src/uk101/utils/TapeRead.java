@@ -1,31 +1,33 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.utils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
 import java.io.PrintWriter;
 
+import uk101.io.KansasCityDecoder;
+import uk101.io.Stream;
 import uk101.io.UK101OutputStream;
 
 /**
- * Utility program to take a UK101 binary tape and print or write an ASCII
- * file representation.
+ * Utility program to take a UK101 binary or audio input and print or 
+ * write an ASCII file representation.
  *
  * Usage:
  *    TapeRead [options] inputtape [outputfile]
  *
  * where:
- *    inputtape: the name of the binary tape to be read
+ *    inputtape: the name of the binary or audio tape to be read
  *    outputfile: the name for the output file, defaults to standard output
  *
  * options:
- *    -encoding encoding_name: the encoding of the output file, defaults to the
- *                             standard platform encoding
+ *    -binary: input is binary, defaults to auto-selected
+ *    -audio: input is audio, defaults to auto-selected
+ *    -baudRate: the baud rate if the file is an audio file, defaults to 300
  *
  * @author Baldwin
  */
@@ -34,35 +36,34 @@ public class TapeRead {
     public static void main(String[] args) throws Exception {
         // Handle parameters
         Args.Map options = Args.optionMap();
-        options.put("encoding", "outputencoding");
+        options.put("binary");
+        options.put("audio");
+        options.put("baudRate", "baudrate (300, 600 or 1200");
         Args parms = new Args("TapeRead", "inputtape [outputfile]", args, options);
-
-        File inputFile = parms.getInputFile(1);
-        File outputFile = parms.getOutputFile(2);
-        String encoding = parms.getOption("encoding");
+        
+        File inputFile = parms.getInputFile(1); 
+        File outputFile = parms.getOutputFile(2);    
+        int inputFormat = parms.getFlag("binary") ? Stream.STREAM_BINARY : Stream.STREAM_SELECT;
+        int baudRate = parms.getInteger("baudRate", 300);
 
         // Check parameters
-        if (inputFile == null) {
+        if ((inputFile == null) ||
+                (baudRate != 300 && baudRate != 600 && baudRate != 1200)) {
             parms.usage();
         }
 
         // Create input/output streams/readers
-        FileInputStream input = new FileInputStream(inputFile);
+        KansasCityDecoder decoder = new KansasCityDecoder(baudRate);
+        InputStream input = Stream.getInputStream(inputFile, inputFormat, decoder);
         UK101OutputStream output = null;
         if (outputFile != null) {
-            if (encoding == null)
-                output = new UK101OutputStream(new PrintWriter(outputFile));
-            else
-                output = new UK101OutputStream(new PrintWriter(outputFile, encoding));
+            output = new UK101OutputStream(new PrintWriter(outputFile));
         } else {
-            if (encoding == null)
-                output = new UK101OutputStream(System.out);
-            else
-                output = new UK101OutputStream(new OutputStreamWriter(System.out, encoding));
+            output = new UK101OutputStream(System.out);
         }
-
-        // Print the input to the output
-        output.write(input);
+    
+        // Copy the input to the output
+        Stream.copy(input, output);
         output.close();
         input.close();
     }

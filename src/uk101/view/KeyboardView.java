@@ -53,9 +53,9 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     static final String[] US_ROW4 =
         { "Z", "X", "C", "V", "B", "N", "M", "< ,", "> .", "? /" };
 
-    Computer computer;
-    Keyboard keyboard;
-    boolean rawMode, ctrl;
+    private Computer computer;
+    private Keyboard keyboard;
+    private boolean rawMode, ctrl;
 
     public KeyboardView(Computer computer, Keyboard keyboard) {
         super("Keyboard", false, false, false, false);
@@ -135,7 +135,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     }
 
     // Build a row of standard keys
-    JPanel makeRow(String[] names) {
+    private JPanel makeRow(String[] names) {
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
         row.setAlignmentX(LEFT_ALIGNMENT);
@@ -215,7 +215,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
      *       the LINEFEED key, and the Insert key will map to REPEAT.      
      */
     static final String SHIFT_CHARS = "!\"#$%&'()*=@[\\+]<>?";
-    int mappedKey = 0, mappedShift = 0;
+    private int mappedKey = 0, mappedShift = 0;
 
     public void keyPressed(KeyEvent e) {
         int key = mapKey(e);
@@ -244,7 +244,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         }
     }
 
-    int mapKey(KeyEvent e) {
+    private int mapKey(KeyEvent e) {
         int code = e.getKeyCode();
         int key = 0;
         switch (code) {
@@ -274,7 +274,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         return key;
     }
     
-    void pressMapped(int key) {
+    private void pressMapped(int key) {
         releaseMapped();
         if (SHIFT_CHARS.indexOf(key) != -1) {
             mappedShift = Keyboard.KEY_LSHIFT;
@@ -284,7 +284,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         keyboard.pressKey(mappedKey);
     }
     
-    void releaseMapped() {
+    private void releaseMapped() {
         if (mappedKey != 0) {
             keyboard.releaseKey(mappedKey);
             keyboard.releaseKey(mappedShift);

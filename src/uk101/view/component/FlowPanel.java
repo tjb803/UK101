@@ -22,7 +22,7 @@ import javax.swing.SwingConstants;
 public class FlowPanel extends JPanel implements SwingConstants {
     private static final long serialVersionUID = 1L;
     
-    int direction;
+    private int direction;
 
     public FlowPanel(int direction) {
         setLayout(new FlowLayout(FlowLayout.LEFT));

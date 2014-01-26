@@ -53,7 +53,7 @@ public class Video extends RAM {
      * GUI visualisation
      */
 
-    VideoView view;
+    private VideoView view;
 
     public void setView(VideoView view) {
         this.view = view;

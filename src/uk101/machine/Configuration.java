@@ -19,7 +19,9 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import uk101.Main;
+import uk101.io.AudioDecoder;
 import uk101.io.AudioEncoder;
+import uk101.io.KansasCityDecoder;
 import uk101.io.KansasCityEncoder;
 import uk101.utils.Args;
 
@@ -47,7 +49,6 @@ public class Configuration extends Properties {
     public static final String SCREEN_UPDATE = "screen.update";
     public static final String KCS_RATE = "kcs.rate";
     public static final String KCS_BITS = "kcs.bits";
-    public static final String KCS_BAUD = "kcs.baud";
     public static final String KCS_LEAD = "kcs.lead";
     public static final String ROM = "rom.";
     
@@ -118,7 +119,6 @@ public class Configuration extends Properties {
         applyStr(props, SCREEN_UPDATE, SYNC, ASYNC);
         applyInt(props, KCS_RATE, 8000, 96000);
         applyStr(props, KCS_BITS, "8", "16");
-        applyStr(props, KCS_BAUD, "300", "600", "1200");
         applyInt(props, KCS_LEAD, 0, 10);
         applyROM(props);
     }
@@ -187,11 +187,16 @@ public class Configuration extends Properties {
     }
     
     /*
-     * Return the KCS audio encoder based on configuration settings 
+     * Return the KCS audio encoder/decoder based on configuration settings 
      */
     public AudioEncoder getAudioEncoder() {
-        AudioEncoder kcs = new KansasCityEncoder(getInt(KCS_RATE), getInt(KCS_BITS), getInt(KCS_BAUD));
-        kcs.setLeadInOut(getInt(KCS_LEAD)*1000, getInt(KCS_LEAD)*1000); 
+        KansasCityEncoder kcs = new KansasCityEncoder(getInt(KCS_RATE), getInt(KCS_BITS), getInt(BAUD_RATE));
+        kcs.setLeader(getInt(KCS_LEAD)*1000, getInt(KCS_LEAD)*1000); 
+        return kcs;        
+    }
+    
+    public AudioDecoder getAudioDecoder() {
+        KansasCityDecoder kcs = new KansasCityDecoder(getInt(BAUD_RATE));
         return kcs;        
     }
     

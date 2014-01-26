@@ -1,12 +1,11 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.io;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
@@ -35,8 +34,8 @@ import uk101.machine.Data;
  */
 public class UK101OutputStream extends OutputStream {
 
-    PrintWriter outputWriter;
-    boolean pendingNewline;
+    private PrintWriter outputWriter;
+    private boolean pendingNewline;
 
     // The writer needs to be wrapped in a PrintWriter (if it is not already
     // one) to allow correct handling of line ends.
@@ -88,19 +87,10 @@ public class UK101OutputStream extends OutputStream {
         outputWriter.close();
     }
 
-    void checkCR() {
+    private void checkCR() {
         if (pendingNewline) {
             outputWriter.write("\\0D");
             pendingNewline = false;
         }
-    }
-
-    /*
-     * Extra useful methods
-     */
-
-    public void write(InputStream input) throws IOException {
-        for (int ch = input.read(); ch != -1; ch = input.read())
-            write(ch);
     }
 }

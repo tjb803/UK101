@@ -57,33 +57,33 @@ public class CPU6502 {
     static final int IRQ_VECTOR = 0xFFFE;
 
     // Processor registers
-    byte A;              // Accumulator
-    byte X, Y;           // X and Y Index registers
-    byte S;              // Stack pointer
-    byte P;              // Status register
-    short PC;            // 16-bit program counter
+    private byte A;         // Accumulator
+    private byte X, Y;      // X and Y Index registers
+    private byte S;         // Stack pointer
+    private byte P;         // Status register
+    private short PC;       // 16-bit program counter
 
     // Arithmetic and Logic Unit
-    ALU6502 alu;
+    private ALU6502 alu;
 
     // Data Bus gives access to the RAM and ROM
-    DataBus bus;
+    private DataBus bus;
 
     // Execution control
-    AtomicBoolean running;
-    boolean sigRESET, sigNMI, sigIRQ;
+    private AtomicBoolean running;
+    private boolean sigRESET, sigNMI, sigIRQ;
 
     // Timing control
-    boolean useSpin;
-    int speed;
-    long spinPause, sleepPause;
+    private boolean useSpin;
+    private int speed;
+    private long spinPause, sleepPause;
     
     // Relative speed calculation
-    AtomicLong cpuStart, cpuCycles;
+    private AtomicLong cpuStart, cpuCycles;
 
     // Debugging
-    Trace trace;
-    Trace.Entry traceEntry;
+    private Trace trace;
+    private Trace.Entry traceEntry;
 
     public CPU6502(int mhz, DataBus bus) {
         this.alu = new ALU6502();
@@ -135,7 +135,7 @@ public class CPU6502 {
     }
 
     // Attempt to calibrate the CPU timing controls
-    void calibrate() {
+    private void calibrate() {
         // We need to know roughly how long it takes to read the nanosecond
         // timer and what the typical minimum Thread.sleep() period is.
         long nt = 0, st = 0;
@@ -221,7 +221,7 @@ public class CPU6502 {
     }
 
     // Processor reset state
-    void reset() {
+    private void reset() {
         A = X = Y = 0;
         S = STACK_TOP;
         P = FLAG_x;
@@ -231,7 +231,7 @@ public class CPU6502 {
     /*
      * Execute a single instruction
      */
-    int execute() {
+    private int execute() {
         // Check for external signals before executing the next instruction
         checkSignals();
 
@@ -420,7 +420,7 @@ public class CPU6502 {
     /*
      * Signal processing
      */
-    void checkSignals() {
+    private void checkSignals() {
         if (sigRESET) {
             sigRESET = sigNMI = sigIRQ = false;
             reset();
@@ -443,114 +443,113 @@ public class CPU6502 {
     /*
      * Standard instruction set
      */
-    void nop() {
+    private void nop() {
         return;
     }
 
-    void brk() {
+    private void brk() {
         pushWord((short)(PC + 1));
         pushByte((byte)(P | FLAG_B));
         PC = bus.readWord(IRQ_VECTOR);
     }
 
-    void sta(int mode) {
+    private void sta(int mode) {
         setResult(A, mode);
     }
 
-    void stx(int mode) {
+    private void stx(int mode) {
         setResult(X, mode);
     }
 
-    void sty(int mode) {
+    private void sty(int mode) {
         setResult(Y, mode);
     }
 
-    void lda(int mode) {
+    private void lda(int mode) {
         A = getOperand(mode);
         setNZ(A);
     }
 
-    void ldx(int mode) {
+    private void ldx(int mode) {
         X = getOperand(mode);
         setNZ(X);
     }
 
-    void ldy(int mode) {
+    private void ldy(int mode) {
         Y = getOperand(mode);
         setNZ(Y);
     }
 
-    void tax() {
+    private void tax() {
         X = A;
         setNZ(X);
     }
 
-    void txa() {
+    private void txa() {
         A = X;
         setNZ(A);
     }
 
-    void tay() {
+    private void tay() {
         Y = A;
         setNZ(Y);
     }
 
-    void tya() {
+    private void tya() {
         A = Y;
         setNZ(A);
     }
 
-     void tsx() {
+    private void tsx() {
         X = S;
         setNZ(X);
     }
 
-    void txs() {
+    private void txs() {
         S = X;
     }
 
-    void ora(int mode) {
+    private void ora(int mode) {
         A = alu.or(A, getOperand(mode));
         setNZ(A);
     }
 
-    void and(int mode) {
+    private void and(int mode) {
         A = alu.and(A, getOperand(mode));
         setNZ(A);
     }
 
-    void eor(int mode) {
+    private void eor(int mode) {
         A = alu.xor(A, getOperand(mode));
         setNZ(A);
     }
 
-    void adc(int mode) {
+    private void adc(int mode) {
         A = alu.add(A, getOperand(mode), testFlag(FLAG_C));
         setNZCV(A);
     }
 
-    void sbc(int mode) {
+    private void sbc(int mode) {
         A = alu.sub(A, getOperand(mode), testFlag(FLAG_C));
         setNZCV(A);
     }
 
-
-    void cmp(int mode) {
+    private void cmp(int mode) {
         byte b = alu.cmp(A, getOperand(mode));
         setNZC(b);
     }
 
-    void cpx(int mode) {
+    private void cpx(int mode) {
         byte b = alu.cmp(X, getOperand(mode));
         setNZC(b);
     }
 
-    void cpy(int mode) {
+    private void cpy(int mode) {
         byte b = alu.cmp(Y, getOperand(mode));
         setNZC(b);
     }
 
-    void asl(int mode) {
+    private void asl(int mode) {
         byte b;
         if (mode == MODE_IMPLICIT) {
             b = A = alu.shl(A);
@@ -562,7 +561,7 @@ public class CPU6502 {
         setNZC(b);
     }
 
-    void rol(int mode) {
+    private void rol(int mode) {
         byte b;
         if (mode == MODE_IMPLICIT) {
             b = A = alu.rol(A, testFlag(FLAG_C));
@@ -574,7 +573,7 @@ public class CPU6502 {
         setNZC(b);
     }
 
-    void ror(int mode) {
+    private void ror(int mode) {
         byte b;
         if (mode == MODE_IMPLICIT) {
             b = A = alu.ror(A, testFlag(FLAG_C));
@@ -586,7 +585,7 @@ public class CPU6502 {
         setNZC(b);
     }
 
-    void lsr(int mode) {
+    private void lsr(int mode) {
         byte b;
         if (mode == MODE_IMPLICIT) {
             b = A = alu.shr(A);
@@ -598,113 +597,113 @@ public class CPU6502 {
         setNZC(b);
     }
 
-    void dec(int mode) {
+    private void dec(int mode) {
         int addr = getAddress(mode);
         byte b = (byte)(getOperand(addr, mode) - 1);
         setResult(addr, b);
         setNZ(b);
     }
 
-    void inc(int mode) {
+    private void inc(int mode) {
         int addr = getAddress(mode);
         byte b = (byte)(getOperand(addr, mode) + 1);
         setResult(addr, b);
         setNZ(b);
     }
 
-    void dex() {
+    private void dex() {
         X -= 1;
         setNZ(X);
     }
 
-    void inx() {
+    private void inx() {
         X += 1;
         setNZ(X);
     }
 
-    void dey() {
+    private void dey() {
         Y -= 1;
         setNZ(Y);
     }
 
-    void iny() {
+    private void iny() {
         Y += 1;
         setNZ(Y);
     }
 
-    void bit(int mode) {
+    private void bit(int mode) {
         byte b = getOperand(mode);
         setFlag(FLAG_Z, (b & A) == 0);
         setFlag(FLAG_N, (b & 0x80) != 0);
         setFlag(FLAG_V, (b & 0x40) != 0);
     }
 
-    void jmp(int mode) {
+    private void jmp(int mode) {
         PC = Data.asWord(getAddress(mode));
     }
 
-    void jsr(int mode) {
+    private void jsr(int mode) {
         pushWord(Data.asWord(PC + 1));
         PC = Data.asWord(getAddress(mode));
     }
 
-    void rts() {
+    private void rts() {
         PC = pullWord();
         PC += 1;
     }
 
-    void rti() {
+    private void rti() {
         P = pullByte();
         PC = pullWord();
     }
 
-    void php() {
+    private void php() {
         pushByte(P);
     }
 
-    void pha() {
+    private void pha() {
         pushByte(A);
     }
 
-    void plp() {
+    private void plp() {
         P = pullByte();
     }
 
-    void pla() {
+    private void pla() {
         A = pullByte();
         setNZ(A);
     }
 
     // Combined instructions for simple operations
-    void pushByte(byte b) {
+    private void pushByte(byte b) {
         bus.writeByte(STACK_BASE + Data.asAddr(S), b);
         S -= 1;
     }
 
-    void pushWord(short w) {
+    private void pushWord(short w) {
         pushByte(Data.getHiByte(w));
         pushByte(Data.getLoByte(w));
     }
 
-    byte pullByte() {
+    private byte pullByte() {
         S += 1;
         return bus.readByte(STACK_BASE + Data.asAddr(S));
     }
 
-    short pullWord() {
+    private short pullWord() {
         byte bl = pullByte();
         byte bh = pullByte();
         return Data.getWord(bh, bl);
     }
 
-    void flag(byte flag, boolean value) {
+    private void flag(byte flag, boolean value) {
         setFlag(flag, value);
         if (flag == FLAG_D) {
             alu.setDecimal(value);
         }
     }
 
-    int branch(byte flag, boolean value) {
+    private int branch(byte flag, boolean value) {
         int extraCycles = 0;
         int offset = getAddress(MODE_RELATIVE);
         if (testFlag(flag) == value) {
@@ -717,14 +716,14 @@ public class CPU6502 {
     /*
      * Additional simulator instructions
      */
-    void halt() {
+    private void halt() {
         try {
             wait();
         } catch (InterruptedException e) {
         }
     }
 
-    void debug() {
+    private void debug() {
         int action = getOperand(MODE_IMMEDIATE);
         switch (action) {
         case 0xFF:
@@ -744,29 +743,29 @@ public class CPU6502 {
     /*
      * Set and test processor status flags
      */
-    void setFlag(byte flag, boolean set) {
+    private void setFlag(byte flag, boolean set) {
         if (set)
             P |= flag;
         else
             P &= ~flag;
     }
 
-    boolean testFlag(byte flag) {
+    private boolean testFlag(byte flag) {
         return (P & flag) != 0;
     }
 
-    void setNZ(byte value) {
+    private void setNZ(byte value) {
         setFlag(FLAG_N, value < 0);
         setFlag(FLAG_Z, value == 0);
     }
 
-    void setNZC(byte value) {
+    private void setNZC(byte value) {
         setFlag(FLAG_N, value < 0);
         setFlag(FLAG_Z, value == 0);
         setFlag(FLAG_C, alu.isCarry);
     }
 
-    void setNZCV(byte value) {
+    private void setNZCV(byte value) {
         setFlag(FLAG_N, value < 0);
         setFlag(FLAG_Z, value == 0);
         setFlag(FLAG_C, alu.isCarry);
@@ -776,7 +775,7 @@ public class CPU6502 {
     /*
      * Memory access through the program counter
      */
-    byte fetchByte() {
+    private byte fetchByte() {
         byte b = bus.readByte(Data.asAddr(PC));
         PC += 1;
         if (traceEntry != null) {
@@ -785,7 +784,7 @@ public class CPU6502 {
         return b;
     }
 
-    short fetchWord() {
+    private short fetchWord() {
         short w = bus.readWord(Data.asAddr(PC));
         PC += 2;
         if (traceEntry != null) {
@@ -795,7 +794,7 @@ public class CPU6502 {
     }
 
     // Decode the instruction operand address
-    int getAddress(int mode) {
+    private int getAddress(int mode) {
         int addr = 0;
         switch (mode) {
         case MODE_IMPLICIT:  break;
@@ -818,20 +817,20 @@ public class CPU6502 {
     }
 
     // Return the instruction operand
-    byte getOperand(int mode) {
+    private byte getOperand(int mode) {
         return getOperand(getAddress(mode), mode);
     }
 
-    byte getOperand(int addr, int mode) {
+    private byte getOperand(int addr, int mode) {
         return (mode == MODE_IMMEDIATE) ? Data.asByte(addr) : bus.readByte(addr);
     }
 
     // Write instruction result
-    void setResult(byte b, int mode) {
+    private void setResult(byte b, int mode) {
         setResult(getAddress(mode), b);
     }
 
-    void setResult(int addr, byte b) {
+    private void setResult(int addr, byte b) {
         bus.writeByte(addr, b);
     }
 

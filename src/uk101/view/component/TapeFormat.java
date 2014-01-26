@@ -28,7 +28,7 @@ public class TapeFormat extends JPanel {
     public static final String MODE_AUDIO = "Audio";
     public static final String MODE_UNSET = " ";
 
-    ButtonGroup inputGroup, outputGroup;
+    private ButtonGroup inputGroup, outputGroup;
 
     public TapeFormat() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -40,14 +40,17 @@ public class TapeFormat extends JPanel {
         JRadioButton ix = new JRadioButton(MODE_AUTO, true);
         JRadioButton ia = new JRadioButton(MODE_ASCII);
         JRadioButton ib = new JRadioButton(MODE_BINARY);
+        JRadioButton iw = new JRadioButton(MODE_AUDIO);
         ix.setActionCommand(Integer.toString(Stream.STREAM_SELECT));
         ia.setActionCommand(Integer.toString(Stream.STREAM_ASCII));
         ib.setActionCommand(Integer.toString(Stream.STREAM_BINARY));
+        iw.setActionCommand(Integer.toString(Stream.STREAM_AUDIO));
         inputGroup = new ButtonGroup();
-        inputGroup.add(ix);  inputGroup.add(ia);  inputGroup.add(ib);
+        inputGroup.add(ix);  inputGroup.add(ia);  inputGroup.add(ib);  inputGroup.add(iw);
         ip.add(ix);  ip.add(Box.createVerticalStrut(2));
         ip.add(ia);  ip.add(Box.createVerticalStrut(2));
-        ip.add(ib);
+        ip.add(ib);  ip.add(Box.createVerticalStrut(2));
+        ip.add(iw);
 
         JPanel op = new JPanel();
         op.setLayout(new BoxLayout(op, BoxLayout.Y_AXIS));

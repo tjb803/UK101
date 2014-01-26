@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.view;
 
@@ -35,13 +35,13 @@ public class ComputerView extends JDesktopPane implements ActionListener {
     static final String IMAGE_LOAD = "Load...";
     static final String IMAGE_SAVE = "Save...";
 
-    Computer computer;
-    JFileChooser imageSelect;
+    private Computer computer;
+    private JFileChooser imageSelect;
 
-    MachineView machine;
-    VideoView video;
-    KeyboardView keyboard;
-    CassetteView cassette;
+    private MachineView machine;
+    private VideoView video;
+    private KeyboardView keyboard;
+    private CassetteView cassette;
 
     public ComputerView(Computer computer, Configuration cfg) {
         setLayout(null);
@@ -51,7 +51,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         // Create views for the various machine elements
         video = new VideoView(computer.video, cfg);
         keyboard = new KeyboardView(computer, computer.keyboard);
-        cassette = new CassetteView(computer.recorder, cfg.getAudioEncoder());
+        cassette = new CassetteView(computer.recorder, cfg);
         machine = new MachineView(computer, this);
         
         // Attach the keyboard handler to each top level frame

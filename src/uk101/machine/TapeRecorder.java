@@ -24,9 +24,9 @@ import uk101.view.CassetteView;
  */
 public class TapeRecorder implements IOBus {
 
-    IODevice acia;
-    InputStream input;
-    OutputStream output;
+    private IODevice acia;
+    private InputStream input;
+    private OutputStream output;
     
     public TapeRecorder(IODevice io) {
         acia = io;
@@ -103,7 +103,7 @@ public class TapeRecorder implements IOBus {
      * GUI visualisation
      */
 
-    CassetteView view;
+    private CassetteView view;
 
     public void setView(CassetteView view) {
         this.view = view;

@@ -78,10 +78,10 @@ public class Keyboard extends Memory {
      *  (3) This position is the ESC key
      */
 
-    boolean isUK;
-    Map<Integer,Key> keys;
-    byte[] matrix;
-    byte kbport;
+    private boolean isUK;
+    private Map<Integer,Key> keys;
+    private byte[] matrix;
+    private byte kbport;
 
     public Keyboard(String type) {
         super(K1);                  // Decodes to 1K of store
@@ -200,7 +200,7 @@ public class Keyboard extends Memory {
     }
 
     // Add details of a key
-    void addKey(int k1, int k2, int row, int col) {
+    private void addKey(int k1, int k2, int row, int col) {
         Key key = new Key(row, col);
         if (k1 != 0) keys.put(k1, key);
         if (k2 != 0) keys.put(k2, key);
@@ -216,7 +216,7 @@ public class Keyboard extends Memory {
     /*
      * Representation of the key
      */
-    static class Key {
+    private static class Key {
         int row;  byte col;
         Key(int r, int c) {
             row = r;

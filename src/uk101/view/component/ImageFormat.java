@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 public class ImageFormat extends JPanel {
     private static final long serialVersionUID = 1L;
     
-    JCheckBox saveMem, saveCfg, savePos;
+    private JCheckBox saveMem, saveCfg, savePos;
     
     public ImageFormat() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

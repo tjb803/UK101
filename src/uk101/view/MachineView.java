@@ -34,16 +34,14 @@ public class MachineView extends JInternalFrame implements ActionListener {
     static final String MACHINE_NMI = "NMI";
     static final String MACHINE_IRQ = "IRQ";
 
-    Computer computer;
-    ComputerView view;
+    private Computer computer;
     
-    DisplayText speed, baud;
-    Timer speedTimer;
+    private DisplayText speed, baud;
+    private Timer speedTimer;
 
     public MachineView(Computer computer, ComputerView computerView) {
         super("Machine", true, false, false, true);
         this.computer = computer;
-        this.view = computerView;
 
         // Machine image load/save
         JPanel mp = new JPanel(new GridLayout(1, 0, 5, 5));

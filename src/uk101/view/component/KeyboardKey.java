@@ -44,7 +44,7 @@ public class KeyboardKey extends JButton {
         return Box.createHorizontalStrut(KEY_SIZE.width*size/KEY_STD);
     }
 
-    int code;
+    private int code;
     
     public KeyboardKey(String text, int keycode, MouseListener handler) {
         this(text, KEY_STD, keycode, handler);

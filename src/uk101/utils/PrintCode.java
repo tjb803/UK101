@@ -58,7 +58,7 @@ public class PrintCode {
      * Instances of this class can be used by other utilities
      */
 
-    PrintStream output;
+    private PrintStream output;
 
     public PrintCode(PrintStream output) {
         this.output = output;

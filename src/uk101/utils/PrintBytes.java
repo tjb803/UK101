@@ -63,7 +63,7 @@ public class PrintBytes {
      * Instances of this class can be used by other utilities
      */
 
-    PrintStream output;
+    private PrintStream output;
 
     public PrintBytes(PrintStream output) {
         this.output = output;

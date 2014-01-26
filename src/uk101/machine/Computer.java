@@ -178,7 +178,7 @@ public class Computer extends Thread implements DataBus {
      * Debugging functions
      */
 
-    Trace trace;
+    private Trace trace;
 
     public void trace(boolean enable) {
         if (enable) {

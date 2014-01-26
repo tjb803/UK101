@@ -23,10 +23,9 @@ import uk101.view.component.VideoScreen;
 public class VideoView extends JInternalFrame {
     private static final long serialVersionUID = 1L;
 
-    VideoScreen screen;
-    int colour;
-    int vrows, vcols;
-    int srows, scols, sstart;
+    private VideoScreen screen;
+    private int vrows, vcols;
+    private int srows, scols, sstart;
 
     public VideoView(Video video, Configuration cfg) {
         super("Video", false, false, false, false);
@@ -65,7 +64,7 @@ public class VideoView extends JInternalFrame {
     }
 
     // Map configuration screen colour
-    Color getScreenColour(String name) {
+    private Color getScreenColour(String name) {
         Color colour = VideoScreen.SCREEN_WHITE;
         if (name.equals(Configuration.GREEN))
             colour = VideoScreen.SCREEN_GREEN;
@@ -75,7 +74,7 @@ public class VideoView extends JInternalFrame {
     }
     
     // Map configuration screen update mode
-    boolean getScreenUpdate(String name) {
+    private boolean getScreenUpdate(String name) {
         boolean sync = false;
         if (name.equals(Configuration.SYNC))
             sync = true;

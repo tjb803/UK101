@@ -35,13 +35,13 @@ public class Disassembler {
     public int instrSize;
 
     // Source details
-    byte[] sourceBytes;
-    int sourceLength;
-    int sourceOrigin;
+    private byte[] sourceBytes;
+    private int sourceLength;
+    private int sourceOrigin;
 
     // Position in the source of the start of the next instruction
-    int origin;
-    int position;
+    private int origin;
+    private int position;
 
     /*
      * The disassembler is provided with an array of bytes and an origin for the first
@@ -104,7 +104,7 @@ public class Disassembler {
     }
 
     // Decode the next instruction in a very simple way (just a lot of typing)
-    void decodeInstruction() {
+    private void decodeInstruction() {
         switch (Data.asBits(sourceBytes[position])) {
         default:   instrText = "???";  instrMode = MODE_IMPLICIT;     break;
         case 0x6D: instrText = "ADC";  instrMode = MODE_ABSOLUTE;     break;
@@ -262,7 +262,7 @@ public class Disassembler {
     }
 
     // Decode the instruction length and instruction operand
-    void decodeOperand() {
+    private void decodeOperand() {
         switch (instrMode) {
         default:             instrSize = 1;  break;
         case MODE_IMMEDIATE: instrSize = 2;  break;
@@ -298,7 +298,7 @@ public class Disassembler {
     }
 
     // Format the instruction mnemonic and operand
-    String formatInstruction() {
+    private String formatInstruction() {
         String result = "  " + instrText + " ";
 
         switch (instrMode) {

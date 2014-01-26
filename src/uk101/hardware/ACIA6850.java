@@ -33,12 +33,12 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
      * port, so this logic is fairly simple.
      */
 
-    byte statusReg;                 // Status register
-    byte txByte, rxByte;            // Transmit/receive buffers
+    private byte statusReg;             // Status register
+    private byte txByte, rxByte;        // Transmit/receive buffers
     
-    int txClock;                    // Transmit clock rate
-    int txTime;                     // Millisecond time to transmit one character
-    int baudRate;                   // Real baud rate
+    private int txClock;                // Transmit clock rate
+    private int txTime;                 // Millisecond time to transmit one character
+    private int baudRate;               // Real baud rate
     
     IOBus txBus, rxBus;
 

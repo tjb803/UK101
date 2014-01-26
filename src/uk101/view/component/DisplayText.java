@@ -21,7 +21,7 @@ public class DisplayText extends JPanel {
 
     static final Font monoFont = Font.decode("monospaced");
 
-    JLabel text;
+    private JLabel text;
 
     public DisplayText(String name, String value, boolean monospaced) {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));

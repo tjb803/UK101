@@ -28,8 +28,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import uk101.io.AudioDecoder;
 import uk101.io.AudioEncoder;
 import uk101.io.Stream;
+import uk101.machine.Configuration;
 import uk101.machine.TapeRecorder;
 import uk101.view.component.CassetteButton;
 import uk101.view.component.DisplayText;
@@ -43,24 +45,26 @@ import uk101.view.component.TapeFormat;
 public class CassetteView  extends JInternalFrame implements ActionListener, ItemListener {
     private static final long serialVersionUID = 1L;
 
-    TapeRecorder recorder;
+    private TapeRecorder recorder;
 
-    JLabel name;
-    DisplayText format;
-    CassetteButton record, play, stop;
-    JFileChooser select;
-    Timer autoStop;
+    private JLabel name;
+    private DisplayText format;
+    private CassetteButton record, play, stop;
+    private JFileChooser select;
+    private Timer autoStop;
 
-    File tapeFile;
-    int inFormat, outFormat;
-    AudioEncoder audioEncoder;
+    private File tapeFile;
+    private int inFormat, outFormat;
+    private AudioEncoder audioEncoder;
+    private AudioDecoder audioDecoder;
 
-    public CassetteView(TapeRecorder recorder, AudioEncoder enc) {
+    public CassetteView(TapeRecorder recorder, Configuration cfg) {
         super("Cassette Recorder", false, false, false, true);
         this.recorder = recorder;
 
         recorder.setView(this);
-        audioEncoder = enc;
+        audioEncoder = cfg.getAudioEncoder();
+        audioDecoder = cfg.getAudioDecoder();
  
         // Create an auto-stop timer.  Stops the cassette player if it has
         // not been used for 15 seconds.
@@ -158,12 +162,12 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
 
     // Implementation methods for cassette player function
 
-    void loadTape() {
+    private void loadTape() {
         name.setText(tapeFile.getName());
         format.setValue(TapeFormat.MODE_UNSET);
     }
 
-    void recordTape() {
+    private void recordTape() {
         OutputStream out = null;
         if (!tapeFile.exists()) {
             out = Stream.getOutputStream(tapeFile, outFormat, audioEncoder);
@@ -190,21 +194,21 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
         }
     }
 
-    void playTape() {
-        InputStream in = Stream.getInputStream(tapeFile, inFormat);
+    private void playTape() {
+        InputStream in = Stream.getInputStream(tapeFile, inFormat, audioDecoder);
         if (in != null) {
             format.setValue(tapeFormat(Stream.getFormat(in)));
             recorder.setInputTape(in);
         }
     }
 
-    void stopTape() {
+    private void stopTape() {
         format.setValue(TapeFormat.MODE_UNSET);
         recorder.setInputTape(null);
         recorder.setOutputTape(null);
     }
     
-    String tapeFormat(int format) {
+    private String tapeFormat(int format) {
         return ((format == Stream.STREAM_ASCII) ? TapeFormat.MODE_ASCII : 
                 (format == Stream.STREAM_AUDIO) ? TapeFormat.MODE_AUDIO : TapeFormat.MODE_BINARY);
     }

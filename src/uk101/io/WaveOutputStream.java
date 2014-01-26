@@ -8,7 +8,6 @@ package uk101.io;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.sound.sampled.AudioFileFormat.Type;
@@ -27,9 +26,9 @@ import javax.sound.sampled.AudioSystem;
  */
 public class WaveOutputStream extends OutputStream {
  
-    OutputStream outputStream;
-    AudioEncoder audioEncoder;
-    ByteArrayOutputStream audioStream;
+    private OutputStream outputStream;
+    private AudioEncoder audioEncoder;
+    private ByteArrayOutputStream audioStream;
 
     public WaveOutputStream(OutputStream out, AudioEncoder encoder) {
         outputStream = out;
@@ -59,16 +58,5 @@ public class WaveOutputStream extends OutputStream {
             audioIn.close();
         }
         outputStream.close();
-    }
-    
-    /*
-     * Extra useful methods
-     */
-    
-    public void write(InputStream in) throws IOException {
-        if (audioStream.size() == 0) {
-            audioEncoder.encodeStart();
-        } 
-        audioEncoder.encodeStream(in); 
     }
 }

@@ -20,22 +20,20 @@ import javax.sound.sampled.AudioFormat;
  */
 public abstract class AudioEncoder {
     
-    public static final int BIT8 = 8;
+    public static final int RATE44K = 44100;
     public static final int BIT16 = 16;
-    public static final int WAVE_SINE = 1;
+    public static final int BIT8 = 8;
  
     protected AudioFormat audioFormat;
     protected OutputStream outputStream;
-    protected int waveForm;
-    protected int leadIn, leadOut;
     
     /*
-     * AudioFormat is fixed to PCM encoding in either unsigned 8-bit
-     * or signed 16-bit big-endian mono format.
+     * AudioFormat for output is fixed to PCM encoding in either 8-bit
+     * 16-bit signed big-endian mono format.
      */
     protected AudioEncoder(int rate, int bits) {
-        audioFormat = new AudioFormat(rate, bits, 1, (bits==BIT16), true);
-        waveForm = WAVE_SINE;
+        audioFormat = new AudioFormat(rate, bits, 1, true, true);
+        bytesPerSample = audioFormat.getFrameSize();
     }
     
     public void setOutputStream(OutputStream out) {
@@ -46,27 +44,19 @@ public abstract class AudioEncoder {
         return audioFormat;
     }
     
-    public void setLeadInOut(int lin, int lout) {
-        leadIn = lin;
-        leadOut = lout;
-    }
+    private int bytesPerSample;
     
     // Generate a set of sound samples that produce a number of cycles of
     // a fixed tone.
     protected byte[] getSamples(int cycles, int freq) {
-        int byteCount = audioFormat.getFrameSize();
-        int sampleCount = (int)(audioFormat.getSampleRate()*cycles + freq/2)/freq;
-        byte[] data = new byte[sampleCount*byteCount];
-        for (int i = 0, j = 0; i < sampleCount; i++) {
-            double s = waveFn((i*cycles*2*Math.PI)/sampleCount);
-            if (byteCount == 1) {
-                int a = 128 + (int)(100*s); // 8-bit is unsigned
-                data[j++] = (byte)a;
-            } else {
-                int a = (int)(25600*s);     // 16-bit is signed
-                data[j++] = (byte)(a>>8);
-                data[j++] = (byte)a;
-            }
+        int sampleLength = (int)(audioFormat.getSampleRate()*cycles + freq/2)/freq;
+        byte[] data = new byte[sampleLength*bytesPerSample];
+        for (int i = 0, k = 0; i < sampleLength; i++) {
+            double s = waveFn((i*cycles*2*Math.PI)/sampleLength);
+            int a = (int)(25600*s); 
+            data[k++] = (byte)(a>>8);
+            if (bytesPerSample > 1) 
+                data[k++] = (byte)a;
         }
         return data;
     }
@@ -78,7 +68,7 @@ public abstract class AudioEncoder {
     // for both high and low frequencies this also had the effect of making the 
     // high frequency slightly quieter.
     // TODO: Implement the hardware wave function?
-    double waveFn(double r) {
+    private double waveFn(double r) {
         return Math.sin(r);
     }
 
