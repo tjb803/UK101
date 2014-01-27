@@ -24,9 +24,10 @@ public abstract class AudioDecoder {
     
     /*
      * Default AudioFormat only gets used if recording directly from the 
-     * soundcard, otherwise format is provided when setting the input stream.
-     * Format must be linear PCM with signed big-endian data.. 
+     * sound card, otherwise format is provided when setting the input stream.
+     * Format must be linear PCM with signed big-endian data.
      */
+    
     protected AudioDecoder() {
         audioFormat = new AudioFormat(AudioEncoder.RATE44K, AudioEncoder.BIT16, 1, true, true);
     }
@@ -88,20 +89,19 @@ public abstract class AudioDecoder {
     
     /*
      * Read the next tone cycle and return the number of samples it spanned.
-     * Assumes we are positioned at the start of a new cycle (lowest amplitude)
-     * and reads until we reach the next low point.
+     * Assumes we are positioned at the start of a new cycle (zero amplitude)
+     * and reads until we reach the next start point.
      * TODO: This will be confused by glitches in the signal. 
      */
     
     protected int readCycle() throws IOException {
-        int count = 1;
-        int a = readSample();
-        while (peekSample() >= a) {
-            a = readSample();
+        int count = 0;
+        while (peekSample() >= 0) {
+            readSample();
             count += 1;
         }
-        while (peekSample() < a) {
-            a = readSample();
+        while (peekSample() < 0) {
+            readSample();
             count += 1;
         }
         return count;
