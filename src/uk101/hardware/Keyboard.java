@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2013
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.hardware;
 
@@ -165,7 +165,7 @@ public class Keyboard extends Memory {
         pressKey(KEY_SHIFTLOCK);
     }
 
-    public byte readByte(int offset) {
+    public synchronized byte readByte(int offset) {
         // Returns the column values for any row that has been set to a 0
         // in a value previously written to the kbport address.
         byte b = (byte)0xFF;
@@ -178,21 +178,21 @@ public class Keyboard extends Memory {
         return b;
     }
 
-    public void writeByte(int offset, byte b) {
+    public synchronized void writeByte(int offset, byte b) {
         kbport = b;
     }
 
     /*
      * Handle key presses and releases
      */
-    public void pressKey(int key) {
+    public synchronized void pressKey(int key) {
         Key k = keys.get(key);
         if (k != null) {
             matrix[k.row] &= ~k.col;
         }
     }
 
-    public void releaseKey(int key) {
+    public synchronized void releaseKey(int key) {
         Key k = keys.get(key);
         if (k != null) {
             matrix[k.row] |= k.col;

@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.view.component;
 
@@ -90,15 +90,17 @@ public class VideoScreen extends JPanel {
             minCol = (clip.x)/sw;  maxCol = Math.min((clip.x+clip.width)/sw, maxCol);
         }
 
-        int y = minRow*sh;
-        for (int r = minRow; r <= maxRow; r++) {
-            int x = minCol*sw;
-            byte[] rcells = cells[r];
-            for (int c = minCol; c <= maxCol; c++) {
-                g.drawImage(charset[rcells[c] & 0xFF], x, y, this);
-                x += sw;
+        synchronized (this) {
+            int y = minRow*sh;
+            for (int r = minRow; r <= maxRow; r++) {
+                int x = minCol*sw;
+                byte[] rcells = cells[r];
+                for (int c = minCol; c <= maxCol; c++) {
+                    g.drawImage(charset[rcells[c] & 0xFF], x, y, this);
+                    x += sw;
+                }
+                y += sh;
             }
-            y += sh;
         }
     }
     
@@ -112,7 +114,7 @@ public class VideoScreen extends JPanel {
     /*
      * Indicate a screen character needs updating
      */
-    public void screenUpdate(int row, int col, byte b) {
+    public synchronized void screenUpdate(int row, int col, byte b) {
         if (cells[row][col] != b) {
             cells[row][col] = b;
             
