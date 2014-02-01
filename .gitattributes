@@ -96,7 +96,7 @@ src/uk101/machine/Loudspeaker.java -text
 src/uk101/machine/TapeRecorder.java -text
 src/uk101/machine/Trace.java -text
 src/uk101/rom/BASUK101.ROM -text
-src/uk101/rom/CEGMONUK.ROM -text
+src/uk101/rom/CEGMON.ROM -text
 src/uk101/rom/CHGUK101.ROM -text
 src/uk101/rom/MONUK02.ROM -text
 src/uk101/rom/uk101.properties -text

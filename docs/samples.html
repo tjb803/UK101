@@ -22,8 +22,7 @@
 <li><a href="#astero">Asteroids</a></li>
 </ul>
 <p>In addition this page provides some notes about the 
-<a href="#format">binary and ASCII tape formats</a> used by the 
-simulator and details of how to 
+<a href="#format">tape formats</a> used by the simulator and details of how to 
 <a href="#decode">recover programs from cassette tapes</a>.</p> 
 <p>Note: <i>Where indicated (using a cassette image) some of these sample 
 programs and tapes are recovered from original software.
@@ -229,7 +228,7 @@ this or if it is related to the simulation!
 You should set the keyboard to <a href="operation.html#kbmode">raw mode</a>
 to play the game.</p>
 <hr>
-<h2 id="format">Binary and ASCII Tape Formats</h2>
+<h2 id="format">Binary, ASCII and Audio Tape Formats</h2>
 <p>When the UK101 wrote data to a cassette tape it was written as a 
 series of bytes.
 Although most of the bytes that were written were standard ASCII
@@ -263,16 +262,13 @@ is a pair of hexadecimal digits.</p>
 <p>All the sample BASIC programs are in <i>ASCII</i> format and
 have a file extension of <code>.basic</code>.</p></dd>
 <dt><i>Audio</i></dt>
-<dd>This is the original Kansas City encoded audio format which
-is stored in the form of a WAV file.
+<dd>This is the original Kansas City Standard encoded audio format 
+which is stored in the form of a WAV file.
 The audio encoding parameters can be controlled by properties
-in the <a href="config.html#kcs">system configuraton</a>. 
-Currently this format is only available when writing output 
-tapes, not for reading input.</dd>
+in the <a href="config.html#kcs">system configuraton</a>.</dd>
 </dl>
-<p>The simulator will correctly recognise and load tapes in both
-<i>binary</i> or <i>ASCII</i> format and can save in either 
-format.
+<p>The simulator will correctly recognise and load tapes any of 
+the three formats and can save in any selected format.
 If you are saving a BASIC program it would make sense to 
 save in <i>ASCII</i> format (which is the default) as the 
 resulting program can then be viewed and edited on the PC.
@@ -281,14 +277,37 @@ real UK101 you will need to ensure it is in <i>binary</i>
 or maybe <i>audio</i> format.</p>
 <p>The utility programs <a href="utilities.html#tread">Tape Reader</a>
 and <a href="utilities.html#twrite">Tape Writer</a> can be used
-to quickly convert between the two formats.</p>
+to quickly convert between the various formats.</p>
 <h3 id="decode">Recovering Programs from Old Cassette Tapes</h3>
 <p>If you have original UK101 programs on old cassette tapes it is 
 usually possible to recover them on a PC so they can be loaded
 and used with the simulator, provided the tapes are still playable
 and provided you still have something to play them with.
+The first steps are to record the cassette as an audio WAV file on
+the PC:
+<ol><li>Attach a cassette tape player to the sound card in your PC.
+I used an old (but good quality) 
+<a href="http://www.walkmancentral.com/products/wm-dd">Sony Walkman</a>
+and plugged the headphone output into the line-input on the PC (it's
+best not to use the microphone input) and set the volume to about 7.</li>
+<li>Play the tape and record the sound to a WAV file, setting to Mono
+(rather than Stereo) if you can and sampling at a high rate such as 
+44.1kHz or 48kHz.
+I used <a href="http://audacity.sourceforge.net/">Audacity</a> to do
+the recording and exporting as a WAV, remembering to trim off any 
+unwanted blanks and noise at the beginning and end of the recording.
+Make sure you save as an uncompressed WAV file, not an MP3.</li>
+</ol>
+<p>If the recording is good quality and the original tape was in reasonably
+good condtion it should be possible to to load the resulting WAV file
+directly into the simulator by playing it with the
+<a href="operation.html#opcas">cassette player</a>.
+<p>If the recording is poor quality or the original tape was in poor
+condition (which is quite likely) further processing might be needed
+to recover the data. 
 This is done using an excellent piece of software written by Martin Ward 
-that can decode the tape sounds to recover the original data bytes.
+that can examine and process WAV file in greate detail to recover the 
+original data bytes.
 The process is something like this:
 <ol>
 <li>Download and install Martin Ward's
@@ -296,23 +315,8 @@ The process is something like this:
 kansas city tape decoder</a>.
 This is a perl script, so might require a few pre-requisites to be gathered
 from elsewhere if you are a Windows user (like me).</li> 
-<li>Attach a cassette tape player to the sound card in your PC.
-I used an old (but good quality) 
-<a href="http://www.walkmancentral.com/products/wm-dd">Sony Walkman</a>
-and plugged the headphone output into the line-input on the PC (it's
-best not to use the microphone input) and set the volume to about 7.</li>
-<li>Play the tape and record the sound to a WAV file, setting to Mono
-(rather than Stereo) if you can and sampling at the standard 44.1kHz.
-I used <a href="http://audacity.sourceforge.net/">Audacity</a> to do
-the recording and exporting as a WAV, remembering to trim off any 
-unwanted blanks and noise at the beginning and end of the recording.
-Make sure you save as an uncompressed WAV file, not an MP3.</li>
-<li>Use the 
-<a href="http://www.cse.dmu.ac.uk/~mward/martin/software/index.html#CUTS">
-kansas city decoder</a> perl script to process the WAV 
-file and create the decoded tape.
-This might take a little while if the original tape was fairly
-long.
+<li>Run the perl script to process the WAV file and create the decoded tape.
+This might take a little while if the original tape was fairly long.
 Hopefully the data will be analysed, processed and extracted correctly - 
 Martin's program did a fine job for all the tapes I have found and
 tried.</li>

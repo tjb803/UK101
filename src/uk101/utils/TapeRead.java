@@ -26,7 +26,6 @@ import uk101.io.UK101OutputStream;
  *
  * options:
  *    -binary: input is binary, defaults to auto-selected
- *    -audio: input is audio, defaults to auto-selected
  *    -baudRate: the baud rate if the file is an audio file, defaults to 300
  *
  * @author Baldwin
@@ -37,7 +36,6 @@ public class TapeRead {
         // Handle parameters
         Args.Map options = Args.optionMap();
         options.put("binary");
-        options.put("audio");
         options.put("baudRate", "baudrate (300, 600 or 1200");
         Args parms = new Args("TapeRead", "inputtape [outputfile]", args, options);
         

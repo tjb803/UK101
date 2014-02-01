@@ -49,6 +49,7 @@ public class Configuration extends Properties {
     public static final String SCREEN_UPDATE = "screen.update";
     public static final String KCS_RATE = "kcs.rate";
     public static final String KCS_BITS = "kcs.bits";
+    public static final String KCS_BAUD = "kcs.baud";
     public static final String KCS_LEAD = "kcs.lead";
     public static final String ROM = "rom.";
     
@@ -88,8 +89,8 @@ public class Configuration extends Properties {
         }
         String s = parms.getOption("properties");
         if (s != null) {
-            s = s.replace("\\", "\\\\").replace(";", "\n");
-            in = new ByteArrayInputStream(s.getBytes("ISO8859_1"));
+            s = s.replace("\\", "\\\\").replace(";", "\n").replace(",", "\n");
+            in = new ByteArrayInputStream(s.getBytes());
             props.load(in);
             in.close();
         }
@@ -119,6 +120,7 @@ public class Configuration extends Properties {
         applyStr(props, SCREEN_UPDATE, SYNC, ASYNC);
         applyInt(props, KCS_RATE, 8000, 96000);
         applyStr(props, KCS_BITS, "8", "16");
+        applyStr(props, KCS_BAUD, "300", "600", "1200");
         applyInt(props, KCS_LEAD, 0, 10);
         applyROM(props);
     }
@@ -187,16 +189,19 @@ public class Configuration extends Properties {
     }
     
     /*
-     * Return the KCS audio encoder/decoder based on configuration settings 
+     * Return the KCS audio encoder/decoder based on configuration settings.
+     * Note: baud rate is limited to 300, 600 or 1200. 
      */
     public AudioEncoder getAudioEncoder() {
-        KansasCityEncoder kcs = new KansasCityEncoder(getInt(KCS_RATE), getInt(KCS_BITS), getInt(BAUD_RATE));
+        int baud = Math.min(Math.max(getInt(BAUD_RATE), 300), 1200);
+        KansasCityEncoder kcs = new KansasCityEncoder(getInt(KCS_RATE), getInt(KCS_BITS), baud);
         kcs.setLeader(getInt(KCS_LEAD)*1000, getInt(KCS_LEAD)*1000); 
         return kcs;        
     }
     
     public AudioDecoder getAudioDecoder() {
-        KansasCityDecoder kcs = new KansasCityDecoder(getInt(BAUD_RATE));
+        int baud = Math.min(Math.max(getInt(BAUD_RATE), 300), 1200);
+        KansasCityDecoder kcs = new KansasCityDecoder(baud);
         return kcs;        
     }
     

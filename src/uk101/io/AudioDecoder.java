@@ -29,7 +29,7 @@ public abstract class AudioDecoder {
      */
     
     protected AudioDecoder() {
-        audioFormat = new AudioFormat(AudioEncoder.RATE44K, AudioEncoder.BIT16, 1, true, true);
+        audioFormat = new AudioFormat(AudioEncoder.RATE48K, AudioEncoder.BIT16, 1, true, true);
     }
     
     public void setInputStream(InputStream in, AudioFormat format) {

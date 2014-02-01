@@ -21,13 +21,12 @@ import uk101.io.Stream;
  *    TapeWrite [options] inputfile outputtape
  *
  * where:
- *    inputfile: the name of the text input file
+ *    inputfile: the name of the ASCII or binary input file
  *    outputtape: the name for the output tape
  *
  * options:
- *    -binary: create binary tape (default)
- *    -audio: create audio tape
- *    -sampleRate: audio sample rate (default 44.1kHz)
+ *    -audio: create audio tape (default is binary)
+ *    -sampleRate: audio sample rate (default 48kHz)
  *    -sampleSize: audio sample size (default 16 bits)
  *    -baudRate: audio baud rate (default 300)
  *    -leadIn: time to play lead-in tone (default to 5s)
@@ -40,9 +39,8 @@ public class TapeWrite {
     public static void main(String[] args) throws Exception {
         // Handle parameters
         Args.Map options = Args.optionMap();
-        options.put("binary");
         options.put("audio");
-        options.put("sampleRate", "samplerate (8000 to 48000)");
+        options.put("sampleRate", "samplerate (8000 to 96000)");
         options.put("sampleSize", "samplesize (8 or 16)");
         options.put("baudRate", "baudrate (300, 600 or 1200)");
         options.put("leadIn", "+leadin");
@@ -52,7 +50,7 @@ public class TapeWrite {
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile(2);
         int outputFormat = parms.getFlag("audio") ? Stream.STREAM_AUDIO : Stream.STREAM_BINARY;
-        int sampleRate = parms.getInteger("sampleRate", AudioEncoder.RATE44K);
+        int sampleRate = parms.getInteger("sampleRate", AudioEncoder.RATE48K);
         int sampleSize = parms.getInteger("sampleSize", AudioEncoder.BIT16);
         int baudRate = parms.getInteger("baudRate", KansasCityEncoder.BAUD300);
         int leadIn = parms.getInteger("leadIn", 5);
@@ -60,7 +58,7 @@ public class TapeWrite {
 
         // Check parameters
         if ((inputFile == null || outputFile == null) ||
-                (sampleRate < 8000 || sampleRate > 48000) ||
+                (sampleRate < 8000 || sampleRate > 96000) ||
                 (sampleSize != 8 && sampleSize != 16) ||
                 (baudRate != 300 && baudRate != 600 && baudRate != 1200)) {
             parms.usage();

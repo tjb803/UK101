@@ -20,7 +20,7 @@ import javax.sound.sampled.AudioFormat;
  */
 public abstract class AudioEncoder {
     
-    public static final int RATE44K = 44100;
+    public static final int RATE48K = 48000;
     public static final int BIT16 = 16;
     public static final int BIT8 = 8;
  
