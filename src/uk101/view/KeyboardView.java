@@ -246,23 +246,34 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
 
     private int mapKey(KeyEvent e) {
         int code = e.getKeyCode();
+        int location = e.getKeyLocation();
+        
         int key = 0;
         switch (code) {
-        case KeyEvent.VK_CONTROL:      key = Keyboard.KEY_CTRL;    break;
         case KeyEvent.VK_ENTER:        key = Keyboard.KEY_RETURN;  break;
         case KeyEvent.VK_BACK_SPACE:   key = Keyboard.KEY_RUBOUT;  break;
         case KeyEvent.VK_ESCAPE:       key = Keyboard.KEY_ESC;     break;
         case KeyEvent.VK_INSERT:       key = Keyboard.KEY_REPEAT;  break;
         case KeyEvent.VK_DELETE:       key = Keyboard.KEY_RUBOUT;  break;
+        
+        case KeyEvent.VK_CONTROL:   
+            if (rawMode && location == KeyEvent.KEY_LOCATION_RIGHT) {
+                key = Keyboard.KEY_RSHIFT;  // Right-ctrl is treated as an
+            } else {                        // alternative to right-shift in
+                key = Keyboard.KEY_CTRL;    // raw mode.
+            }    
+            break;
+        
         case KeyEvent.VK_SHIFT:             // Menu-key can be used as an 
-        case KeyEvent.VK_CONTEXT_MENU:      // alternative to the right-shift    
+        case KeyEvent.VK_CONTEXT_MENU:      // alternative to right-shift.   
             if (rawMode || ctrlMode) {
-                if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT)
+                if (location == KeyEvent.KEY_LOCATION_LEFT)
                     key = Keyboard.KEY_LSHIFT;
                 else
                     key = Keyboard.KEY_RSHIFT;
             }
             break;
+            
         default:
             if (rawMode || ctrlMode) {  // Note: the key(s) to the right of the 'P' key map to UPARROW/LINE FEED
                 if (code == KeyEvent.VK_OPEN_BRACKET || code == KeyEvent.VK_CLOSE_BRACKET)
