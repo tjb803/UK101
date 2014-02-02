@@ -218,6 +218,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     private int mappedKey = 0, mappedShift = 0;
 
     public void keyPressed(KeyEvent e) {
+        e.consume();
         int key = mapKey(e);
         if (key != 0) {
             keyboard.pressKey(key);
@@ -227,6 +228,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     }
 
     public void keyReleased(KeyEvent e) {
+        e.consume();
         releaseMapped();
         int key = mapKey(e);
         if (key != 0) {
