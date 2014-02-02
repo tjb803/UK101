@@ -27,7 +27,7 @@ import uk101.view.component.KeyboardLock;
 /**
  * A visual representation of the keyboard.
  *
- * The keyboard can operate in two modes 'raw' or normal.  In 'raw' mode basic
+ * The keyboard can operate in two modes 'game' or normal.  In 'game' mode basic
  * key presses and releases are used and the keyboard layout closely matches
  * the UK101 (so for example SHIFT-3 gives a '#').  In normal mode an attempt
  * is made to use the PC characters to press the appropriate key (this ought to
@@ -55,14 +55,14 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
 
     private Computer computer;
     private Keyboard keyboard;
-    private boolean rawMode, ctrlMode;
+    private boolean gameMode, ctrlMode;
 
     public KeyboardView(Computer computer, Keyboard keyboard) {
         super("Keyboard", false, false, false, false);
         this.computer = computer;
         this.keyboard = keyboard;
 
-        rawMode = false;
+        gameMode = false;
 
         // Layout the basic keys
         JPanel row1, row2, row3, row4, row5;
@@ -115,12 +115,12 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
             row3.add(new KeyboardKey("BREAK", Keyboard.KEY_RESET, this));
         }
 
-        // Add the keyboard 'raw' mode selector
-        JCheckBox raw = new JCheckBox("Raw mode");
-        raw.setAlignmentY(BOTTOM_ALIGNMENT);
-        raw.addItemListener(this);
+        // Add the keyboard 'game' mode selector
+        JCheckBox game = new JCheckBox("Game mode");
+        game.setAlignmentY(BOTTOM_ALIGNMENT);
+        game.addItemListener(this);
         row5.add(Box.createHorizontalGlue());
-        row5.add(raw);
+        row5.add(game);
 
         // Build the full keyboard
         Container content = getContentPane();
@@ -152,7 +152,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     public void mousePressed(MouseEvent e) {
         KeyboardKey key = (KeyboardKey)e.getSource();
         if (key.getCode() != Keyboard.KEY_RESET) {
-            if (!rawMode && e.isShiftDown()) {
+            if (!gameMode && e.isShiftDown()) {
                 keyboard.pressKey(Keyboard.KEY_LSHIFT);
             }
             keyboard.pressKey(key.getCode());
@@ -169,7 +169,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         KeyboardKey key = (KeyboardKey)e.getSource();
         if (key.getCode() != Keyboard.KEY_RESET) {
             keyboard.releaseKey(key.getCode());
-            if (!rawMode && e.isShiftDown()) {
+            if (!gameMode && e.isShiftDown()) {
                 keyboard.releaseKey(Keyboard.KEY_LSHIFT);
             }
         }
@@ -196,7 +196,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
             else
                 keyboard.releaseKey(key.getCode());
         } else {
-            rawMode = (e.getStateChange() == ItemEvent.SELECTED);
+            gameMode = (e.getStateChange() == ItemEvent.SELECTED);
         }
     }
 
@@ -204,10 +204,10 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
      * KeyListener is used to map the real keyboard.
      *
      * In normal mode we try to interpret the real PC keys and try to press the
-     * matching character on the UK101 keyboard.  In 'raw' mode we just process
+     * matching character on the UK101 keyboard.  In '' mode we just process
      * basic key-ups and key-downs.
      * 
-     * Note: when the Ctrl key is pressed we always process as if in 'raw' mode,
+     * Note: when the Ctrl key is pressed we always process as if in '' mode,
      *       this is to ensure the BASIC editor works correctly.
      *       
      * Note: for Superboard II mappings, any of the keys to right of the P key (ie
@@ -239,7 +239,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     }
 
     public void keyTyped(KeyEvent e) {
-        if (!rawMode && !ctrlMode) {
+        if (!gameMode && !ctrlMode) {
             char key = e.getKeyChar();
             if (key > 31 && key < 127) 
                 pressMapped(key);
@@ -259,16 +259,16 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         case KeyEvent.VK_DELETE:       key = Keyboard.KEY_RUBOUT;  break;
         
         case KeyEvent.VK_CONTROL:   
-            if (rawMode && location == KeyEvent.KEY_LOCATION_RIGHT) {
+            if (gameMode && location == KeyEvent.KEY_LOCATION_RIGHT) {
                 key = Keyboard.KEY_RSHIFT;  // Right-ctrl is treated as an
             } else {                        // alternative to right-shift in
-                key = Keyboard.KEY_CTRL;    // raw mode.
+                key = Keyboard.KEY_CTRL;    // game mode.
             }    
             break;
         
         case KeyEvent.VK_SHIFT:             // Menu-key can be used as an 
         case KeyEvent.VK_CONTEXT_MENU:      // alternative to right-shift.   
-            if (rawMode || ctrlMode) {
+            if (gameMode || ctrlMode) {
                 if (location == KeyEvent.KEY_LOCATION_LEFT)
                     key = Keyboard.KEY_LSHIFT;
                 else
@@ -277,7 +277,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
             break;
             
         default:
-            if (rawMode || ctrlMode) {  // Note: the key(s) to the right of the 'P' key map to UPARROW/LINE FEED
+            if (gameMode || ctrlMode) {  // Note: the key(s) to the right of the 'P' key map to UPARROW/LINE FEED
                 if (code == KeyEvent.VK_OPEN_BRACKET || code == KeyEvent.VK_CLOSE_BRACKET)
                     key = Keyboard.KEY_UPARROW;
                 else if (code > 31 && code < 127)
