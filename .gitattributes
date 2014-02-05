@@ -83,7 +83,7 @@ src/uk101/io/AudioDecoder.java -text
 src/uk101/io/AudioEncoder.java -text
 src/uk101/io/KansasCityDecoder.java -text
 src/uk101/io/KansasCityEncoder.java -text
-src/uk101/io/Stream.java -text
+src/uk101/io/Tape.java -text
 src/uk101/io/UK101InputStream.java -text
 src/uk101/io/UK101OutputStream.java -text
 src/uk101/io/WaveInputStream.java -text

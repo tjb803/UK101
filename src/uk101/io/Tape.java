@@ -17,11 +17,11 @@ import java.io.OutputStream;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
- * Utility class to manipulate input and output streams.
+ * Utility class to manipulate tape input and output streams.
  *
  * @author Baldwin
  */
-public class Stream {
+public class Tape {
 
     public static final int STREAM_SELECT = 0;
     public static final int STREAM_ASCII = 1;

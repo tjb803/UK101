@@ -12,7 +12,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import uk101.io.Stream;
+import uk101.io.Tape;
 
 /**
  * Tape file selection dialog accessory to select tape mode.
@@ -41,10 +41,10 @@ public class TapeFormat extends JPanel {
         JRadioButton ia = new JRadioButton(MODE_ASCII);
         JRadioButton ib = new JRadioButton(MODE_BINARY);
         JRadioButton iw = new JRadioButton(MODE_AUDIO);
-        ix.setActionCommand(Integer.toString(Stream.STREAM_SELECT));
-        ia.setActionCommand(Integer.toString(Stream.STREAM_ASCII));
-        ib.setActionCommand(Integer.toString(Stream.STREAM_BINARY));
-        iw.setActionCommand(Integer.toString(Stream.STREAM_AUDIO));
+        ix.setActionCommand(Integer.toString(Tape.STREAM_SELECT));
+        ia.setActionCommand(Integer.toString(Tape.STREAM_ASCII));
+        ib.setActionCommand(Integer.toString(Tape.STREAM_BINARY));
+        iw.setActionCommand(Integer.toString(Tape.STREAM_AUDIO));
         inputGroup = new ButtonGroup();
         inputGroup.add(ix);  inputGroup.add(ia);  inputGroup.add(ib);  inputGroup.add(iw);
         ip.add(ix);  ip.add(Box.createVerticalStrut(2));
@@ -58,9 +58,9 @@ public class TapeFormat extends JPanel {
         JRadioButton oa = new JRadioButton(MODE_ASCII, true);
         JRadioButton ob = new JRadioButton(MODE_BINARY);
         JRadioButton ow = new JRadioButton(MODE_AUDIO);
-        oa.setActionCommand(Integer.toString(Stream.STREAM_ASCII));
-        ob.setActionCommand(Integer.toString(Stream.STREAM_BINARY));
-        ow.setActionCommand(Integer.toString(Stream.STREAM_AUDIO));
+        oa.setActionCommand(Integer.toString(Tape.STREAM_ASCII));
+        ob.setActionCommand(Integer.toString(Tape.STREAM_BINARY));
+        ow.setActionCommand(Integer.toString(Tape.STREAM_AUDIO));
         outputGroup = new ButtonGroup();
         outputGroup.add(oa);  outputGroup.add(ob);  outputGroup.add(ow);
         op.add(oa);  op.add(Box.createVerticalStrut(2));

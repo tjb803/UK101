@@ -11,7 +11,7 @@ import java.io.OutputStream;
 
 import uk101.io.AudioEncoder;
 import uk101.io.KansasCityEncoder;
-import uk101.io.Stream;
+import uk101.io.Tape;
 
 /**
  * Utility program to take ASCII or binary input and write an 
@@ -49,7 +49,7 @@ public class TapeWrite {
 
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile(2);
-        int outputFormat = parms.getFlag("audio") ? Stream.STREAM_AUDIO : Stream.STREAM_BINARY;
+        int outputFormat = parms.getFlag("audio") ? Tape.STREAM_AUDIO : Tape.STREAM_BINARY;
         int sampleRate = parms.getInteger("sampleRate", AudioEncoder.RATE48K);
         int sampleSize = parms.getInteger("sampleSize", AudioEncoder.BIT16);
         int baudRate = parms.getInteger("baudRate", KansasCityEncoder.BAUD300);
@@ -67,11 +67,11 @@ public class TapeWrite {
         // Create input/output streams
         KansasCityEncoder encoder = new KansasCityEncoder(sampleRate, sampleSize, baudRate);
         encoder.setLeader(leadIn*1000, leadOut*1000);
-        InputStream input = Stream.getInputStream(inputFile, Stream.STREAM_SELECT, null); 
-        OutputStream output = Stream.getOutputStream(outputFile, outputFormat, encoder);
+        InputStream input = Tape.getInputStream(inputFile, Tape.STREAM_SELECT, null); 
+        OutputStream output = Tape.getOutputStream(outputFile, outputFormat, encoder);
 
         // Copy the input to the output
-        Stream.copy(input, output);
+        Tape.copy(input, output);
         output.close();
         input.close();
     }

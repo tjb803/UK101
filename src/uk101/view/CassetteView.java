@@ -30,7 +30,7 @@ import javax.swing.Timer;
 
 import uk101.io.AudioDecoder;
 import uk101.io.AudioEncoder;
-import uk101.io.Stream;
+import uk101.io.Tape;
 import uk101.machine.Configuration;
 import uk101.machine.TapeRecorder;
 import uk101.view.component.CassetteButton;
@@ -170,7 +170,7 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
     private void recordTape() {
         OutputStream out = null;
         if (!tapeFile.exists()) {
-            out = Stream.getOutputStream(tapeFile, outFormat, audioEncoder);
+            out = Tape.getOutputStream(tapeFile, outFormat, audioEncoder);
         } else { 
             String[] msg = {
                 "File " + tapeFile.getPath() + " already exists.",
@@ -183,21 +183,21 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
             if (JOptionPane.showInternalOptionDialog(this, 
                     msg, getTitle(), JOptionPane.YES_NO_OPTION, 
                     JOptionPane.WARNING_MESSAGE, null, opts, opts[0]) == JOptionPane.NO_OPTION) {
-                out = Stream.getOutputStream(tapeFile, outFormat, audioEncoder);  
+                out = Tape.getOutputStream(tapeFile, outFormat, audioEncoder);  
             } else {
                 stop.button.doClick();
             }
         }
         if (out != null) {
-            format.setValue(tapeFormat(Stream.getFormat(out)));
+            format.setValue(tapeFormat(Tape.getFormat(out)));
             recorder.setOutputTape(out);
         }
     }
 
     private void playTape() {
-        InputStream in = Stream.getInputStream(tapeFile, inFormat, audioDecoder);
+        InputStream in = Tape.getInputStream(tapeFile, inFormat, audioDecoder);
         if (in != null) {
-            format.setValue(tapeFormat(Stream.getFormat(in)));
+            format.setValue(tapeFormat(Tape.getFormat(in)));
             recorder.setInputTape(in);
         }
     }
@@ -209,8 +209,8 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
     }
     
     private String tapeFormat(int format) {
-        return ((format == Stream.STREAM_ASCII) ? TapeFormat.MODE_ASCII : 
-                (format == Stream.STREAM_AUDIO) ? TapeFormat.MODE_AUDIO : TapeFormat.MODE_BINARY);
+        return ((format == Tape.STREAM_ASCII) ? TapeFormat.MODE_ASCII : 
+                (format == Tape.STREAM_AUDIO) ? TapeFormat.MODE_AUDIO : TapeFormat.MODE_BINARY);
     }
     
     /*

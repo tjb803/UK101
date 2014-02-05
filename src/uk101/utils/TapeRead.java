@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 import uk101.io.KansasCityDecoder;
-import uk101.io.Stream;
+import uk101.io.Tape;
 import uk101.io.UK101OutputStream;
 
 /**
@@ -41,7 +41,7 @@ public class TapeRead {
         
         File inputFile = parms.getInputFile(1); 
         File outputFile = parms.getOutputFile(2);    
-        int inputFormat = parms.getFlag("binary") ? Stream.STREAM_BINARY : Stream.STREAM_SELECT;
+        int inputFormat = parms.getFlag("binary") ? Tape.STREAM_BINARY : Tape.STREAM_SELECT;
         int baudRate = parms.getInteger("baudRate", 300);
 
         // Check parameters
@@ -52,7 +52,7 @@ public class TapeRead {
 
         // Create input/output streams/readers
         KansasCityDecoder decoder = new KansasCityDecoder(baudRate);
-        InputStream input = Stream.getInputStream(inputFile, inputFormat, decoder);
+        InputStream input = Tape.getInputStream(inputFile, inputFormat, decoder);
         UK101OutputStream output = null;
         if (outputFile != null) {
             output = new UK101OutputStream(new PrintWriter(outputFile));
@@ -61,7 +61,7 @@ public class TapeRead {
         }
     
         // Copy the input to the output
-        Stream.copy(input, output);
+        Tape.copy(input, output);
         output.close();
         input.close();
     }
