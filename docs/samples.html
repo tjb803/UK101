@@ -19,6 +19,7 @@
 <li><a href="#lepasse">Le Passe-Temps</a></li>
 <li><a href="#exmon">Extended Monitor</a></li>
 <li><a href="#invade">Space Invaders</a></li>
+<li><a href="#superinv">8k Super Invaders</a></li>
 <li><a href="#astero">Asteroids</a></li>
 </ul>
 <p>In addition this page provides some notes about the 
@@ -197,6 +198,42 @@ I once knew some locations to patch to change these keys, but I can no
 longer find those notes - sorry! 
 You should set the keyboard to <a href="operation.html#kbmode">game mode</a>
 to play the game.</p>
+<hr>
+<h2 id="superinv">8K Super Invaders</h2>
+<table frame="void"><tr valign="top">
+<td><img src="image/tapesinv.jpg" alt="Super Invaders Tape" align="left"/></td>
+<td>
+<table frame="box" rules="all" cellspacing="0" cellpadding="4">
+<tr><td><b>Program Tape</b></td>
+<td><samp>samples/tapes/superinvaders.tape</samp></td></tr>
+</table>
+</td></tr></table>
+<br clear="left">
+This is a copy of Craig Clapp's excellent <i>8K Super Invaders</i>
+space invaders game, which shows just how much could be done
+with the limited character set graphics.
+<p>This games is a mix of machine code and BASIC, to load it restart 
+the machine with a <a href="quickstart.html#boot">cold start</a> into 
+BASIC, type <code>LOAD</code> then play the tape.  
+The machine code will be loaded first followed by the BASIC program
+and the program will then start to run and display its instructions.
+If you do a warm start you can restart it just by typing <code>RUN</code>.
+<p>This game rather cleverly hooked into the ACIA timing signals to 
+ensure it always ran at the correct speed, even if the CPU was over-clocked
+to 2MHz - my thanks to Craig for explaining to me how this worked so I 
+could ensure the emulator handled it correctly!
+It would also produce some simple sound effects if you hooked up a 
+speaker or earphone to the ACIA output - this is not implemented in
+the simulation yet but I hope to add it soon.</p>
+<p>To move the laser the <i>left-SHIFT</i> key is used to go left and the 
+<i>Z</i> key is used to go right.
+The <i>right-SHIFT</i> key is used to fire, but note there are some 
+problems when trying to use both shift keys independently on Windows
+(something to do with the way Java incorrectly reports the key events), 
+so you should use an alternative right-SHIFT if you can.  
+When the keyboard is set to <a href="operation.html#kbmode">game mode</a>
+either the <i>right-CTRL</i> or the <i>Windows-Menu</i> key (both normally
+directly beneath the right-SHIFT) can be used as alternatives.</p>
 <hr>
 <h2 id="astero">Asteroids</h2>
 <table frame="void"><tr valign="top">

@@ -47,7 +47,6 @@ docs/quickstart.html -text
 docs/samples.html -text
 docs/utilities.html -text
 extras/CEGMON32.ROM -text
-extras/superinvaders.tape -text
 samples/basic/blackbox.basic -text
 samples/basic/charset.basic -text
 samples/basic/hectic.basic -text
@@ -56,6 +55,7 @@ samples/basic/nytaxi.basic -text
 samples/basic/passetemp.basic -text
 samples/machines/asteroids.uk101 -text
 samples/machines/invaders.uk101 -text
+samples/machines/superinvaders.uk101 -text
 samples/properties/BASOSI.ROM -text
 samples/properties/CHGOSI.ROM -text
 samples/properties/MONOSI.ROM -text
@@ -64,6 +64,7 @@ samples/properties/uk101.properties -text
 samples/tapes/asteroids.tape -text
 samples/tapes/exmon.tape -text
 samples/tapes/invaders.tape -text
+samples/tapes/superinvaders.tape -text
 src/uk101/Main.java -text
 src/uk101/hardware/ACIA6850.java -text
 src/uk101/hardware/ALU6502.java -text

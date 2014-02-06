@@ -51,7 +51,7 @@ addition the following are notable improvements:
 
 v1.2.0
  - "rom.XXXX" property to allow extra plug-in ROMs
- - Additional games: "Asteroids" and "Le Passe-Temp"
+ - Additional games: "8K Super Invaders", "Asteroids" and "Le Passe-Temp"
  - CEGMON monitor included in package
  - Default screen size to support CEGMON and MONUK02
  - Support for reading and writing Kansas City Standard audio tapes
@@ -73,7 +73,7 @@ Release History
 ---------------
 v0.5.0  December 2010  First public release
 v0.6.0  January 2011   Bug fixes 
-v1.0.0  February 2011  Add Ohio Superboard support
+v1.0.0  February 2011  Add Ohio Superboard II support
 v1.1.0  October 2011   ACIA support for 8K Super Invaders
 v1.2.0  January 2014   Support additional plug-in ROMs and audio encoded tapes
 
