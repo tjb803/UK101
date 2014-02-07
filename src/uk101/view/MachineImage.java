@@ -20,8 +20,8 @@ import uk101.machine.Dump;
 
 /**
  * A saved machine image.  Currently  this consists of a memory dump,
- * the system 
- * and the size and position of all the windows on the screen.
+ * the system configuration and the size and position of all the 
+ * windows on the screen.
  *
  * @author Baldwin
  */
@@ -51,7 +51,7 @@ public class MachineImage {
         boolean layout = false;
         computer.restore(imageDump);
         computer.reset();
-        if (imageView != null) {
+        if (view != null && imageView != null) {
             layout = imageView.layout(view);
         }
         return layout;

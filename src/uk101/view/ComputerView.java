@@ -50,7 +50,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
 
         // Create views for the various machine elements
         video = new VideoView(computer.video, cfg);
-        keyboard = new KeyboardView(computer, computer.keyboard);
+        keyboard = new KeyboardView(computer, computer.keyboard, cfg);
         cassette = new CassetteView(computer.recorder, cfg);
         machine = new MachineView(computer, this);
         
@@ -122,7 +122,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
 
         return false;       // Layout is incomplete (frame is unsized)
     }
-
+    
     // Attach a keyListener to a top level window and ensure that no 
     // subcomponents can grab focus.
     private void attachKeyboard(JInternalFrame frame, KeyListener listener) {
@@ -156,13 +156,15 @@ public class ComputerView extends JDesktopPane implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(IMAGE_LOAD)) {
+            ImageFormat format = new ImageFormat(false);
+            imageSelect.setAccessory(format);
             if (imageSelect.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File file = imageSelect.getSelectedFile();
                 MachineImage image = MachineImage.readImage(file);
-                image.apply(computer, this);
+                image.apply(computer, null);
             }
         } else if (e.getActionCommand().equals(IMAGE_SAVE)) {
-            ImageFormat format = new ImageFormat();
+            ImageFormat format = new ImageFormat(true);
             imageSelect.setAccessory(format);
             if (imageSelect.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File file = imageSelect.getSelectedFile();

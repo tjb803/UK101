@@ -39,7 +39,8 @@ public class Configuration extends Properties {
     public static final String ROM_MONITOR = "rom.monitor";
     public static final String ROM_BASIC = "rom.basic";
     public static final String ROM_CHARSET = "rom.charset";
-    public static final String KEYBOARD = "keyboard";
+    public static final String KBD_LAYOUT = "keyboard.layout";
+    public static final String KBD_MODE = "keyboard.mode";
     public static final String VIDEO_ROWS = "video.rows";
     public static final String VIDEO_COLS = "video.cols";
     public static final String SCREEN_SIZE = "screen.size";
@@ -60,6 +61,8 @@ public class Configuration extends Properties {
     public static final String ASYNC = "async";
     public static final String UK = "uk";
     public static final String US = "us";
+    public static final String NORMAL = "normal";
+    public static final String GAME = "game";
     
     // Additional ROMs have an address and a filename
     public static class ROM {
@@ -109,7 +112,9 @@ public class Configuration extends Properties {
         applyStr(props, ROM_MONITOR);
         applyStr(props, ROM_BASIC);
         applyStr(props, ROM_CHARSET);
-        applyStr(props, KEYBOARD, UK, US);
+        applyStr(props, KBD_LAYOUT, UK, US);
+        apply(props, KBD_LAYOUT, "keyboard", 0, 0, UK, US);
+        applyStr(props, KBD_MODE, NORMAL, GAME);
         applyInt(props, VIDEO_ROWS, 16, 32);
         applyInt(props, VIDEO_COLS, 32, 64);
         applyInt(props, SCREEN_SIZE, 1, 2);
@@ -186,6 +191,10 @@ public class Configuration extends Properties {
     
     public String getValue(String key) {
         return getProperty(key);
+    }
+    
+    public void setValue(String key, String value) {
+        setProperty(key, value);
     }
     
     /*

@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.view.component;
 
@@ -19,32 +19,35 @@ import javax.swing.JPanel;
 public class ImageFormat extends JPanel {
     private static final long serialVersionUID = 1L;
     
-    private JCheckBox saveMem, saveCfg, savePos;
+    private JCheckBox imgMem, imgCfg, imgPos;
     
-    public ImageFormat() {
+    public ImageFormat(boolean save) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Image options"));
         
-        saveMem = new JCheckBox("Save RAM");
-        saveMem.setSelected(true);
-        saveMem.setEnabled(false);
-        saveCfg = new JCheckBox("Save properties");
-        saveCfg.setSelected(true);
-        savePos = new JCheckBox("Save positions");
-        savePos.setSelected(true);
+        String action = (save) ? "Save " : "Load ";
+        imgMem = new JCheckBox(action + "RAM");
+        imgMem.setSelected(true);
+        imgMem.setEnabled(false);
+        imgCfg = new JCheckBox(action + "properties");
+        imgCfg.setSelected(save);
+        imgCfg.setEnabled(save);
+        imgPos = new JCheckBox(action + "positions");
+        imgPos.setSelected(save);
+        imgPos.setEnabled(save);
         
-        add(saveMem);
+        add(imgMem);
         add(Box.createVerticalStrut(5));
-        add(saveCfg);
+        add(imgCfg);
         add(Box.createVerticalStrut(5));
-        add(savePos);
+        add(imgPos);
     }
     
     public boolean saveProperties() {
-        return saveCfg.isSelected();
+        return imgCfg.isSelected();
     }
     
     public boolean savePostions() {
-        return savePos.isSelected();
+        return imgPos.isSelected();
     }
 }

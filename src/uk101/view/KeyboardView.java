@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 
 import uk101.hardware.Keyboard;
 import uk101.machine.Computer;
+import uk101.machine.Configuration;
 import uk101.view.component.KeyboardKey;
 import uk101.view.component.KeyboardLock;
 
@@ -54,16 +55,18 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         { "Z", "X", "C", "V", "B", "N", "M", "< ,", "> .", "? /" };
 
     private Computer computer;
+    private Configuration config;
     private Keyboard keyboard;
     private boolean gameMode, ctrlMode;
 
-    public KeyboardView(Computer computer, Keyboard keyboard) {
+    public KeyboardView(Computer computer, Keyboard keyboard, Configuration cfg) {
         super("Keyboard", false, false, false, false);
         this.computer = computer;
+        this.config = cfg;
         this.keyboard = keyboard;
 
-        gameMode = false;
-
+        gameMode = isGameMode(cfg.getValue(Configuration.KBD_MODE)); 
+                
         // Layout the basic keys
         JPanel row1, row2, row3, row4, row5;
         row1 = makeRow(KB_ROW1);
@@ -116,7 +119,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         }
 
         // Add the keyboard game mode selector
-        JCheckBox game = new JCheckBox("Game mode");
+        JCheckBox game = new JCheckBox("Game mode", gameMode);
         game.setAlignmentY(BOTTOM_ALIGNMENT);
         game.addItemListener(this);
         row5.add(Box.createHorizontalGlue());
@@ -143,6 +146,11 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
             row.add(new KeyboardKey(names[i], 0, this));
         }
         return row;
+    }
+    
+    // Map configuration keyboard mode
+    private boolean isGameMode(String name) {
+        return name.equals(Configuration.GAME);
     }
 
     /*
@@ -195,8 +203,9 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
                 keyboard.pressKey(key.getCode());
             else
                 keyboard.releaseKey(key.getCode());
-        } else {
+        } else {    // Push game mode back to configuration so it will be saved in a machine image 
             gameMode = (e.getStateChange() == ItemEvent.SELECTED);
+            config.setValue(Configuration.KBD_MODE, (gameMode) ? Configuration.GAME : Configuration.NORMAL);
         }
     }
 
