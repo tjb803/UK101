@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2012
+ * (C) Copyright Tim Baldwin 2010,2014
  */
 package uk101.hardware;
 
@@ -150,10 +150,9 @@ public class CPU6502 {
         spinPause = nt/5;
         sleepPause = st/5;
         
-        // If the Thread.sleep interval is short enough for a few hundred typical
-        // instructions (assume 5 cycles per instruction) we can do timing using
-        // sleeps.  Otherwise we'll have to do it using spin loops.
-        useSpin = (sleepPause > 500*5*speed);
+        // If the Thread.sleep interval is short enough (say <2ms?) we can do 
+        // timing using sleeps, otherwise we'll have to do it using spin loops.
+        useSpin = (sleepPause > 2000000);
     }
 
     /*

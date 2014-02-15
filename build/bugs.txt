@@ -44,6 +44,6 @@ v1.2.0
    
    Main bug fixes:
    - Problem pushing and popping 2-byte values when the stack wraps 
-     around, which caused problems loading Super Space Invaders.
+     around.
    - Add additional mappings for Right-Shift key to workaround issues
      on Windows.

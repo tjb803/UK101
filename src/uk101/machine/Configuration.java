@@ -48,10 +48,9 @@ public class Configuration extends Properties {
     public static final String SCREEN_OFFSET = "screen.offset";
     public static final String SCREEN_COLOUR = "screen.colour";
     public static final String SCREEN_UPDATE = "screen.update";
-    public static final String KCS_RATE = "kcs.rate";
-    public static final String KCS_BITS = "kcs.bits";
-    public static final String KCS_BAUD = "kcs.baud";
-    public static final String KCS_LEAD = "kcs.lead";
+    public static final String AUDIO_RATE = "audio.rate";
+    public static final String AUDIO_BITS = "audio.bits";
+    public static final String AUDIO_LEAD = "audio.lead";
     public static final String ROM = "rom.";
     
     public static final String WHITE = "white";
@@ -123,10 +122,9 @@ public class Configuration extends Properties {
         applyStr(props, SCREEN_COLOUR, WHITE, GREEN, AMBER);
         apply(props, SCREEN_COLOUR, "screen.color", 0, 0, WHITE, GREEN, AMBER);
         applyStr(props, SCREEN_UPDATE, SYNC, ASYNC);
-        applyInt(props, KCS_RATE, 8000, 96000);
-        applyStr(props, KCS_BITS, "8", "16");
-        applyStr(props, KCS_BAUD, "300", "600", "1200");
-        applyInt(props, KCS_LEAD, 0, 10);
+        applyInt(props, AUDIO_RATE, 8000, 96000);
+        applyStr(props, AUDIO_BITS, "8", "16");
+        applyInt(props, AUDIO_LEAD, 0, 10);
         applyROM(props);
     }
     
@@ -203,8 +201,8 @@ public class Configuration extends Properties {
      */
     public AudioEncoder getAudioEncoder() {
         int baud = Math.min(Math.max(getInt(BAUD_RATE), 300), 1200);
-        KansasCityEncoder kcs = new KansasCityEncoder(getInt(KCS_RATE), getInt(KCS_BITS), baud);
-        kcs.setLeader(getInt(KCS_LEAD)*1000, getInt(KCS_LEAD)*1000); 
+        KansasCityEncoder kcs = new KansasCityEncoder(getInt(AUDIO_RATE), getInt(AUDIO_BITS), baud);
+        kcs.setLeader(getInt(AUDIO_LEAD)*1000, getInt(AUDIO_LEAD)*1000); 
         return kcs;        
     }
     
