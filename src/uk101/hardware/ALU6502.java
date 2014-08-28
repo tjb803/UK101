@@ -35,7 +35,7 @@ class ALU6502 {
         int c = (carry) ? 1 : 0;
         if (isDecimal) {
             int i = fromBCD(value1) + fromBCD(value2) + c;
-            isCarry = (i > 100);
+            isCarry = (i > 99);
             if (isCarry) i = i - 100;
             result = toBCD(i);
         } else {
@@ -53,8 +53,8 @@ class ALU6502 {
         int c = (carry) ? 0 : 1;
         if (isDecimal) {
             int i = fromBCD(value1) - fromBCD(value2) - c;
-            isCarry = (i < 0);
-            if (isCarry) i = 100 + i;
+            isCarry = (i >= 0);
+            if (!isCarry) i = 100 + i;
             result = toBCD(i);
         } else {
             int uresult = (value1 & 0xFF) - (value2 & 0xFF) - c;
