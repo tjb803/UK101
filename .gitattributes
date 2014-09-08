@@ -48,6 +48,10 @@ docs/quickstart.html -text
 docs/samples.html -text
 docs/utilities.html -text
 extras/CEGMON32.ROM -text
+extras/sourceforge/Screen1.jpg -text
+extras/sourceforge/Screen2.jpg -text
+extras/sourceforge/Screen3.jpg -text
+extras/sourceforge/Screen4.jpg -text
 samples/basic/blackbox.basic -text
 samples/basic/charset.basic -text
 samples/basic/hectic.basic -text
