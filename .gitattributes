@@ -52,6 +52,7 @@ samples/basic/blackbox.basic -text
 samples/basic/charset.basic -text
 samples/basic/hectic.basic -text
 samples/basic/hello.basic -text
+samples/basic/labyrinth.basic -text
 samples/basic/nytaxi.basic -text
 samples/basic/passetemp.basic -text
 samples/machines/asteroids.uk101 -text
