@@ -74,12 +74,13 @@ Note that property names and values are case-sensitive.</p>
 <tr><th width="15%">Name</th><th width="15%">Values</th>
 <th width="8%">Default</th><th width="62%">Notes</th></tr>
 <tr><td><code>cpu.speed</code></td>
-<td><code>0</code>,&nbsp;<code>1</code>&nbsp;or&nbsp;<code>2</code></td>
+<td>from <code>0</code> to <code>8</code></td>
 <td align="center"><code>1</code></td>
 <td>This defines the maximum simulated CPU speed in MHz.
 A standard 6502 ran at 1Mhz but most could be over-clocked to 2Mhz quite
 successfully, which doubles the speed of the machine (although some
 games may then run too fast).
+The simulation allows any speed from 1MHz to 8Mhz to be specified.
 <p>Setting a value of <code>0</code> will cause the simulation to
 run as fast as it can.</p></td></tr>
 </table>

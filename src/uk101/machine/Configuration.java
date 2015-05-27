@@ -105,7 +105,7 @@ public class Configuration extends Properties {
     }
     
     private void applyProperties(Properties props) {
-        applyInt(props, CPU_SPEED, 0, 2);
+        applyInt(props, CPU_SPEED, 0, 8);
         applyStr(props, BAUD_RATE, "110", "300", "600", "1200", "2400", "4800", "9600");
         applyInt(props, RAM_SIZE, 4, 40);
         applyStr(props, ROM_MONITOR);
