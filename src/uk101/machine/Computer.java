@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2014
+ * (C) Copyright Tim Baldwin 2010,2015
  */
 package uk101.machine;
 
@@ -66,7 +66,7 @@ public class Computer extends Thread implements DataBus {
         config = cfg;
         
         // A 6502 CPU
-        cpu = new CPU6502(cfg.getInt(Configuration.CPU_SPEED), this);
+        cpu = new CPU6502(cfg.getInt(Configuration.CPU_SPEED), cfg.getValue(Configuration.CPU_CONTROL), this);
 
         // Address space is 64K.  Assumption here is that any ROM/RAM or any
         // memory-mapped devices are mapped in BLKSIZE sections.
@@ -217,7 +217,7 @@ public class Computer extends Thread implements DataBus {
     public Computer(boolean test) throws IOException {
         ram = new RAM(4);
         monitor = new ROM("MONUK02.ROM");
-        cpu = new CPU6502(1, null);
+        cpu = new CPU6502(1, "sleep", null);
         acia = new ACIA6850(300, Thread.NORM_PRIORITY);
     }
 }

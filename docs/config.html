@@ -83,8 +83,21 @@ games may then run too fast).
 The simulation allows any speed from 1MHz to 8Mhz to be specified.
 <p>Setting a value of <code>0</code> will cause the simulation to
 run as fast as it can.</p></td></tr>
+<tr><td><code>cpu.control</code></td>
+<td><code>auto</code>, <code>sleep</code>, <code>yield</code> or <code>spin</code></td>
+<td align="center"><code>auto</code></td>
+<td>This determines the method used by the CPU emulation to manage correct
+instruction timings.
+Generally this is best left set to <code>auto</code> to let the system decide
+the best method based on measured system performance.  
+The other options are mainly for experimentation and debug.
+The <code>sleep</code> option uses the least host CPU processing but may give 
+a less smooth emulation on slower machines.
+The <code>spin</code> option will give the smoothest emulation but will require
+more host CPU power.</td></tr>
 </table>
-<p><i>Note: </i>This setting represents a maximum simulation speed.  
+<p><i>Note: </i>The <code>cpu.speed</code> setting represents a maximum 
+simulation speed.  
 It is possible that an older or slower PC will not be able reach 
 the maximum requested.</p>
 <hr>

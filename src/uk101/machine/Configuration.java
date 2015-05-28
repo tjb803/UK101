@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2014
+ * (C) Copyright Tim Baldwin 2010,2015
  */
 package uk101.machine;
 
@@ -34,6 +34,7 @@ public class Configuration extends Properties {
     private static final long serialVersionUID = 2L;
     
     public static final String CPU_SPEED = "cpu.speed";
+    public static final String CPU_CONTROL = "cpu.control";
     public static final String BAUD_RATE = "baud.rate";
     public static final String RAM_SIZE = "ram.size";
     public static final String ROM_MONITOR = "rom.monitor";
@@ -53,6 +54,10 @@ public class Configuration extends Properties {
     public static final String AUDIO_LEAD = "audio.lead";
     public static final String ROM = "rom.";
     
+    public static final String AUTO = "auto";
+    public static final String SLEEP = "sleep";
+    public static final String YIELD = "yield";
+    public static final String SPIN = "spin";
     public static final String WHITE = "white";
     public static final String GREEN = "green";
     public static final String AMBER = "amber";
@@ -106,6 +111,7 @@ public class Configuration extends Properties {
     
     private void applyProperties(Properties props) {
         applyInt(props, CPU_SPEED, 0, 8);
+        applyStr(props, CPU_CONTROL, AUTO, SLEEP, YIELD, SPIN);
         applyStr(props, BAUD_RATE, "110", "300", "600", "1200", "2400", "4800", "9600");
         applyInt(props, RAM_SIZE, 4, 40);
         applyStr(props, ROM_MONITOR);

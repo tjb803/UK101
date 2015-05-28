@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import uk101.hardware.bus.DataBus;
 import uk101.machine.Computer;
+import uk101.machine.Configuration;
 import uk101.machine.Data;
 import uk101.machine.Trace;
 
@@ -75,9 +76,9 @@ public class CPU6502 {
     private boolean sigRESET, sigNMI, sigIRQ;
 
     // Timing control
-    private boolean useSpin;
+    private boolean useAuto, useYield, useSleep;
     private int speed;
-    private long spinPause, sleepPause;
+    private long spinPause, yieldPause, sleepPause;
 
     // Relative speed calculation
     private AtomicLong cpuStart, cpuCycles;
@@ -86,21 +87,22 @@ public class CPU6502 {
     private Trace trace;
     private Trace.Entry traceEntry;
 
-    public CPU6502(int mhz, DataBus bus) {
+    public CPU6502(int mhz, String control, DataBus bus) {
         this.alu = new ALU6502();
         this.bus = bus;
         running = new AtomicBoolean();
         cpuStart = new AtomicLong();
         cpuCycles = new AtomicLong();
+        sigRESET = true;
         setMHz(mhz);
-        calibrate();
-        reset();
         
-        if (Computer.debug) {
-            System.out.println("CPU:");
-            System.out.println("  sleep time:   " + sleepPause);
-            System.out.println("  spin time:    " + spinPause);
-            System.out.println("  pause method: " + (speed == 0 ? "none" : useSpin ? "spin" : "sleep"));
+        // Set the timing control from configuration, if specified
+        if (control.equals(Configuration.AUTO)) {
+            useAuto = true;
+        } else {
+            useAuto = false;
+            useSleep = control.equals(Configuration.SLEEP);
+            useYield = control.equals(Configuration.YIELD);
         }
     }
 
@@ -138,23 +140,41 @@ public class CPU6502 {
     // Attempt to calibrate the CPU timing controls
     private void calibrate() {
         // We need to know roughly how long it takes to read the nanosecond
-        // timer and what the typical minimum Thread.sleep() period is.
-        long nt = 0, st = 0;
-        for (int i = 0; i < 5; i++) {
+        // timer and what the typical minimum Thread.yield() and Thread.sleep() 
+        // period is.
+        long nt = 0, yt = 0, st = 0;
+        for (int i = 0; i < 3; i++) {
             long t1 = System.nanoTime();
             long t2 = System.nanoTime();
-            try { Thread.sleep(0, 1); } catch (InterruptedException e) { }
+            Thread.yield();
             long t3 = System.nanoTime();
+            try { Thread.sleep(0, 1); } catch (InterruptedException e) { }
+            long t4 = System.nanoTime();
             nt += (t2-t1);
-            st += (t3-t2);
+            yt += (t3-t2);
+            st += (t4-t3);
         }
-        spinPause = nt/5;
-        sleepPause = st/5;
+        spinPause = nt/3;
+        yieldPause = yt/3;
+        sleepPause = st/3;
 
-        // If the Thread.sleep interval is short enough (say <2ms?) we can do 
-        // timing using sleeps, otherwise we'll have to do it using spin loops.
-        useSpin = (sleepPause > 2000000);
+        // If the Thread.sleep interval is short enough (say less than 2000
+        // instructions assuming an average of 5 cycles per instruction) we can 
+        // do timing using sleeps, otherwise we'll have to do it using spin loops 
+        // (including Thread.yield if the yield interval is also short enough).
+        if (useAuto) {
+            useSleep = (sleepPause <= 2000*5*speed);
+            useYield = (yieldPause <= 2000*5*speed);
         }
+        
+        if (Computer.debug) {
+            System.out.println("CPU:");
+            System.out.println("  sleep time:   " + sleepPause);
+            System.out.println("  yield time:   " + yieldPause);
+            System.out.println("  spin time:    " + spinPause);
+            System.out.println("  pause method: " + (speed == 0 ? "none" : useSleep ? "sleep" : useYield ? "yield" : "spin"));
+        }
+    }
 
     /*
      * Normal processor execution
@@ -174,19 +194,26 @@ public class CPU6502 {
 
                 // It is difficult to get timings exactly right in Java.  This logic
                 // assumes we are running too fast (which should be true most of the
-                // time on anything except a very slow machine) and adds some delays
-                // when we have accumulated enough excess time for a delay to be
-                // worthwhile - this means individual instructions won't be at the
-                // exact correct speed, but on average the CPU should be close.
+                // time on anything except a very slow machine) and adds delays when
+                // we have accumulated enough excess time for a delay to be worthwhile.
+                // This means individual instructions won't be at the exact correct
+                // speed but on average the CPU should be close.
                 if (speed > 0) {
                     end += cycles*speed;
-                    long pause = end-now;
-                    if (pause > sleepPause) {
+                    if (useSleep) {
+                        while (end-now > sleepPause) {
                             try {
+                                long pause = end-now;
                                 Thread.sleep(pause/1000000, (int)pause%1000000);
                             } catch (InterruptedException e) { }
                             now = System.nanoTime();
-                    } else if (useSpin) {
+                        }
+                    } else if (useYield) {
+                        while (end-now > yieldPause) {
+                            Thread.yield();
+                            now = System.nanoTime();
+                        }
+                    } else {
                         while (end-now > spinPause) {
                             now = System.nanoTime();
                         }
@@ -220,8 +247,10 @@ public class CPU6502 {
         }
     }
 
-    // Processor reset state
+    // Processor reset state.  Perform a re-calibration on a reset in case the JIT
+    // has done enough to alter the timings.
     private void reset() {
+        calibrate();
         A = X = Y = 0;
         S = STACK_TOP;
         P = FLAG_x;
