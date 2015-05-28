@@ -15,8 +15,5 @@ package uk101.hardware.bus;
 public interface DataBus {
 
     public byte readByte(int addr);                 // Read 8-bit value
-    public short readWord(int addr);                // Read 16-bit value
-
     public void writeByte(int addr, byte value);    // Write 8-bit value
-    public void writeWord(int addr, short value);   // Write 16-bit value
 }

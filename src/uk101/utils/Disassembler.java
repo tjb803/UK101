@@ -287,7 +287,7 @@ public class Disassembler {
                 } else if (instrSize == 3) {
                     byte lo = sourceBytes[position+1];
                     byte hi = sourceBytes[position+2];
-                    instrOperand = Data.asAddr(hi, lo);
+                    instrOperand = Data.asAddr(Data.getWord(hi, lo));
                 }
             } else {
                 instrText = "!!!";              // Incomplete instruction!

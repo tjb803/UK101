@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2014
+ * (C) Copyright Tim Baldwin 2010,2015
  */
 package uk101.hardware;
 
@@ -34,18 +34,19 @@ public class CPU6502 {
     static final byte FLAG_C = (byte)0x01;
 
     // Addressing modes
-    static final int MODE_IMPLICIT = 0;
-    static final int MODE_IMMEDIATE = 1;
-    static final int MODE_ABSOLUTE = 2;
-    static final int MODE_INDIRECT = 3;
-    static final int MODE_ZEROPAGE = 4;
-    static final int MODE_RELATIVE = 5;
-    static final int MODE_ABS_X = 6;
-    static final int MODE_ABS_Y = 7;
-    static final int MODE_PRE_X = 8;
-    static final int MODE_POST_Y = 9;
-    static final int MODE_0PAGE_X = 10;
-    static final int MODE_0PAGE_Y = 11;
+    static final int MODE_IMPLIED = 0;
+    static final int MODE_ACCUM = 1;
+    static final int MODE_IMMEDIATE = 2;
+    static final int MODE_ABSOLUTE = 3;
+    static final int MODE_INDIRECT = 4;
+    static final int MODE_ZEROPAGE = 5;
+    static final int MODE_RELATIVE = 6;
+    static final int MODE_ABS_X = 7;
+    static final int MODE_ABS_Y = 8;
+    static final int MODE_PRE_X = 9;
+    static final int MODE_POST_Y = 10;
+    static final int MODE_0PAGE_X = 11;
+    static final int MODE_0PAGE_Y = 12;
 
     // Important address pages
     static final int STACK_BASE = 0x100;
@@ -77,7 +78,7 @@ public class CPU6502 {
     private boolean useSpin;
     private int speed;
     private long spinPause, sleepPause;
-    
+
     // Relative speed calculation
     private AtomicLong cpuStart, cpuCycles;
 
@@ -146,14 +147,14 @@ public class CPU6502 {
             long t3 = System.nanoTime();
             nt += (t2-t1);
             st += (t3-t2);
-        }    
+        }
         spinPause = nt/5;
         sleepPause = st/5;
-        
+
         // If the Thread.sleep interval is short enough (say <2ms?) we can do 
         // timing using sleeps, otherwise we'll have to do it using spin loops.
         useSpin = (sleepPause > 2000000);
-    }
+        }
 
     /*
      * Normal processor execution
@@ -165,7 +166,7 @@ public class CPU6502 {
 
         long now = System.nanoTime();
         long end = now;
-        
+
         while (running.get()) {
             synchronized (this) {
                 int cycles = execute();
@@ -181,14 +182,14 @@ public class CPU6502 {
                     end += cycles*speed;
                     long pause = end-now;
                     if (pause > sleepPause) {
-                        try { 
-                            Thread.sleep(pause/1000000, (int)pause%1000000);
-                        } catch (InterruptedException e) { }
-                        now = System.nanoTime();
-                    } else if (useSpin) {
-                        while (end-now > spinPause) { 
+                            try {
+                                Thread.sleep(pause/1000000, (int)pause%1000000);
+                            } catch (InterruptedException e) { }
                             now = System.nanoTime();
-                        }    
+                    } else if (useSpin) {
+                        while (end-now > spinPause) {
+                            now = System.nanoTime();
+                        }
                     }
                 }
             }
@@ -235,9 +236,9 @@ public class CPU6502 {
         checkSignals();
 
         // Add trace record if tracing
-        if (trace != null) { 
+        if (trace != null) {
             traceEntry = trace.trace(PC, A, X, Y, S, P);
-        }    
+        }
 
         // Read the next opcode
         int op = Data.asBits(fetchByte());
@@ -252,7 +253,7 @@ public class CPU6502 {
         //       efficient and the order we write the 'case's doesn't matter.
         int cycles = 0, bc = 0;
         switch (op) {
-        default:                                            break;
+        default:                               cycles = 6;  break;
         case 0x6D: adc(MODE_ABSOLUTE);         cycles = 4;  break;
         case 0x65: adc(MODE_ZEROPAGE);         cycles = 3;  break;
         case 0x69: adc(MODE_IMMEDIATE);        cycles = 2;  break;
@@ -338,22 +339,22 @@ public class CPU6502 {
         case 0x8C: sty(MODE_ABSOLUTE);         cycles = 4;  break;
         case 0x84: sty(MODE_ZEROPAGE);         cycles = 3;  break;
         case 0x94: sty(MODE_0PAGE_X);          cycles = 4;  break;
-        case 0x0A: asl(MODE_IMPLICIT);         cycles = 2;  break;
+        case 0x0A: asl(MODE_ACCUM);            cycles = 2;  break;
         case 0x0E: asl(MODE_ABSOLUTE);         cycles = 6;  break;
         case 0x06: asl(MODE_ZEROPAGE);         cycles = 5;  break;
         case 0x1E: asl(MODE_ABS_X);            cycles = 7;  break;
         case 0x16: asl(MODE_0PAGE_X);          cycles = 6;  break;
-        case 0x4A: lsr(MODE_IMPLICIT);         cycles = 2;  break;
+        case 0x4A: lsr(MODE_ACCUM);            cycles = 2;  break;
         case 0x4E: lsr(MODE_ABSOLUTE);         cycles = 6;  break;
         case 0x46: lsr(MODE_ZEROPAGE);         cycles = 5;  break;
         case 0x5E: lsr(MODE_ABS_X);            cycles = 7;  break;
         case 0x56: lsr(MODE_0PAGE_X);          cycles = 6;  break;
-        case 0x2A: rol(MODE_IMPLICIT);         cycles = 2;  break;
+        case 0x2A: rol(MODE_ACCUM);            cycles = 2;  break;
         case 0x2E: rol(MODE_ABSOLUTE);         cycles = 6;  break;
         case 0x26: rol(MODE_ZEROPAGE);         cycles = 5;  break;
         case 0x3E: rol(MODE_ABS_X);            cycles = 7;  break;
         case 0x36: rol(MODE_0PAGE_X);          cycles = 6;  break;
-        case 0x6A: ror(MODE_IMPLICIT);         cycles = 2;  break;
+        case 0x6A: ror(MODE_ACCUM);            cycles = 2;  break;
         case 0x6E: ror(MODE_ABSOLUTE);         cycles = 6;  break;
         case 0x66: ror(MODE_ZEROPAGE);         cycles = 5;  break;
         case 0x7E: ror(MODE_ABS_X);            cycles = 7;  break;
@@ -423,19 +424,19 @@ public class CPU6502 {
         if (sigRESET) {
             sigRESET = sigNMI = sigIRQ = false;
             reset();
-            PC = bus.readWord(RESET_VECTOR);
+            PC = readWord(RESET_VECTOR);
         } else if (sigNMI) {
             sigNMI = false;
             pushWord(PC);
             pushByte(P);
             setFlag(FLAG_I, true);
-            PC = bus.readWord(NMI_VECTOR);
+            PC = readWord(NMI_VECTOR);
         } else if (sigIRQ) {
             sigIRQ = false;
             pushWord(PC);
             pushByte((byte)(P & ~FLAG_B));
             setFlag(FLAG_I, true);
-            PC = bus.readWord(IRQ_VECTOR);
+            PC = readWord(IRQ_VECTOR);
         }
     }
 
@@ -449,7 +450,7 @@ public class CPU6502 {
     private void brk() {
         pushWord((short)(PC + 1));
         pushByte((byte)(P | FLAG_B));
-        PC = bus.readWord(IRQ_VECTOR);
+        PC = readWord(IRQ_VECTOR);
     }
 
     private void sta(int mode) {
@@ -550,7 +551,7 @@ public class CPU6502 {
 
     private void asl(int mode) {
         byte b;
-        if (mode == MODE_IMPLICIT) {
+        if (mode == MODE_ACCUM) {
             b = A = alu.shl(A);
         } else {
             int addr = getAddress(mode);
@@ -562,7 +563,7 @@ public class CPU6502 {
 
     private void rol(int mode) {
         byte b;
-        if (mode == MODE_IMPLICIT) {
+        if (mode == MODE_ACCUM) {
             b = A = alu.rol(A, testFlag(FLAG_C));
         } else {
             int addr = getAddress(mode);
@@ -574,7 +575,7 @@ public class CPU6502 {
 
     private void ror(int mode) {
         byte b;
-        if (mode == MODE_IMPLICIT) {
+        if (mode == MODE_ACCUM) {
             b = A = alu.ror(A, testFlag(FLAG_C));
         } else {
             int addr = getAddress(mode);
@@ -586,7 +587,7 @@ public class CPU6502 {
 
     private void lsr(int mode) {
         byte b;
-        if (mode == MODE_IMPLICIT) {
+        if (mode == MODE_ACCUM) {
             b = A = alu.shr(A);
         } else {
             int addr = getAddress(mode);
@@ -638,12 +639,12 @@ public class CPU6502 {
     }
 
     private void jmp(int mode) {
-        PC = Data.asWord(getAddress(mode));
+        PC = (short)getAddress(mode);
     }
 
     private void jsr(int mode) {
-        pushWord(Data.asWord(PC + 1));
-        PC = Data.asWord(getAddress(mode));
+        pushWord((short)(PC + 1));
+        PC = (short)getAddress(mode);
     }
 
     private void rts() {
@@ -704,9 +705,9 @@ public class CPU6502 {
 
     private int branch(byte flag, boolean value) {
         int extraCycles = 0;
-        int offset = getAddress(MODE_RELATIVE);
+        int addr = getAddress(MODE_RELATIVE);
         if (testFlag(flag) == value) {
-            PC += offset;
+            PC = (short)addr;
             extraCycles = 1;
         }
         return extraCycles;
@@ -720,6 +721,8 @@ public class CPU6502 {
             wait();
         } catch (InterruptedException e) {
         }
+        cpuStart.set(System.currentTimeMillis());
+        cpuCycles.set(0);
     }
 
     private void debug() {
@@ -772,11 +775,31 @@ public class CPU6502 {
     }
 
     /*
+     * Memory access for 16-bit words.  Need to handle the obscure case of
+     * wrapping around the end of store when loading the high-byte.
+     */
+    private short readWord(int addr) {
+        byte bl = bus.readByte(addr++);
+        byte bh = bus.readByte(addr & 0xFFFF);
+        return Data.getWord(bh, bl);
+    }
+
+    /*
+     * Page-0 memory access for 16-bit words.  Need to handle the obscure case
+     * of wrapping around the page boundary when loading the high-byte.  Initial
+     * addr is assumed to be within page-0.
+     */
+    private short readWord0(int addr) {
+        byte bl = bus.readByte(addr++);
+        byte bh = bus.readByte(addr & 0xFF);
+        return Data.getWord(bh, bl);
+    }
+
+    /*
      * Memory access through the program counter
      */
     private byte fetchByte() {
-        byte b = bus.readByte(Data.asAddr(PC));
-        PC += 1;
+        byte b = bus.readByte(Data.asAddr(PC++));
         if (traceEntry != null) {
             traceEntry.addByte(b);
         }
@@ -784,31 +807,33 @@ public class CPU6502 {
     }
 
     private short fetchWord() {
-        short w = bus.readWord(Data.asAddr(PC));
-        PC += 2;
+        byte bl = bus.readByte(Data.asAddr(PC++));
+        byte bh = bus.readByte(Data.asAddr(PC++));
+        Short w = Data.getWord(bh, bl);
         if (traceEntry != null) {
             traceEntry.addWord(w);
         }
         return w;
     }
 
-    // Decode the instruction operand address
+    // Decode the instruction operand or operand address
     private int getAddress(int mode) {
         int addr = 0;
         switch (mode) {
-        case MODE_IMPLICIT:  break;
+        default:  break;
         case MODE_IMMEDIATE: addr = Data.asBits(fetchByte());                             break;
         case MODE_ABSOLUTE:  addr = Data.asAddr(fetchWord());                             break;
-        case MODE_INDIRECT:  addr = Data.asAddr(bus.readWord(Data.asAddr(fetchWord())));  break;
+        case MODE_INDIRECT:  addr = Data.asAddr(readWord(Data.asAddr(fetchWord())));      break;
         case MODE_ZEROPAGE:  addr = Data.asAddr(fetchByte());                             break;
-        case MODE_RELATIVE:  addr = Data.asInt(fetchByte());                              break;
+        case MODE_RELATIVE:  addr = Data.asInt(fetchByte()) + Data.asAddr(PC);            break;
         case MODE_ABS_X:     addr = Data.asAddr(fetchWord()) + Data.asAddr(X);            break;
         case MODE_ABS_Y:     addr = Data.asAddr(fetchWord()) + Data.asAddr(Y);            break;
-        case MODE_PRE_X:     addr = Data.asAddr(bus.readWord(Data.asAddr(fetchByte()) + Data.asAddr(X))); break;
-        case MODE_POST_Y:    addr = Data.asAddr(bus.readWord(Data.asAddr(fetchByte()))) + Data.asAddr(Y); break;
+        case MODE_PRE_X:     addr = Data.asAddr(readWord0((Data.asAddr(fetchByte()) + Data.asAddr(X)) & 0xFF)); break;
+        case MODE_POST_Y:    addr = Data.asAddr(readWord0(Data.asAddr(fetchByte()))) + Data.asAddr(Y); break;
         case MODE_0PAGE_X:   addr = (Data.asAddr(fetchByte()) + Data.asAddr(X)) & 0xFF;   break;
         case MODE_0PAGE_Y:   addr = (Data.asAddr(fetchByte()) + Data.asAddr(Y)) & 0xFF;   break;
         }
+        addr &= 0xFFFF;         // Ensure address is only ever 16 bits
         if (traceEntry != null) {
             traceEntry.addAddr(addr);
         }
@@ -821,7 +846,7 @@ public class CPU6502 {
     }
 
     private byte getOperand(int addr, int mode) {
-        return (mode == MODE_IMMEDIATE) ? Data.asByte(addr) : bus.readByte(addr);
+        return (mode == MODE_IMMEDIATE) ? (byte)addr : bus.readByte(addr);
     }
 
     // Write instruction result

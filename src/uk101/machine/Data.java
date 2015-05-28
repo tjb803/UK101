@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2015
  */
 package uk101.machine;
 
@@ -33,25 +33,13 @@ public abstract class Data {
         return w;
     }
 
-    // Return 8- and 16-bit values as addresses
+    // Return 16-bit value as address (integer 0 to 65535)
     public static final int asAddr(byte b) {
         return (b & BYTE_MASK);
     }
 
     public static final int asAddr(short w) {
         return (w & WORD_MASK);
-    }
-
-    public static final int asAddr(byte bh, byte bl) {
-        return (bh & BYTE_MASK)<<8 | (bl & BYTE_MASK);
-    }
-
-    public static final byte asByte(int addr) {
-        return (byte)addr;
-    }
-
-    public static final short asWord(int addr) {
-        return (short)addr;
     }
 
     // Byte to Word and Word to Byte conversions
