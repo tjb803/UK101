@@ -131,6 +131,7 @@ src/uk101/view/component/KeyboardKey.java -text
 src/uk101/view/component/KeyboardLock.java -text
 src/uk101/view/component/SmallButton.java -text
 src/uk101/view/component/SmallToggle.java -text
+src/uk101/view/component/SpeedSelector.java -text
 src/uk101/view/component/TapeFormat.java -text
 src/uk101/view/component/VideoScreen.java -text
 test/UK101[!!-~]Main.launch -text

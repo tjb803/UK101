@@ -112,51 +112,44 @@ public class Computer extends Thread implements DataBus {
     public void reset() {
         cpu.signalReset();
     }
+    
+    /*
+     * Set the CPU clock speed
+     */
+    public void setSpeed(int mhz) {
+        cpu.setMHz(mhz);
+    }
 
     /*
      * Implement the DataBus interface used by the processor to access
      * memory in the address space.
      *
-     * It shouldn't really matter what value is returned if we try to read 
-     * non-existent memory - I suspect the real machine would return 0 or 
-     * -1.  But I'm returning 32 (the space character) as when the monitor
-     * ROM scrolls the screen it sometimes seems to read beyond the end of
-     * the video RAM.  I guess on the real machine this either didn't
-     * happen or the video logic didn't show anything, but I was seeing 
-     * garbage characters on the screen very briefly.  By returning space
-     * characters this is avoided.
+     * If we read from non-existent memory the UK101 hardware would return
+     * the high byte of the memory address.
      */
     public byte readByte(int addr) {
-        byte b = 32;
+        byte b;
         Memory m = memory[Memory.asBlock(addr)];
         if (m != null) {
             b = m.readByte(addr-m.base);
+        } else {
+            b = Data.getHiByte((short)addr);
+            // Small hack to avoid nasty video artifacts when MONUK02 scrolls the
+            // screen.  This monitor will read past the end of the video RAM when it
+            // scrolls and very briefly display garbage on the screen.  It is very 
+            // brief and presumably isn't visible on a real machine but can sometimes
+            // be seen in this emulation.  So if this looks like a read by the video 
+            // scroll routine we return 0x20 to keep the screen clean!
+            if (cpu.getPC() == 0xFB72) 
+                b = 0x20;
         }
         return b;
-    }
-
-    public short readWord(int addr) {
-        byte bl = 32, bh = 32;
-        Memory m = memory[Memory.asBlock(addr)];
-        if (m != null) {
-            bl = m.readByte(addr-m.base);
-            bh = m.readByte(addr-m.base+1);
-        }
-        return Data.getWord(bh, bl);
     }
 
     public void writeByte(int addr, byte value) {
         Memory m = memory[Memory.asBlock(addr)];
         if (m != null) {
             m.writeByte(addr-m.base, value);
-        }
-    }
-
-    public void writeWord(int addr, short value) {
-        Memory m = memory[Memory.asBlock(addr)];
-        if (m != null) {
-            m.writeByte(addr-m.base, Data.getLoByte(value));
-            m.writeByte(addr-m.base+1, Data.getHiByte(value));
         }
     }
 

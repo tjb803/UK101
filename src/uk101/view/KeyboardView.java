@@ -96,7 +96,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         }
         row4.add(new KeyboardKey("SHIFT", KeyboardKey.KEY_BIG, Keyboard.KEY_LSHIFT, this), 0);
         row4.add(new KeyboardKey("SHIFT", KeyboardKey.KEY_BIG, Keyboard.KEY_RSHIFT, this));
-        row5.add(new KeyboardKey("", KeyboardKey.KEY_STD*8, Keyboard.KEY_SPACE, this));
+        row5.add(new KeyboardKey("", KeyboardKey.KEY_BAR, Keyboard.KEY_SPACE, this));
 
         // Add filler space to align the rows
         if (keyboard.isUK()) {

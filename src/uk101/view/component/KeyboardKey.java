@@ -28,6 +28,7 @@ public class KeyboardKey extends JButton {
     public static final int KEY_STD = 2;
     public static final int KEY_BIG = 3;
     public static final int KEY_HALF = 1;
+    public static final int KEY_BAR = 16;
 
     static Font KEY_FONT;
     static Border KEY_BORDER;

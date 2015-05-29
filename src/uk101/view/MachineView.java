@@ -1,11 +1,12 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2015
  */
 package uk101.view;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,8 +16,11 @@ import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import uk101.machine.Computer;
+import uk101.view.component.SpeedSelector;
 import uk101.view.component.DisplayText;
 import uk101.view.component.FlowPanel;
 import uk101.view.component.SmallButton;
@@ -25,7 +29,7 @@ import uk101.view.component.SmallToggle;
 /**
  * The control and debug panel.
  */
-public class MachineView extends JInternalFrame implements ActionListener {
+public class MachineView extends JInternalFrame implements ActionListener, ChangeListener {
     private static final long serialVersionUID = 1L;
     
     static final String MACHINE_DUMP = "Dump";
@@ -37,11 +41,18 @@ public class MachineView extends JInternalFrame implements ActionListener {
     private Computer computer;
     
     private DisplayText speed, baud;
+    private SpeedSelector cpuClock;
     private Timer speedTimer;
 
     public MachineView(Computer computer, ComputerView computerView) {
         super("Machine", true, false, false, true);
         this.computer = computer;
+
+        // Timer to update CPU actual speed
+        speedTimer = new Timer(2000, this);
+        speedTimer.setInitialDelay(5000);
+        speedTimer.setRepeats(true);
+        speedTimer.start();
 
         // Machine image load/save
         JPanel mp = new JPanel(new GridLayout(1, 0, 5, 5));
@@ -62,12 +73,6 @@ public class MachineView extends JInternalFrame implements ActionListener {
         ip.add(baud);
         ip.add(new DisplayText("RAM", computer.ram.kBytes() + "KB", false));
         ip.add(new DisplayText("ROM", computer.monitor.getName(), false));
-        
-        // Timer to update CPU actual speed
-        speedTimer = new Timer(2500, this);
-        speedTimer.setInitialDelay(5000);
-        speedTimer.setRepeats(true);
-        speedTimer.start();
 
         // Debug panel
         JPanel db = new JPanel(new GridLayout(1, 0, 3, 3));
@@ -82,12 +87,25 @@ public class MachineView extends JInternalFrame implements ActionListener {
         db.add(reset);
         db.add(nmi);
         db.add(irq);
-
-        FlowPanel panel = new FlowPanel(FlowPanel.VERTICAL);
+        
+        // CPU Speed control panel
+        JPanel sp = new JPanel(new GridLayout(1, 0, 0, 0));
+        sp.setBorder(BorderFactory.createTitledBorder("CPU Clock Speed"));
+        cpuClock = new SpeedSelector(4, computer.cpu.getMHz());
+        cpuClock.addChangeListener(this);
+        sp.add(cpuClock);
+        
+         // Size the speed panel to be no wider than debug panel
+        Dimension d = sp.getPreferredSize();
+        d.setSize(Math.min(d.width, db.getPreferredSize().width), d.height);
+        sp.setPreferredSize(d);
+        
+        JPanel panel = new FlowPanel(FlowPanel.VERTICAL);
         panel.add(mp);
         panel.add(ip);
+        panel.add(sp);
         panel.add(db);
-
+        
         Container content = getContentPane();
         content.add(panel);
         pack();
@@ -112,6 +130,18 @@ public class MachineView extends JInternalFrame implements ActionListener {
             computer.cpu.signalNMI();
         } else if (e.getActionCommand().equals(MACHINE_IRQ)) {
             computer.cpu.signalIRQ();
+        }
+    }
+
+    /*
+     * CPU clock speed slider
+     */
+    
+    public void stateChanged(ChangeEvent e) {
+        if (e.getSource() == cpuClock) {
+            if (!cpuClock.getValueIsAdjusting()) {
+                computer.setSpeed(cpuClock.getMhz());
+            }    
         }
     }
 }

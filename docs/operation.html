@@ -61,7 +61,8 @@ Make sure you save anything you want to keep before you do this.</p>
 <td valign="top"><img src="image/opctl.jpg" alt="Machine Control"/></td>
 <td valign="top">The machine control panel provides details of the 
 current machine configuration, provides the buttons to load and save 
-complete machine images and provides some simple debugging functions.
+complete machine images, a slider for setting the CPU clock speed and 
+some simple debugging functions.
 <p>The <i>Load...</i> and <i>Save...</i> buttons are used to save the 
 current machine image or restore a previously saved machine image.
 A machine image consists of the complete RAM memory and may also include the 
@@ -72,8 +73,14 @@ They are typically saved as files with an extension of
 Loading and saving a machine image is much faster and a lot simpler
 than saving programs to cassette tapes.</p>
 <p>Some sample machine images for some of the games are provided
-in the <code>samples/machines</code> directory.</p></td>
-</tr></table>
+in the <code>samples/machines</code> directory.</p>
+<p>The CPU Clock Speed slider allows the CPU speed to be adjusted while
+the emulation is running.
+Faster clock speeds can make programs load faster, but may make them hard 
+to use as program timings often used simple loops.
+Setting the slider to <i>Max</i> will cause the emulation to run as fast
+as possible.</p></td>
+</tr></table> 
 <p>At the bottom of the window are a number of debug buttons.
 Pressing the <i>Dump</i> button will produce a
 <a href="extras.html#dump">system memory dump</a> (this can 

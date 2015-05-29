@@ -79,6 +79,7 @@ public class CPU6502 {
     private boolean useAuto, useYield, useSleep;
     private int speed;
     private long spinPause, yieldPause, sleepPause;
+    private long now, end;
 
     // Relative speed calculation
     private AtomicLong cpuStart, cpuCycles;
@@ -97,10 +98,8 @@ public class CPU6502 {
         setMHz(mhz);
         
         // Set the timing control from configuration, if specified
-        if (control.equals(Configuration.AUTO)) {
-            useAuto = true;
-        } else {
-            useAuto = false;
+        useAuto = control.equals(Configuration.AUTO);
+        if (!useAuto) {
             useSleep = control.equals(Configuration.SLEEP);
             useYield = control.equals(Configuration.YIELD);
         }
@@ -112,6 +111,7 @@ public class CPU6502 {
     public void setMHz(int mhz) {
         // speed = cycle time in nanoseconds
         speed = (mhz == 0) ? 0 : 1000/mhz;
+        now = end = System.nanoTime();
     }
 
     public int getMHz() {
@@ -184,8 +184,7 @@ public class CPU6502 {
         cpuStart.set(System.currentTimeMillis());
         cpuCycles.set(0);
 
-        long now = System.nanoTime();
-        long end = now;
+        now = end = System.nanoTime();
 
         while (running.get()) {
             synchronized (this) {
@@ -750,8 +749,7 @@ public class CPU6502 {
             wait();
         } catch (InterruptedException e) {
         }
-        cpuStart.set(System.currentTimeMillis());
-        cpuCycles.set(0);
+        now = end = System.nanoTime();
     }
 
     private void debug() {
@@ -895,6 +893,10 @@ public class CPU6502 {
     /*
      * Mainly for debugging
      */
+    public int getPC() {
+        return Data.asAddr(PC);
+    }
+    
     public String toString() {
         StringBuilder s = new StringBuilder("CPU: ");
         s.append("PC=").append(Data.toHexString(PC));

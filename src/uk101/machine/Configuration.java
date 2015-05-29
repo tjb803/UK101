@@ -110,7 +110,7 @@ public class Configuration extends Properties {
     }
     
     private void applyProperties(Properties props) {
-        applyInt(props, CPU_SPEED, 0, 8);
+        applyInt(props, CPU_SPEED, 0, 4);
         applyStr(props, CPU_CONTROL, AUTO, SLEEP, YIELD, SPIN);
         applyStr(props, BAUD_RATE, "110", "300", "600", "1200", "2400", "4800", "9600");
         applyInt(props, RAM_SIZE, 4, 40);

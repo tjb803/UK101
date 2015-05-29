@@ -94,7 +94,9 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         int maxX1 = video.getWidth() + machine.getWidth() + 5;
         int maxX2 = keyboard.getWidth() + cassette.getWidth() + 10;
         int maxX = Math.max(maxX1, maxX2);
-        int maxY = keyboard.getHeight() + video.getHeight();
+        int maxY1 = keyboard.getHeight() + video.getHeight();
+        int maxY2 = keyboard.getHeight() + machine.getHeight();
+        int maxY = Math.max(maxY1,  maxY2);
         
         int macX = maxX - machine.getWidth(), macY = 0;
         machine.setLocation(macX, macY);
