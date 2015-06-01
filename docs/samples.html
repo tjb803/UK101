@@ -18,14 +18,12 @@
 <li><a href="#bbox">Black Box</a></li>
 <li><a href="#lepasse">Le Passe-Temps</a></li>
 <li><a href="#maze">Labyrinth</a></li>
+<li><a href="#rtstrek">Real-Time Star Trek</a></li>
 <li><a href="#exmon">Extended Monitor</a></li>
 <li><a href="#invade">Space Invaders</a></li>
 <li><a href="#superinv">8k Super Invaders</a></li>
 <li><a href="#astero">Asteroids</a></li>
 </ul>
-<p>In addition this page provides some notes about the 
-<a href="#format">tape formats</a> used by the simulator and details of how to 
-<a href="#decode">recover programs from cassette tapes</a>.</p> 
 <p>Note: <i>Where indicated (using a cassette image) some of these sample 
 programs and tapes are recovered from original software.
 I do not own the copyrights for these recovered programs and so I sincerely
@@ -33,23 +31,56 @@ hope no one will mind them being included in this package.
 If any of the original copyright owners object, please contact me at 
 the email address at the bottom of the page and I will gladly remove 
 anything that should not be here.</i></p>
+<p>In addition this page provides some notes about the 
+<a href="#format">tape formats</a> used by the simulator and details of how to 
+<a href="#decode">recover programs from cassette tapes</a>.</p> 
+<h3 id="runbas">Loading and Running BASIC programs</h3>
+<p>To load and run a program written in BASIC:
+<ol>
+<li><a href=quickstart.html#boot>Reset</a> the machine and do a cold start to
+enter the BASIC interpreter.</li>
+<li>Type the <code>LOAD</code> and press <i>Enter</i>.
+The cursor will stop flashing to indicate input has been switched to the
+cassette player.</li>
+<li>Use the <i>Cassette Recorder</i> to open the program source code file
+and press the <i>Play</i> button.
+You should see the program being loaded.</li>
+<li>When the loading has finished press the <i>SPACE</i> bar to switch 
+control back to the keyboard (the cursor should start flashing again).</li>
+<li>Type <code>RUN</code> and press <i>Enter</i> to run the program.</li>
+</ol>
+<h3 id="runmc">Loading and Running Machine Code Tapes</h3>
+<p>Machine code program tapes need to be loaded using the Monitor:
+<ol>
+<li><a href=quickstart.html#boot>Reset</a> the machine and enter the
+Monitor by pressing <i>M</i>.</li>
+<li>Start the Monitor load routine by pressing <i>L</i>.
+There's no visible cue that anything has happened but the system should
+now be waiting for input from the cassette player.</li>
+<li>Use the <i>Cassette Recorder</i> to open the program tape file
+and press the <i>Play</i> button.
+You should see the program being loaded.</li>
+<li>Machine code tapes normally have trigger commands embedded at the
+end to automatically run the program that was loaded.</li>
+</ol>
+<p>Often machine code is loaded in two or more phases, where the first phase 
+loads a more sophisticated checksum loader that then loads the remaining 
+code.</p>
 <hr>
 <h2 id="hello1">Hello World</h2>
 <table frame="box" rules="all" cellspacing="0" cellpadding="4">
 <tr><td><b>Source Code</b></td>
 <td><a href="../samples/basic/hello.basic"><samp>samples/basic/hello1.basic</samp></a></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
 <p>This is a very simple &quot;hello world&quot; BASIC program.
 This program is used in the <a href="quickstart.html">quick start guide</a>.</p>
-<p>This should be loaded as a BASIC program by typing the <code>LOAD</code> 
-command in BASIC and playing the tape.
-Press the <i>SPACE</i> bar when the program has loaded to regain control of
-the keyboard then type <code>RUN</code>.</p>
 <hr>
 <h2 id="charset">Character Set</h2>
 <table frame="box" rules="all" cellspacing="0" cellpadding="4">
 <tr><td><b>Source Code</b></td>
 <td><a href="../samples/basic/charset.basic"><samp>samples/basic/charset.basic</samp></a></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
 <p>This is the program from page 38 of the 
 <a href="http://uk101.sourceforge.net/docs/pdf/manual.pdf">manual</a> 
@@ -57,10 +88,6 @@ which can be used to display most of the character set of the machine.
 It is not quite the same as the listing in the manual, as that listing
 actually contains a couple of bugs and also needed some changes to work
 correctly with the New Monitor.</p>
-<p>This should be loaded as a BASIC program by typing the <code>LOAD</code> 
-command in BASIC and playing the tape.
-Press the <i>SPACE</i> bar when the program has loaded to regain control of
-the keyboard then type <code>RUN</code>.</p>
 <hr>
 <h2 id="nytaxi">New York Taxi</h2>
 <table frame="void"><tr valign="top">
@@ -69,17 +96,14 @@ the keyboard then type <code>RUN</code>.</p>
 <table frame="box" rules="all" cellspacing="0" cellpadding="4">
 <tr><td><b>Source Code</b></td>
 <td><a href="../samples/basic/nytaxi.basic"><samp>samples/basic/nytaxi.basic</samp></a></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
 </td></tr></table>
 <br clear="left">
 This is a game that was provided on a sample tape that came with the original
 machine.
-<p>This should be loaded as a BASIC program by typing the <code>LOAD</code> 
-command in BASIC and playing the tape.
-Press the <i>SPACE</i> bar when the program has loaded to regain control of
-the keyboard then type <code>RUN</code>.
 You should set the keyboard to <a href="operation.html#kbmode">game mode</a>
-to play the game.</p>
+to play the game.
 <hr>
 <h2 id="hectic">Hectic</h2>
 <table frame="void"><tr valign="top">
@@ -89,26 +113,27 @@ to play the game.</p>
 <tr>
 <td><b>Source Code</b></td>
 <td><a href="../samples/basic/hectic.basic"><samp>samples/basic/hectic.basic</samp></a></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
 </td></tr></table>
 <br clear="left">
 This is a game that was provided on a sample tape that came with the original
 machine.
-<p>This should be loaded as a BASIC program by typing the <code>LOAD</code> 
-command in BASIC and playing the tape.
-Press the <i>SPACE</i> bar when the program has loaded to regain control of
-the keyboard then type <code>RUN</code>.
 You should set the keyboard to <a href="operation.html#kbmode">game mode</a>
-to play the game.</p>
+to play the game.
 <hr>
 <h2 id="bbox">Black Box</h2>
 <table frame="box" rules="all" cellspacing="0" cellpadding="4">
 <tr><td><b>Source Code</b></td>
 <td><a href="../samples/basic/blackbox.basic"><samp>samples/basic/blackbox.basic</samp></a></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
 <p>This is game kindly sent to me by Chic McGregor.
 It was first published in the July 1980 issue of <i>Personal Computer World</i> and 
-is provided here exactly as originally published.</p>
+is provided here exactly as originally published.
+When you run the game it can provide some instructions on how to use it.</p>
+<img src="image/blackbox.jpg" alt="Black Box"/>
+<br clear="left">
 <p>There's an interesting history to this particular program as it was almost 
 certainly the first <q>user written</q> BASIC program for the UK101.
 How can we know this?  Chic tells me that the very first shipment of UK101
@@ -125,18 +150,15 @@ to get hold of a set of ROMs ahead of anyone else.</p>
 <table frame="box" rules="all" cellspacing="0" cellpadding="4">
 <tr><td><b>Source Code</b></td>
 <td><a href="../samples/basic/passetemp.basic"><samp>samples/basic/passetemp.basic</samp></a></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
 </td></tr></table>
 <br clear="left">
-This game was published in Practical Electronics n July 1980, athough the 
+This game was published in Practical Electronics in July 1980, athough the 
 copy here is a slightly later version that I bought on cassette.
 It is a version of the 
 <a href="http://en.wikipedia.org/wiki/Connect_Four">Connect Four</a> game.
-<p>This should be loaded as a BASIC program by typing the <code>LOAD</code> 
-command in BASIC and playing the tape.
-Press the <i>SPACE</i> bar when the program has loaded to regain control of
-the keyboard then type <code>RUN</code>.
-The program should give some instructions on how to use it.
+<p>The program should give some instructions on how to use it.
 You should set the keyboard to <a href="operation.html#kbmode">game mode</a>
 to play the game.</p>
 <hr>
@@ -144,25 +166,107 @@ to play the game.</p>
 <table frame="box" rules="all" cellspacing="0" cellpadding="4">
 <tr><td><b>Source Code</b></td>
 <td><a href="../samples/basic/labyrinth.basic"><samp>samples/basic/labyrinth.basic</samp></a></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
-<p>This is a version of the ubiquitous &quot;first-persion 3D maze&quot; type of game, 
+<p>This is a version of the ubiquitous &quot;first-person 3D maze&quot; type of game, 
 popular in the early 1980's - this one was written by me in about 1982, I think.
+<img src="image/maze.jpg" alt="Labyrinth"/>
+<br clear="left">
 It was written for my modified UK101 and requires a 32-line display and the
-CEGMON monitor installed.  
-It also works better with a faster CPU.
-So ensure the follwoing <a href="config.html"> configuration options</a> 
+CEGMON monitor installed; it also works better with a faster CPU.
+So ensure the following <a href="config.html">configuration options</a> 
 are specified when starting the simulator:</p>
 <blockquote><pre>
--p rom.monitor=CEGMON,video.rows=32,cpu.speed=2
+-p rom.monitor=CEGMON,video.rows=32,cpu.speed=4
 </pre></blockquote>
-<p>This should be loaded as a BASIC program by typing the <code>LOAD</code> 
-command in BASIC and playing the tape.
-Press the SPACE bar when the program has loaded to regain control of the 
-keyboard then type RUN.
-The program should start and display some instructions on how to play the game.
+<p>When the program starts it will display some instructions on how to play the game.
 In addition to the keys listed in the instructions you can also press the
-<b><code>G</code></b> key to display the current maze and your position
+<i><code>G</code></i> key to display the current maze and your position
 and trail within it.</p>
+<hr>
+<h2 id="rtstrek">Real-Time Star Trek</h2>
+<table frame="box" rules="all" cellspacing="0" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/basic/startrek.basic"><samp>samples/basic/startrek.basic</samp></a></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
+</table>
+<p>This game was written by <a href="http://www.cse.dmu.ac.uk/~mward/">Martin Ward</a>
+and is an impressive achievement squeezing just about everything it can into 
+the 8K BASIC memory space!</p>
+<p>This game must be run on a 32-line display and requires a patched version of the 
+standard monitor ROM that fully supports 32 lines.
+A suitable monitor called NEWMON32.ROM can be found the the <samp>samples/roms</samp>
+directory.
+Ensure the following <a href="config.html">configuration options</a> 
+are specified when starting the simulator:</p>
+<blockquote><pre>
+-p rom.monitor=samples/roms/NEWMON32.ROM,video.rows=32
+</pre></blockquote>
+<h3>Real-Time Star Trek Instructions</h3>
+<p>Real Time Star Trek is, in the modern jargon, a procedurally generated,
+open world, RTS (real time strategy) game with destructable environments.</p>
+<p>The object of the game is to destroy all the Klingons before the time
+runs out:  when they will perfect their secret weapon and take
+over the galaxy.</p>
+<img src="image/startrek.jpg" alt="Star Trek"/>
+<br clear="left">
+<p>To execute a function: hold down the function key (a letter)
+plus an optional direction key (a digit). 
+For example, to move down, firing your phasers and recharing shields
+all at the same time, hold down: "I", "5", "P", and "S".</p>
+<p>Hold down the key(s) and wait for the function to take effect.
+Press the function before pressing the direction.</p>
+<p>The numbers around the E show the directions: 1 for straight up etc.</p>
+<p>You can operate several functions at the same time, by holding
+down more than one key at a time.</p>
+<p>Functions are:
+<table cellpadding="3">
+<tr><td valign="top">I&nbsp;+&nbsp;dir</td>
+<td>Impulse Drive: move around within the current sector</td></tr>
+<tr><td valign="top">W&nbsp;+&nbsp;dir</td>
+<td>Warp drive: move to an adjacent sector></td></tr>
+<tr><td valign="top">T&nbsp;+&nbsp;dir</td>
+<td>Fire a photon torpedo in the given direction.
+If a torpedo hits a star, it will create a large explosion
+which may destroy nearby Klingons (or you!)</td></tr>
+<tr><td valign="top">S</td>
+<td>Recharge shield energy: hold down to charge your shields up to 
+the maximum of 500 energy units. 
+Energy is taken from your main energy store, which recharge (by the power plant) 
+up to its maximum of 3000 units.</td></tr>
+<tr><td valign="top">R</td>
+<td>Repair. 
+You can repair damage at the cost of energy.</td></tr>
+<tr><td valign="top">P</td>
+<td>Fire phasers. 
+Phasers automatically lock on target and keep firing as long as you hold down 
+the P key. 
+Phaser effectiveness decreases with distance. 
+The Klingons only have phasers, so their weapons do more damage the closer you 
+are to them.</td></tr>
+<tr><td valign="top">G</td>
+<td>Galaxy Scan: displays the map of the galaxy for as long as you hold
+down the G key.</td></tr>
+</table>
+<p>The area on the left is the short range scan, showing the current sector:</p>
+<table cellpadding="3">
+<tr><td>E:</td><td>The Enterprise (you!)</td></tr>
+<tr><td>K:</td><td>Klingon</td></tr>
+<tr><td>B:</td><td>Starbase</td></tr>
+<tr><td>*:</td><td>Star</td></tr>
+</table>
+<p>The bottom right is the long range scan, showing your sector and
+the eight surrounding sectors:</p>
+<table>
+<tr><td>Tens digit = number of Klingons in that sector</td></tr>
+<tr><td>Units digit = number of starbases in that sector</td></tr>
+<tr><td>9 = edge of galaxy</td></tr>
+</table>
+<p>To dock with a starbase, move next to it (using the impulse drive I+direction)
+and press Y. 
+This will repair all damage, give you full energy,
+and 8 torpedoes, and reduce shields to zero. 
+So hold down S afterwards to charge up your shields again.</p>
 <hr>
 <h2 id="exmon">Extended Monitor</h2>
 <table frame="void"><tr valign="top">
@@ -172,6 +276,7 @@ and trail within it.</p>
 <tr>
 <td><b>Program Tape</b></td>
 <td><samp>samples/tapes/exmon.tape</samp></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runmc">Machine code</a></td></tr>
 </table>
 </td></tr></table>
 <br clear="left">
@@ -181,12 +286,8 @@ The extended monitor provided some extra function to help with writing
 and debugging simple machine code programs.
 <p>Details of the extended monitor can be found on its 
 <a href="http://uk101.sourceforge.net/docs/pdf/exmon.pdf">instruction sheet</a>.</p>
-<p>The extended monitor is a machine code program and needs to be loaded
-through the Monitor, not as a BASIC program.
-To do this first reset the machine then select <i>M</i> to enter the 
-monitor, press the <i>L</i> key to begin loading and play the tape.
-The extended monitor first loads a short checksum loader routine then
-loads the rest of itself in checksum format.</p>
+<p>When the program loads it will first load a short checksum loader program
+then automatically load the rest of the code in checksum format.</p>
 <hr>
 <h2 id="invade">Space Invaders</h2>
 <table frame="void"><tr valign="top">
@@ -195,18 +296,12 @@ loads the rest of itself in checksum format.</p>
 <table frame="box" rules="all" cellspacing="0" cellpadding="4">
 <tr><td><b>Program Tape</b></td>
 <td><samp>samples/tapes/invaders.tape</samp></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runmc">Machine code</a></td></tr>
 </table>
 </td></tr></table>
 <br clear="left">
 This is a copy of Premier Publication's excellent <i>Invaders</i>
 space invaders game.
-<p>Invaders is a machine code program and needs to be loaded
-through the Monitor, not as a BASIC program.
-To do this first reset the machine then select <i>M</i> to enter the 
-monitor, press the <i>L</i> key to begin loading and play the tape.
-Once the game is loaded you can reset the machine and perform a
-<a href="quickstart.html#boot">warm start</a> to restart it at
-any time.</p>
 <p>The game was intended to be played on a standard 1Mhz processor, 
 if you have over-clocked the processor (see <a href="config.html#config">
 system configuration</a>) it may run too fast.
@@ -222,7 +317,10 @@ this is not ideal!
 I once knew some locations to patch to change these keys, but I can no
 longer find those notes - sorry! 
 You should set the keyboard to <a href="operation.html#kbmode">game mode</a>
-to play the game.</p>
+to play the game.
+Once the game is loaded you can reset the machine and perform a
+<a href="quickstart.html#boot">warm start</a> to restart it at
+any time.</p>
 <hr>
 <h2 id="superinv">8K Super Invaders</h2>
 <table frame="void"><tr valign="top">
@@ -231,17 +329,16 @@ to play the game.</p>
 <table frame="box" rules="all" cellspacing="0" cellpadding="4">
 <tr><td><b>Program Tape</b></td>
 <td><samp>samples/tapes/superinvaders.tape</samp></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
 </td></tr></table>
 <br clear="left">
 This is a copy of Craig Clapp's excellent <i>8K Super Invaders</i>
 space invaders game, which shows just how much could be done
 with the limited character set graphics.
-<p>This games is a mix of machine code and BASIC, to load it restart 
-the machine with a <a href="quickstart.html#boot">cold start</a> into 
-BASIC, type <code>LOAD</code> then play the tape.  
-The machine code will be loaded first followed by the BASIC program
-and the program will then start to run and display its instructions.
+<p>This games is a mix of machine code and BASIC, but it is loaded 
+as if it were a BASIC program and automatically handles loading both 
+the machine code and BASIC parts.
 If you do a warm start you can restart it just by typing <code>RUN</code>.
 <p>This game rather cleverly hooked into the ACIA timing signals to 
 ensure it always ran at the correct speed, even if the CPU was over-clocked
@@ -268,6 +365,7 @@ for the right-SHIFT key.</p>
 <table frame="box" rules="all" cellspacing="0" cellpadding="4">
 <tr><td><b>Program Tape</b></td>
 <td><a href="../samples/tapes/asteroids.tape"><samp>samples/tapes/asteroids.tape</samp></a></td></tr>
+<tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
 </td></tr></table>
 <br clear="left">
@@ -275,12 +373,7 @@ This is a copy of Arcadia's <i>Asteroids</i> game, another
 really well done game given the limitations of the UK101's simple 
 character set graphics.
 <p>Asteroids is actually a BASIC program with a large section of 
-additional machine code.
-To load it, restart the machine with a 
-<a href="quickstart.html#boot">cold start</a> into BASIC and type
-<code>LOAD</code>, then play the tape.  
-The BASIC section will load and automatically run then it will continue 
-to load the machine that follows on the tape.
+additional machine code which it loads automatically.
 Once that has loaded the game will start.
 If you do a warm start you can restart it just by typing <code>RUN</code>.
 <p>To rotate the laser press the <i>left-SHIFT</i> to rotate anti-clockwise  
@@ -341,7 +434,8 @@ or maybe <i>audio</i> format.</p>
 <p>The utility programs <a href="utilities.html#tread">Tape Reader</a>
 and <a href="utilities.html#twrite">Tape Writer</a> can be used
 to quickly convert between the various formats.</p>
-<h3 id="decode">Recovering Programs from Old Cassette Tapes</h3>
+<hr>
+<h2 id="decode">Recovering Programs from Old Cassette Tapes</h2>
 <p>If you have original UK101 programs on old cassette tapes it is 
 usually possible to recover them on a PC so they can be loaded
 and used with the simulator, provided the tapes are still playable
@@ -391,10 +485,10 @@ use the <a href="utilities.html#tread">Tape Reader</a> utility to
 convert the binary form to ASCII for easy viewing or editing on the PC.</li>
 </ol>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>January 2014
+<tr><td align="left">Tim Baldwin<br>May 2015
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2010,2014</td></tr>
+<br><br>&copy; Tim Baldwin 2010,2015</td></tr>
 </table>
 </body>
 </html>

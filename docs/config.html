@@ -62,7 +62,7 @@ suitable for emulating an
 <a href="operation.html#osi">Ohio Scientific Superboard II</a> can be 
 found in the file:
 <blockquote><pre>
-<a href="../samples/properties/superboard.properties">samples/properties/superboard.properties</a>
+<a href="../samples/superboard/superboard.properties">samples/superboard/superboard.properties</a>
 </pre></blockquote>
 <p>The following sections list all the property names and property
 values that can be used.
@@ -86,15 +86,26 @@ run as fast as it can.</p></td></tr>
 <tr><td><code>cpu.control</code></td>
 <td><code>auto</code>, <code>sleep</code>, <code>yield</code> or <code>spin</code></td>
 <td align="center"><code>auto</code></td>
-<td>This determines the method used by the CPU emulation to manage correct
+<td>This determines the method used by the CPU emulation to manage 
 instruction timings.
 Generally this is best left set to <code>auto</code> to let the system decide
-the best method based on measured system performance.  
+the method based on measured system performance.  
 The other options are mainly for experimentation and debug.
-The <code>sleep</code> option uses the least host CPU processing but may give 
-a less smooth emulation on slower machines.
-The <code>spin</code> option will give the smoothest emulation but will require
-more host CPU power.</td></tr>
+<table frame="void">
+<tr valign="top"><td><code>sleep&nbsp;</code></td> 
+<td>causes the processor thread to <i>sleep</i> when possible.
+This uses least host system CPU but may give a less smooth emulation
+on some slow machines.</td></tr>
+<tr valign="top"><td><code>yield&nbsp;</code></td>
+<td>uses spin-loops to manage timings but causes the processor thread
+to <i>yield</i> when spinning.
+This uses more host CPU but the rest of the system should remain fairly
+responsive.</td></tr>
+<tr valign="top"><td><code>spin&nbsp;</code></td>
+<td>uses spin-loops to manage timings.
+This uses a lot of  host CPU but should give a smooth emulation although
+the rest of the system may be less responsive.</td></tr>
+</table></td></tr>
 </table>
 <p><i>Note: </i>The <code>cpu.speed</code> setting represents a maximum 
 simulation speed.  
