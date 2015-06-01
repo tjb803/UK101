@@ -13,8 +13,6 @@ import javax.swing.JButton;
 
 /**
  * A very small push button.
- * 
- * @author Baldwin
  */
 public class SmallButton extends JButton {
     private static final long serialVersionUID = 1L;
@@ -24,12 +22,12 @@ public class SmallButton extends JButton {
     
     public SmallButton(String text, ActionListener listener) {
         super(text);
+        addActionListener(listener);
         // Margin and font work in most look and feels ...
         setMargin(MARGIN);
         setFont(FONT);
         // ... size property works for Nimbus
         putClientProperty("JComponent.sizeVariant", "mini");
         updateUI();
-        addActionListener(listener);
     }
 }

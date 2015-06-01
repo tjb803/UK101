@@ -6,7 +6,6 @@
 package uk101.hardware;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
 
 import uk101.hardware.bus.DataBus;
 import uk101.machine.Computer;
@@ -19,8 +18,6 @@ import uk101.machine.Trace;
  *
  * Instruction decoding and cycle times are from my old copy of Rodney Zaks
  * "Programming the 6502" (3rd edition).
- *
- * @author Baldwin
  */
 public class CPU6502 {
 
@@ -82,7 +79,7 @@ public class CPU6502 {
     private long now, end;
 
     // Relative speed calculation
-    private AtomicLong cpuStart, cpuCycles;
+    private long cpuStart, cpuCycles;
 
     // Debugging
     private Trace trace;
@@ -92,8 +89,6 @@ public class CPU6502 {
         this.alu = new ALU6502();
         this.bus = bus;
         running = new AtomicBoolean();
-        cpuStart = new AtomicLong();
-        cpuCycles = new AtomicLong();
         sigRESET = true;
         setMHz(mhz);
         
@@ -106,9 +101,10 @@ public class CPU6502 {
     }
 
     /*
-     * Set/get the required processor clock speed.
+     * Set/get the required processor clock speed.  Can be called from the
+     * GUI so needs to be synchronized.
      */
-    public void setMHz(int mhz) {
+    public synchronized void setMHz(int mhz) {
         // speed = cycle time in nanoseconds
         speed = (mhz == 0) ? 0 : 1000/mhz;
         now = end = System.nanoTime();
@@ -125,14 +121,14 @@ public class CPU6502 {
      * on a regular basis to be used to display the actual processor
      * speed.
      */
-    public float getSpeed() {
+    public synchronized float getSpeed() {
         // Calculate speed
-        float cpuTime = System.currentTimeMillis() - cpuStart.get();
-        float mhz = (float)cpuCycles.get()/(cpuTime*1000);
+        float cpuTime = System.currentTimeMillis() - cpuStart;
+        float mhz = (float)cpuCycles/(cpuTime*1000);
 
         // Reset counters ready for next call
-        cpuStart.set(System.currentTimeMillis());
-        cpuCycles.set(0);
+        cpuStart = System.currentTimeMillis();
+        cpuCycles = 0;
 
         return mhz;
     }
@@ -180,16 +176,18 @@ public class CPU6502 {
      * Normal processor execution
      */
     public void run() {
-        running.set(true);
-        cpuStart.set(System.currentTimeMillis());
-        cpuCycles.set(0);
-
+        getSpeed();
         now = end = System.nanoTime();
 
+        running.set(true);
         while (running.get()) {
             synchronized (this) {
+                // Check for external signals 
+                checkSignals();
+                
+                // Execute the next instruction
                 int cycles = execute();
-                cpuCycles.addAndGet(cycles);
+                cpuCycles += cycles;
 
                 // It is difficult to get timings exactly right in Java.  This logic
                 // assumes we are running too fast (which should be true most of the
@@ -260,9 +258,6 @@ public class CPU6502 {
      * Execute a single instruction
      */
     private int execute() {
-        // Check for external signals before executing the next instruction
-        checkSignals();
-
         // Add trace record if tracing
         if (trace != null) {
             traceEntry = trace.trace(PC, A, X, Y, S, P);
@@ -703,6 +698,23 @@ public class CPU6502 {
     }
 
     // Combined instructions for simple operations
+    private void flag(byte flag, boolean value) {
+        setFlag(flag, value);
+        if (flag == FLAG_D) {
+            alu.setDecimal(value);
+        }
+    }
+
+    private int branch(byte flag, boolean value) {
+        int extraCycles = 0;
+        int addr = getAddress(MODE_RELATIVE);
+        if (testFlag(flag) == value) {
+            PC = (short)addr;
+            extraCycles = 1;
+        }
+        return extraCycles;
+    }
+    
     private void pushByte(byte b) {
         bus.writeByte(STACK_BASE + Data.asAddr(S), b);
         S -= 1;
@@ -722,23 +734,6 @@ public class CPU6502 {
         byte bl = pullByte();
         byte bh = pullByte();
         return Data.getWord(bh, bl);
-    }
-
-    private void flag(byte flag, boolean value) {
-        setFlag(flag, value);
-        if (flag == FLAG_D) {
-            alu.setDecimal(value);
-        }
-    }
-
-    private int branch(byte flag, boolean value) {
-        int extraCycles = 0;
-        int addr = getAddress(MODE_RELATIVE);
-        if (testFlag(flag) == value) {
-            PC = (short)addr;
-            extraCycles = 1;
-        }
-        return extraCycles;
     }
 
     /*

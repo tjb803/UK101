@@ -7,6 +7,7 @@ package uk101.view;
 
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,11 +21,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import uk101.machine.Computer;
-import uk101.view.component.SpeedSelector;
 import uk101.view.component.DisplayText;
 import uk101.view.component.FlowPanel;
 import uk101.view.component.SmallButton;
 import uk101.view.component.SmallToggle;
+import uk101.view.component.SpeedSelector;
 
 /**
  * The control and debug panel.
@@ -35,8 +36,8 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
     static final String MACHINE_DUMP = "Dump";
     static final String MACHINE_TRACE = "Trace";
     static final String MACHINE_RESET = "Reset";
-    static final String MACHINE_NMI = "NMI";
-    static final String MACHINE_IRQ = "IRQ";
+    static final String MACHINE_NMI = " NMI ";
+    static final String MACHINE_IRQ = " IRQ ";
 
     private Computer computer;
     
@@ -55,8 +56,9 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
         speedTimer.start();
 
         // Machine image load/save
-        JPanel mp = new JPanel(new GridLayout(1, 0, 5, 5));
+        JPanel mp = new JPanel();
         mp.setBorder(BorderFactory.createTitledBorder("Machine"));
+        ((FlowLayout)mp.getLayout()).setHgap(5);
         JButton load = new JButton(ComputerView.IMAGE_LOAD);
         JButton save = new JButton(ComputerView.IMAGE_SAVE);
         load.addActionListener(computerView);
@@ -75,21 +77,17 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
         ip.add(new DisplayText("ROM", computer.monitor.getName(), false));
 
         // Debug panel
-        JPanel db = new JPanel(new GridLayout(1, 0, 3, 3));
+        JPanel db = new JPanel();
         db.setBorder(BorderFactory.createTitledBorder("Debug"));
-        SmallButton dump = new SmallButton(MACHINE_DUMP, this);
-        SmallToggle trace = new SmallToggle(MACHINE_TRACE, this);
-        SmallButton reset = new SmallButton(MACHINE_RESET, this);
-        SmallButton nmi = new SmallButton(MACHINE_NMI, this);
-        SmallButton irq = new SmallButton(MACHINE_IRQ, this);
-        db.add(dump);
-        db.add(trace);
-        db.add(reset);
-        db.add(nmi);
-        db.add(irq);
+        ((FlowLayout)db.getLayout()).setHgap(3);
+        db.add(new SmallButton(MACHINE_DUMP, this));
+        db.add(new SmallToggle(MACHINE_TRACE, this));
+        db.add(new SmallButton(MACHINE_RESET, this));
+        db.add(new SmallButton(MACHINE_NMI, this));
+        db.add(new SmallButton(MACHINE_IRQ, this));
         
         // CPU Speed control panel
-        JPanel sp = new JPanel(new GridLayout(1, 0, 0, 0));
+        JPanel sp = new JPanel();
         sp.setBorder(BorderFactory.createTitledBorder("CPU Clock Speed"));
         cpuClock = new SpeedSelector(4, computer.cpu.getMHz());
         cpuClock.addChangeListener(this);

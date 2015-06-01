@@ -9,12 +9,17 @@ import java.util.Hashtable;
 
 import javax.swing.JLabel;
 import javax.swing.JSlider;
+import javax.swing.UIManager;
 
 /**
  * Slider to select the CPU clock speed.
  */
 public class SpeedSelector extends JSlider {
     private static final long serialVersionUID = 1L;
+    
+    static {    // Improve appearance on GTK look-and-feel
+        UIManager.put("Slider.paintValue", Boolean.FALSE);
+    }
 
     int max;
 
