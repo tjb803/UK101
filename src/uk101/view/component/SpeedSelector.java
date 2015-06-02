@@ -10,6 +10,7 @@ import java.util.Hashtable;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeListener;
 
 /**
  * Slider to select the CPU clock speed.
@@ -23,7 +24,7 @@ public class SpeedSelector extends JSlider {
 
     int max;
 
-    public SpeedSelector(int max, int value) {
+    public SpeedSelector(int max, int value, ChangeListener listener) {
         super(1, max+1, value);
         this.max = max;
 
@@ -34,9 +35,10 @@ public class SpeedSelector extends JSlider {
         setMajorTickSpacing(1);
         setPaintLabels(true);
         setSnapToTicks(true);
+        addChangeListener(listener);
     }
 
-    public int getMhz() {
+    public int getSpeed() {
         return (getValue() > max ? 0 : getValue());
     }
 }

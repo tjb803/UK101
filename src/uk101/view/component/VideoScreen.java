@@ -22,8 +22,6 @@ import uk101.hardware.Video;
 
 /**
  * Displays the video output that would appear on a standard TV screen.
- *
- * @author Baldwin
  */
 public class VideoScreen extends JPanel {
     private static final long serialVersionUID = 1L;

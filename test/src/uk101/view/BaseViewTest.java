@@ -18,8 +18,6 @@ import uk101.utils.Args;
 
 /**
  * General Swing test frame
- *
- * @author Baldwin
  */
 public abstract class BaseViewTest extends TestCase {
 

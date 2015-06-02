@@ -7,8 +7,6 @@ package uk101.machine;
 
 /**
  * Utility class to manipulate 8-bit bytes and 16-bit words
- *
- * @author Baldwin
  */
 public abstract class Data {
 

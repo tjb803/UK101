@@ -16,8 +16,6 @@ import javax.swing.JToggleButton;
 
 /**
  * A button on the cassette player.
- *
- * @author Baldwin
  */
 public class CassetteButton extends JPanel {
     private static final long serialVersionUID = 1L;

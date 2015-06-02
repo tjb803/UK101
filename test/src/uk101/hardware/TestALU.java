@@ -9,8 +9,6 @@ import junit.framework.TestCase;
 
 /**
  * JUnit tests for the arithmetic and logic functions
- *
- * @author Baldwin
  */
 public class TestALU extends TestCase {
 

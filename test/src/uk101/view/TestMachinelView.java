@@ -7,8 +7,6 @@ package uk101.view;
 
 /**
  * Unit test for the Control panel.
- *
- * @author Baldwin
  */
 public class TestMachinelView extends BaseViewTest {
 

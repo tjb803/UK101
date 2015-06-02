@@ -18,8 +18,6 @@ import uk101.hardware.bus.DataBus;
 
 /**
  * The complete UK101 computer.
- *
- * @author Baldwin
  */
 public class Computer extends Thread implements DataBus {
     

@@ -16,8 +16,6 @@ import javax.swing.SwingConstants;
  * This is a panel with a FlowLayout that can return its 
  * preferred size for its elements laid out either in a 
  * single horizontal row or vertical column.
- * 
- * @author Baldwin
  */
 public class FlowPanel extends JPanel implements SwingConstants {
     private static final long serialVersionUID = 1L;

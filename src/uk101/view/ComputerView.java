@@ -26,8 +26,6 @@ import uk101.view.component.ImageFormat;
 /**
  * A visual representation of the full computer.  This is a frame that contains the
  * visuals for the various computer elements.
- *
- * @author Baldwin
  */
 public class ComputerView extends JDesktopPane implements ActionListener {
     private static final long serialVersionUID = 1L;

@@ -14,8 +14,6 @@ import javax.sound.sampled.AudioFormat;
 /**
  * Provides a base class and common function for converting audio tones
  * into data bytes. 
- * 
- * @author Baldwin
  */
 public abstract class AudioDecoder {
  

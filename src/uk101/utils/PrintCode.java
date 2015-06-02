@@ -25,8 +25,6 @@ import java.io.PrintStream;
  *
  * options:
  *    -output outputfile: output file name, defaults to standard out
- *
- * @author Baldwin
  */
 public class PrintCode {
 

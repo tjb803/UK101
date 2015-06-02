@@ -34,8 +34,6 @@ import uk101.machine.Trace;
  * <instruction>: disassembled instruction
  * A=xx etc: register values before execution
  * EA=addr: effective address of instruction (if it addresses memory)
- *
- * @author Baldwin
  */
 public class PrintTrace {
 

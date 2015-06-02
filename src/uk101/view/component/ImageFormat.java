@@ -13,8 +13,6 @@ import javax.swing.JPanel;
 
 /**
  * Machine image selection dialog accessory to select image format.
- *
- * @author Baldwin
  */
 public class ImageFormat extends JPanel {
     private static final long serialVersionUID = 1L;

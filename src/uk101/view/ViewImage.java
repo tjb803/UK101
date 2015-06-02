@@ -25,8 +25,6 @@ import javax.swing.JInternalFrame;
 /**
  * Image of the GUI simulator view.  This contains the sizes and positions of all
  * the windows.
- *
- * @author Baldwin
  */
 public class ViewImage implements Serializable {
     private static final long serialVersionUID = 1L;

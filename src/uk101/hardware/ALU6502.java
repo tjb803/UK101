@@ -7,8 +7,6 @@ package uk101.hardware;
 
 /**
  * The arithmetic and logic unit that forms part of the 6502 CPU.
- *
- * @author Baldwin
  */
 class ALU6502 {
 

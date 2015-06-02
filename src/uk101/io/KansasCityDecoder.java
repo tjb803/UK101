@@ -18,8 +18,6 @@ import java.io.IOException;
  * such as original tapes - but it is best if they are captured at a high
  * sample rate (say 44.1kHz).  It probably won't correctly decode very poor 
  * quality recordings.
- *
- * @author Baldwin
  */
 public class KansasCityDecoder extends AudioDecoder {
 

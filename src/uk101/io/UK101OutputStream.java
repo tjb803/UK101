@@ -29,8 +29,6 @@ import uk101.machine.Data;
  *
  * - The sequence CR <NUL>+ LF is written as a line end (where <NUL>+
  *   means one or more NUL characters).
- *
- * @author Baldwin
  */
 public class UK101OutputStream extends OutputStream {
 

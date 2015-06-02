@@ -21,8 +21,6 @@ import java.util.zip.InflaterInputStream;
 
 /**
  * Capture and record a system memory dump.
- *
- * @author Baldwin
  */
 public class Dump implements Serializable {
     private static final long serialVersionUID = 1L;

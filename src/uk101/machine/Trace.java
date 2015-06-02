@@ -21,8 +21,6 @@ import java.util.zip.InflaterInputStream;
 
 /**
  * Capture and record a CPU instruction trace.
- *
- * @author Baldwin
  */
 public class Trace implements Serializable {
     private static final long serialVersionUID = 1L;

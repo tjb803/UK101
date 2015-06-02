@@ -69,12 +69,12 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
         // Information panel
         JPanel ip = new JPanel(new GridLayout(0, 2, 5, 5));
         ip.setBorder(BorderFactory.createTitledBorder("Configuration"));
-        speed = new DisplayText("CPU", computer.cpu.getMHz() + ".00MHz", false);
-        baud = new DisplayText("Baud Rate", computer.acia.getBaudRate() + "", false);
+        speed = new DisplayText("CPU", computer.cpu.getMHz() + ".00MHz");
+        baud = new DisplayText("Baud Rate", computer.acia.getBaudRate() + "");
         ip.add(speed);
         ip.add(baud);
-        ip.add(new DisplayText("RAM", computer.ram.kBytes() + "KB", false));
-        ip.add(new DisplayText("ROM", computer.monitor.getName(), false));
+        ip.add(new DisplayText("RAM", computer.ram.kBytes() + "KB"));
+        ip.add(new DisplayText("ROM", computer.monitor.getName()));
 
         // Debug panel
         JPanel db = new JPanel();
@@ -89,8 +89,7 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
         // CPU Speed control panel
         JPanel sp = new JPanel();
         sp.setBorder(BorderFactory.createTitledBorder("CPU Clock Speed"));
-        cpuClock = new SpeedSelector(4, computer.cpu.getMHz());
-        cpuClock.addChangeListener(this);
+        cpuClock = new SpeedSelector(4, computer.cpu.getMHz(), this);
         sp.add(cpuClock);
         
          // Size the speed panel to be no wider than debug panel
@@ -138,7 +137,7 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == cpuClock) {
             if (!cpuClock.getValueIsAdjusting()) {
-                computer.setSpeed(cpuClock.getMhz());
+                computer.setSpeed(cpuClock.getSpeed());
             }    
         }
     }

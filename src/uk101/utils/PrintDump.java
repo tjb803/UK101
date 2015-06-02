@@ -26,8 +26,6 @@ import uk101.machine.Dump;
  *    -output outputfile: output file name, defaults to standard out
  *    -hex: print output as a hex dump, default is hex format
  *    -code: print output as disassembled code
- *
- * @author Baldwin
  */
 public class PrintDump {
 

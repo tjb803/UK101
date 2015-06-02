@@ -12,9 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * Display a monpspaced text field.
- *
- * @author Baldwin
+ * Display a text field with a label and optional monopsaced font
  */
 public class DisplayText extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -22,6 +20,10 @@ public class DisplayText extends JPanel {
     static final Font monoFont = Font.decode("monospaced");
 
     private JLabel text;
+    
+    public DisplayText(String name, String value) {
+        this(name, value, false);
+    }
 
     public DisplayText(String name, String value, boolean monospaced) {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));

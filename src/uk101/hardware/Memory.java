@@ -9,8 +9,6 @@ import uk101.machine.Data;
 
 /**
  * Base class for all memory mapped hardware including ROM and RAM.
- *
- * @author Baldwin
  */
 public abstract class Memory {
 

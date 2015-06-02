@@ -8,8 +8,6 @@ package uk101.hardware.bus;
 /**
  * The IODevice provides methods for peripheral devices (such as the 
  * cassette recorder) to interface to the ACIA.
- *
- * @author Baldwin
  */
 public interface IODevice {
     

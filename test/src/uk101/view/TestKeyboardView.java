@@ -10,8 +10,6 @@ import uk101.machine.Configuration;
 
 /**
  * Unit test for the keyboard view
- *
- * @author Baldwin
  */
 public class TestKeyboardView extends BaseViewTest {
 

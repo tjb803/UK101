@@ -16,8 +16,6 @@ import uk101.machine.Data;
  * only uses 1 byte.
  *
  * This class emulates both the UK101 and the Ohio Superboard II keyboards.
- *
- * @author Baldwin
  */
 public class Keyboard extends Memory {
 

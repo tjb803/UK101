@@ -58,12 +58,11 @@ If no image is provided a default window layout will be used.</p>
 Make sure you save anything you want to keep before you do this.</p>
 <hr> 
 <h2 id="opctl">The Machine Control Panel</h2>
-<table frame="void"><tr>
-<td valign="top"><img src="image/opctl.jpg" alt="Machine Control"/></td>
-<td valign="top">The machine control panel provides details of the 
+<img src="image/opctl.jpg" alt="Machine Control" align="left" hspace="10"/>
+<p>The machine control panel provides details of the 
 current machine configuration, provides the buttons to load and save 
 complete machine images, a slider for setting the CPU clock speed and 
-some simple debugging functions.
+some simple debugging functions.</p>
 <p>The <i>Load...</i> and <i>Save...</i> buttons are used to save the 
 current machine image or restore a previously saved machine image.
 A machine image consists of the complete RAM memory and may also include the 
@@ -80,8 +79,9 @@ the emulation is running.
 Faster clock speeds can make programs load faster, but may make them hard 
 to use as program timings often used simple loops.
 Setting the slider to <i>Max</i> will cause the emulation to run as fast
-as possible.</p></td>
-</tr></table> 
+as possible.
+<br clear="left"></p>
+<h3>Debug Functions</h3>
 <p>At the bottom of the window are a number of debug buttons.
 Pressing the <i>Dump</i> button will produce a
 <a href="extras.html#dump">system memory dump</a> (this can 
@@ -97,38 +97,36 @@ Pressing the <i>NMI</i> or <i>IRQ</i> buttons will raise the
 corresponding CPU interrupt.</p>
 <hr>
 <h2 id="opvid">The Video Display</h2>
-<table frame="void"><tr>
-<td valign="top"><img src="image/opvid.jpg" alt="Video Display"/></td>
-<td valign="top">The video display shows the computer output.
+<img src="image/opvid.jpg" alt="Video Display" align="left" hspace="10"/>
+<p>The video display shows the computer output.
 By default this displays 16 lines of 48 characters which was 
 typically what was seen on a normal TV plugged into a standard
 UK101.
 Machines were often modified to improve the video with a 32-line
-display being common.
+display being common.</p>
 <p>A number of aspects of the video display can be changed using 
 the <a href="config.html#video">video configuration</a> properties,
 including the number of lines displayed, the physical size of the 
 video output and the screen colour, which can be set to:</p>
 <p><img src="image/vidwhite.jpg" alt="White"/>
 <img src="image/vidgreen.jpg" alt="Green"/>
-<img src="image/vidamber.jpg" alt="Amber"/></td>
-</tr></table>
+<img src="image/vidamber.jpg" alt="Amber"/>
+<br clear="left"></p>
 <hr>
 <h2 id="opkbd">The Keyboard</h2>
-<table frame="void"><tr>
-<td valign="top"><img src="image/opkbd.jpg" alt="Keyboard"/></td>
-<td valign="top">The keyboard shows an image of the keys, key-markings 
+<img src="image/opkbd.jpg" alt="Keyboard" align="left" hspace="10"/>
+<p>The keyboard shows an image of the keys, key-markings 
 and the key-layout from the real machine.
 You can operate the keyboard either by clicking the appropriate keys with
-the mouse, or by typing on the PC keyboard.
+the mouse, or by typing on the PC keyboard.</p>
 <p>In general the UK101 needs all its characters in UPPERCASE, so it is 
 important to ensure that the <tt>SHIFT LOCK</tt> key is always locked in
 the down position.  
-This should be the default when the system is started up.</p></td>
-</tr></table>
+This should be the default when the system is started up.</p>
 <p>Note that the UK101 reads the keyboard by polling and quite a lot of 
 instructions need to be executed to decode any one keypress - if you type
-too fast you may find some keystrokes get missed.</p>
+too fast you may find some keystrokes get missed.
+<br clear="left"></p>
 <h3 id="kbmode">The Keyboard Mode</h3> 
 The keyboard layout, although very similar to a standard UK or US PC
 keyboard layout is not identical.  
@@ -166,20 +164,18 @@ one of the <tt>RESET</tt> keys (either one) with both mouse buttons
 at once.</p>
 <hr>
 <h2 id="opcas">The Cassette Recorder</h2>
-<table frame="void"><tr>
-<td valign="top"><img src="image/opcas.jpg" align="left"/></td>
-<td valign="top">The cassette recorder allows programs to be loaded 
+<img src="image/opcas.jpg" alt="Cassette Recorder" align="left" hspace="10"/>
+<p>The cassette recorder allows programs to be loaded 
 from and saved to cassette tapes.
 In this simulation &quot;cassette tapes&quot; are simply files on the
-PC containing the bytes that would have been stored on a cassette.
+PC containing the bytes that would have been stored on a cassette.</p>
 <p>To use the cassette recorder first press the <i>Open...</i> button and
 select a tape to load or enter a new file name if you going to be 
 saving a program.
 To start the tape playing (ready for loading) press the <i>Play</i>
 button; to start the tape recording (ready for saving) press the
 <i>Rec</i> button; to stop playing or recording press the 
-<i>Stop</i> button.</p></td>
-</tr></table>
+<i>Stop</i> button.</p>
 <p>You don't have to be too careful about when you press the <i>Play</i>,
 <i>Rec</i> or <i>Stop</i> buttons.
 For example you can press <i>Play</i> before you type the 
@@ -189,9 +185,11 @@ over a real system.
 Similarly if you press <i>Rec</i> nothing will actually be saved
 until the <code>SAVE</code> command lists data to the output.
 The cassette player will automatically stop if it is left 
-doing nothing in <i>Play</i> or <i>Rec</i> mode for about 15 seconds.</p> 
-<p><img src="image/tapemode.jpg" align="left"/>
-When opening a new tape you will need to select the correct 
+doing nothing in <i>Play</i> or <i>Rec</i> mode for about 15 seconds.
+<br clear="left"></p>
+<h3>Tape Format</h3> 
+<img src="image/tapemode.jpg" alt="Tape Formats" align="left" hspace="10"/>
+<p>When opening a new tape you will need to select the correct 
 <a href="samples.html#format">tape format</a> to be used for 
 reading and/or writing.</p>
 <p>The default setting for input tapes is <i>Automatic</i> which will
@@ -207,8 +205,9 @@ The <i>Audio</i> option saves data as an audio WAV file in encoded
 in Kansas City Standard format - this may be useful if you want to 
 create a real CD or tape to load on a real UK101.</p>
 <p>When a tape is playing or recording the format selected 
-will be displayed to the right of the tape name.</p>
-<br clear="left"/><hr>
+will be displayed to the right of the tape name.
+<br clear="left"/></p>
+<hr>
 <h2 id="osi">Ohio Scientific Superboard II Emulation</h2>
 <p>The UK101 was very heavily based on the Ohio Superboard II from the
 US and has an almost identical machine architecture and design.
@@ -238,7 +237,7 @@ A sample set of ROMs and a sample
 configuration</a> properties file can be found in the 
 <code>samples/superboard</code> directory.</p>
 <br clear="left"/><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>January 2014
+<tr><td align="left">Tim Baldwin<br>May 2015
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
 <br><br>&copy; Tim Baldwin 2010,2015</td></tr>

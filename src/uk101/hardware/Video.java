@@ -14,8 +14,6 @@ import uk101.view.VideoView;
  * Video is memory mapped starting at D000.  Standard screen was 16 rows of 64
  * 1-byte characters (=1K memory), although only around 46-48 characters were
  * visible on a standard TV screen.
- *
- * @author Baldwin
  */
 public class Video extends RAM {
 

@@ -15,8 +15,6 @@ import junit.framework.TestCase;
 
 /**
  * General Swing test frame
- *
- * @author Baldwin
  */
 public abstract class BaseComponentTest extends TestCase {
 

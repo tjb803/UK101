@@ -22,8 +22,6 @@ import uk101.machine.Dump;
  * A saved machine image.  Currently  this consists of a memory dump,
  * the system configuration and the size and position of all the 
  * windows on the screen.
- *
- * @author Baldwin
  */
 public class MachineImage {
     static final byte HAS_CONFIG = 0x01;

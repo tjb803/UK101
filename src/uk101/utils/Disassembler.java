@@ -9,8 +9,6 @@ import uk101.machine.Data;
 
 /**
  * 6502 instruction disassembler.
- *
- * @author Baldwin
  */
 public class Disassembler {
 

@@ -26,8 +26,6 @@ import java.util.List;
  *   null - option is a flag, either present or absent
  *   starts with '+' - usage summary shows next option on the same line
  *   starts with '=' - option is a synonym for another option  
- *
- * @author Baldwin
  */
 public class Args {
     

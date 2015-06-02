@@ -10,8 +10,6 @@ import uk101.machine.TapeRecorder;
 
 /**
  * Unit test for the Cassette player view
- *
- * @author Baldwin
  */
 public class TestCassetteView extends BaseViewTest {
 

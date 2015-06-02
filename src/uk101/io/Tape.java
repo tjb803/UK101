@@ -18,8 +18,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * Utility class to manipulate tape input and output streams.
- *
- * @author Baldwin
  */
 public class Tape {
 

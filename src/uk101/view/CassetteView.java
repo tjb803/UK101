@@ -39,8 +39,6 @@ import uk101.view.component.TapeFormat;
 
 /**
  * A visual representation of the cassette recorder.
- *
- * @author Baldwin
  */
 public class CassetteView  extends JInternalFrame implements ActionListener, ItemListener {
     private static final long serialVersionUID = 1L;

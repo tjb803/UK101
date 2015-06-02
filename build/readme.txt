@@ -27,7 +27,7 @@ All new software for this project is covered by the project's BSD
 open source licence.  But please note that the system ROMs and some 
 of the sample code come from original UK101 sources and I do not 
 own the copyright for these.  I do not know who the current copyright
-owners are and I sincerely hope no one will mind this 30-year old 
+owners are and I sincerely hope no one will mind this 35-year old 
 software being made available in my packages.  If any of the copyright
 owners have an issue with this, please contact me and I will remove 
 anything that should not be here.  
@@ -49,6 +49,13 @@ Latest Improvements
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
 
+v1.2.1
+ - More improvements to host CPU usage
+ - Bug fixes for some page-0 and indexed addressing modes
+ - Support emulated CPU speeds up to 4MHz
+ - Allow CPU speed to be changed when running
+ - Additional games: "Labyrinth", "Real Time Star Trek" 
+
 v1.2.0
  - "rom.XXXX" property to allow extra plug-in ROMs
  - Additional games: "8K Super Invaders", "Asteroids" and "Le Passe-Temp"
@@ -58,8 +65,8 @@ v1.2.0
 
 v1.1.0
  - "baud.rate" property to allow correct ACIA timing signals
- - greatly reduced CPU usage 
- - keyboard window doesn't need to be selected to type
+ - Greatly reduced host CPU usage 
+ - Keyboard window doesn't need to be selected to type
 
 v1.0.0
  - "keyboard=uk/us" property to support Superboard II emulation

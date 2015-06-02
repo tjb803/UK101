@@ -19,8 +19,6 @@ import uk101.utils.PrintBytes;
 
 /**
  * JUnit tests for the UK101 input stream
- *
- * @author Baldwin
  */
 public class TestUK101Streams extends TestCase {
 

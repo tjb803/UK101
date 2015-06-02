@@ -17,8 +17,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 /**
  * Utility class to create an input stream that can read an audio WAV
  * file in format defined by the AudioDecoder.
- *
- * @author Baldwin
  */
 public class WaveInputStream extends InputStream {
  

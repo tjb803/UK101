@@ -16,8 +16,6 @@ import uk101.io.Tape;
 
 /**
  * Tape file selection dialog accessory to select tape mode.
- *
- * @author Baldwin
  */
 public class TapeFormat extends JPanel {
     private static final long serialVersionUID = 1L;

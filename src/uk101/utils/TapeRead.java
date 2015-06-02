@@ -27,8 +27,6 @@ import uk101.io.UK101OutputStream;
  * options:
  *    -binary: input is binary, defaults to auto-selected
  *    -baudRate: the baud rate if the file is an audio file, defaults to 300
- *
- * @author Baldwin
  */
 public class TapeRead {
 

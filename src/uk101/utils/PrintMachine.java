@@ -29,8 +29,6 @@ import uk101.view.ViewImage;
  * options:
  *    -hex: Include memory dump as hex, default is no memory dump
  *    -code: Include memory dump as disassembled code
- *    
- * @author Baldwin
  */
 public class PrintMachine {
     

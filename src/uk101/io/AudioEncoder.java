@@ -15,8 +15,6 @@ import javax.sound.sampled.AudioFormat;
  * Provides a base class and common function for converting data bytes
  * into audio tones.  The conversion provides a RAW audio datastream
  * based on the supplied AudioFormat details.
- * 
- * @author Baldwin
  */
 public abstract class AudioEncoder {
     

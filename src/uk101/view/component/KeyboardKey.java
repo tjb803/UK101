@@ -19,8 +19,6 @@ import javax.swing.border.Border;
 
 /**
  * Displays a single keyboard key.
- *
- * @author Baldwin
  */
 public class KeyboardKey extends JButton {
     private static final long serialVersionUID = 1L;

@@ -11,8 +11,6 @@ import uk101.machine.Configuration;
 
 /**
  * Unit test for the video view
- *
- * @author Baldwin
  */
 public class TestVideoView extends BaseViewTest {
 

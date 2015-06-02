@@ -42,8 +42,6 @@ import uk101.view.MachineImage;
  *   -c, -configuration <configFile>: a properties file containing the system configuration
  *   -p, -properties <systemProps>: one or more system configuration properties
  *   -debug: print out debug information
- *
- * @author Baldwin
  */
 public class Main implements Runnable {
 
@@ -60,7 +58,7 @@ public class Main implements Runnable {
         
         Computer.debug = parms.getFlag("debug");
 
-        // Set the Swing look and feel, unless "none" was specified
+        // Set the Swing look and feel
         String look = parms.getOption("look");
         if (look == null) {
             setDefaultLookAndFeel();

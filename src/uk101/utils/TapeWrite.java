@@ -31,8 +31,6 @@ import uk101.io.Tape;
  *    -baudRate: audio baud rate (default 300)
  *    -leadIn: time to play lead-in tone (default to 5s)
  *    -leadOut: time to play lead-out tone (defaults to leadIn) 
- *
- * @author Baldwin
  */
 public class TapeWrite {
 

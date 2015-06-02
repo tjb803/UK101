@@ -27,8 +27,6 @@ import uk101.utils.Args;
 
 /**
  * Contains the machine configuration.
- * 
- * @author Baldwin
  */
 public class Configuration extends Properties {
     private static final long serialVersionUID = 2L;

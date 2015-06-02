@@ -11,8 +11,6 @@ import uk101.machine.Data;
 
 /**
  * Simulation of the base 6850 ACIA used by the UK101.
- *
- * @author Baldwin
  */
 public class ACIA6850 extends Memory implements IODevice, Runnable {
 

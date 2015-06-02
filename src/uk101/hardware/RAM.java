@@ -7,8 +7,6 @@ package uk101.hardware;
 
 /**
  * This is a section of RAM.
- *
- * @author Baldwin
  */
 public class RAM extends Memory {
 

@@ -21,8 +21,6 @@ import javax.sound.sampled.AudioSystem;
  * To write a WAV file we need to know its total length, so we have to 
  * build the RAW audio data in a temporary byte buffer before writing the 
  * WAV as part of the close operation.
- *
- * @author Baldwin
  */
 public class WaveOutputStream extends OutputStream {
  

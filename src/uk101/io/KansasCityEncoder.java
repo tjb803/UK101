@@ -22,8 +22,6 @@ import java.io.IOException;
  *   
  * For faster (non-standard baud rates) the number of cycles is halved for 
  * 600 baud and halved again for 1200 baud.
- *
- * @author Baldwin
  */
 public class KansasCityEncoder extends AudioEncoder {
     

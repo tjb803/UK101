@@ -8,8 +8,6 @@ package uk101.hardware.bus;
 /**
  * The IOBus provides methods for the ACIA to communicate with
  * peripheral devices (such as the cassette recorder).
- *
- * @author Baldwin
  */
 public interface IOBus {
     

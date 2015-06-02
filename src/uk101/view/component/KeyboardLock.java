@@ -14,8 +14,6 @@ import javax.swing.JToggleButton;
 /**
  * This is a special keyboard key that toggles up and down when pressed
  * with the mouse.
- *
- * @author Baldwin
  */
 public class KeyboardLock extends JToggleButton {
     private static final long serialVersionUID = 1L;

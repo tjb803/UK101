@@ -15,12 +15,10 @@ import uk101.view.CassetteView;
 
 /**
  * Program storage via 'tapes'.  This simple implementation just reads
- * and writes bytes from and to a file.
+ * and writes bytes from and to any Input/OutputStream.
  *
- * It might not be _too_ hard to create a subclass of this that read and
- * writes to a real CUTS-encoded WAV file?
- *
- * @author Baldwin
+ * By using the WaveInputStream and WaveOutputStream classes this can be
+ * made to read or write Kansas City encoded audio data.
  */
 public class TapeRecorder implements IOBus {
 

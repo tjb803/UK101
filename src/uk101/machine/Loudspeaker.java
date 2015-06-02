@@ -19,7 +19,7 @@ import javax.sound.sampled.SourceDataLine;
  * Note: data is expected to be written as byte arrays containing one or 
  *       more complete sound sample frames.  Single bytes cannot be written.
  *
- * @author Baldwin
+ * Note: Currently unused!
  */
 public class Loudspeaker extends OutputStream {
     

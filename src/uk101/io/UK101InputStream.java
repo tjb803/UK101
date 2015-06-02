@@ -26,8 +26,6 @@ import java.util.regex.Pattern;
  * - Any hex escapes of the form '\nn' are converted to the byte value.
  *
  * - Line ends are written as CR 10xNUL LF.
- *
- * @author Baldwin
  */
 public class UK101InputStream extends InputStream {
 

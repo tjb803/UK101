@@ -15,8 +15,6 @@ import uk101.Main;
 
 /**
  * This is a system ROM loaded from a resource.
- *
- * @author Baldwin
  */
 public class ROM extends Memory {
 

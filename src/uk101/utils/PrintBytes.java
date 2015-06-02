@@ -28,8 +28,6 @@ import uk101.machine.Data;
  *    -output outputfile: output file name, defaults to standard out
  *
  * Output displays a hex byte dump and the equivalent ASCII characters
- *
- * @author Baldwin
  */
 public class PrintBytes {
 
