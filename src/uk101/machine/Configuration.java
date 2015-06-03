@@ -95,7 +95,7 @@ public class Configuration extends Properties {
         String s = parms.getOption("properties");
         if (s != null) {
             s = s.replace("\\", "\\\\").replace(";", "\n").replace(",", "\n");
-            in = new ByteArrayInputStream(s.getBytes());
+            in = new ByteArrayInputStream(s.getBytes("ISO-8859-1"));
             props.load(in);
             in.close();
         }

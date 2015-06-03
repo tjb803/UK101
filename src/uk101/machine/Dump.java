@@ -41,7 +41,7 @@ public class Dump implements Serializable {
         version = computer.version;
         timestamp = new Date();
 
-        store = computer.ram.store;
+        store = computer.ram.store.clone();
     }
 
     /*

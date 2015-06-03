@@ -20,7 +20,7 @@ import javax.sound.sampled.AudioSystem;
  *
  * To write a WAV file we need to know its total length, so we have to 
  * build the RAW audio data in a temporary byte buffer before writing the 
- * WAV as part of the close operation.
+ * WAV as part of the close operation.  Is there a better way to do this?
  */
 public class WaveOutputStream extends OutputStream {
  

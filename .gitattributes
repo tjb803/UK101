@@ -10,13 +10,13 @@ build/readme.txt -text
 docs/config.html -text
 docs/extras.html -text
 docs/history.html -text
-docs/image/blackbox.jpg -text
+docs/image/blackbox.gif -text
 docs/image/board1.jpg -text
 docs/image/init1.gif -text
 docs/image/inv1.gif -text
 docs/image/inv2.gif -text
 docs/image/kbmode.jpg -text
-docs/image/maze.jpg -text
+docs/image/maze.gif -text
 docs/image/opcas.jpg -text
 docs/image/opctl.jpg -text
 docs/image/opkbd.jpg -text
@@ -28,7 +28,7 @@ docs/image/qsb.gif -text
 docs/image/qsh.gif -text
 docs/image/qsl.gif -text
 docs/image/qsr.gif -text
-docs/image/startrek.jpg -text
+docs/image/startrek.gif -text
 docs/image/tapeastr.jpg -text
 docs/image/tapeex.jpg -text
 docs/image/tapeinv.jpg -text
@@ -37,9 +37,9 @@ docs/image/tapemode.jpg -text
 docs/image/tapesamp.jpg -text
 docs/image/tapesinv.jpg -text
 docs/image/uk101.gif -text
-docs/image/vidamber.jpg -text
-docs/image/vidgreen.jpg -text
-docs/image/vidwhite.jpg -text
+docs/image/vidamber.gif -text
+docs/image/vidgreen.gif -text
+docs/image/vidwhite.gif -text
 docs/index.html -text
 docs/operation.html -text
 docs/pdf/cegmon.pdf -text
