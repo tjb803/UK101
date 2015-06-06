@@ -7,6 +7,7 @@ package uk101.hardware;
 
 import uk101.hardware.bus.IOBus;
 import uk101.hardware.bus.IODevice;
+import uk101.machine.Computer;
 import uk101.machine.Data;
 
 /**
@@ -57,39 +58,42 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
         worker.start();
     }
     
-    // A real UK101 would decode the ACIA address to at least a 256 byte block and
-    // any read/write to that block would be accepted.  But this causes me a
-    // problem when loading the extended monitor as at one point it ends up
-    // setting an address in the monitor of F007 which gets interpreted as a 'read
-    // character' and we lose an input character (this didn't happen on the real
-    // machine as characters were delivered both slowly and asynchronously whereas
-    // here, to make loading fast, I'm attempting to deliver characters on demand). 
-    // So I'm only decoding the two addresses F000 and F001, which works for all
-    // cases encountered so far.
-    // TODO: Perhaps this really ought to be asynchronous and slowed to the 
-    //       correct baud rate? 
-
+    /*
+     * The address decodes to a 256 byte block, but really there are only 
+     * two registers that are accessed.
+     */
+    
     public synchronized byte readByte(int offset) {
         byte b = 0;
-        if (offset == 0) {
+        if ((offset & 1) == 0) {
             b = statusReg;
-        } else if (offset == 1) {
+        } else {
             b = rxByte;
-            statusReg &= ~STATUS_RDRF;
-            notify();
+            // TODO: There's an issue here when loading the EXMON tape (and maybe  
+            // others?) when using the standard monitor.  It briefly ends up setting
+            // an address of F007 which causes this code to read (and so lose) a 
+            // character.  This wouldn't happen on a real machine as characters were
+            // delivered much slower, not on demand as happens here.  So, if we have 
+            // that monitor we'll only flag the character as read if we read from 
+            // address F001.  This is fine, F001 is the address that should be used,
+            // rather than some other random value in the 256 byte block.
+            if (!Computer.aciaFix1 || offset == 1) {
+                statusReg &= ~STATUS_RDRF;
+                notify();
+            }    
         }
         return b;
     }
 
     public synchronized void writeByte(int offset, byte b) {
-        if (offset == 0) {
+        if ((offset & 1) == 0) {
             if (b == CONTROL_RESET) {
                 statusReg = STATUS_TDRE;
                 setSpeed((byte)0);
             } else {
                 setSpeed(b);
             }
-        } else if (offset == 1) {
+        } else {
             txByte = b;
             statusReg &= ~STATUS_TDRE;
             notify();

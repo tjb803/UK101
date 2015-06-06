@@ -34,7 +34,7 @@ public class PrintCode {
         options.put("output", "outputfile");
         Args parms = new Args("PrintCode", "bytesfile [address]", args, options);
         File inputFile = parms.getInputFile(1);
-        int address = parms.getHexInteger(2);
+        int address = parms.getHexInteger(2, 0);
         File outputFile = parms.getOutputFile("output");
 
         // Check parameters

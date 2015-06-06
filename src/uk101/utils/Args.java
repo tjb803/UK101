@@ -163,14 +163,10 @@ public class Args {
         return result;
     }
 
-    public int getInteger(int position) {
-        return getIntegerValue(getParameter(position), -1);
+    public int getInteger(int position, int defaultValue) {
+        return getIntegerValue(getParameter(position), defaultValue);
     }
 
-    public int getInteger(String option) {
-        return getIntegerValue(getOption(option), -1);
-    }
-    
     public int getInteger(String option, int defaultValue) {
         return getIntegerValue(getOption(option), defaultValue);
     }
@@ -187,16 +183,16 @@ public class Args {
         return result;
     }
 
-    public int getHexInteger(int position) {
-        return getHexIntegerValue(getParameter(position));
+    public int getHexInteger(int position, int defaultValue) {
+        return getHexIntegerValue(getParameter(position), defaultValue);
     }
 
-    public int getHexInteger(String option) {
-        return getHexIntegerValue(getOption(option));
+    public int getHexInteger(String option, int defaultValue) {
+        return getHexIntegerValue(getOption(option), defaultValue);
     }
 
-    private int getHexIntegerValue(String value) {
-        int result = -1;
+    private int getHexIntegerValue(String value, int defaultValue) {
+        int result = defaultValue;
         if (value != null) {
             try {
                 result = Integer.parseInt(value);

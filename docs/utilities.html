@@ -21,6 +21,7 @@ various off-line tasks.</p>
 <li><a href="#ptrace">Trace File Formatter</a></li>
 <li><a href="#tread">Binary and Audio Tape Reader</a></li>
 <li><a href="#twrite">Binary and Audio Tape Writer</a></li>
+<li><a href="#tplay">Tape Audio Player</a>
 </ul>
 <p>To run any of these utility programs you must ensure the simulator JAR
 file is on the Java CLASSPATH.</p>
@@ -246,18 +247,70 @@ Default value is 5 seconds.</dd>
 <dt><code>-leadOut <i>lead_out</i></code></dt>
 <dd>The number of seconds of lead-out tone if writing a WAV file.
 Default value is the same as the lead-in.</dd>
+<dt><code>-inputRate <i>input_baud_rate</i></code></dt>
+<dd>The baud rate of the <i>inputfile</i> if it is audio encoded and if
+it differs from the output baud rate.</dd>
 </dl></blockquote>
-<p>This program will take an ASCII or binary representation of a decoded 
+<p>This program will take an ASCII, binary or audio representation of a decoded 
 cassette tape and write it in the original binary format or in Kansas City
 Standard audio WAV format.
 <p>See <a href="samples.html#format">tape formats</a> for
- details on the differences between the <i>binary</i>, <i>audio</i> and 
- <i>ASCII</i> forms of program tapes.</p> 
+details on the differences between the <i>binary</i>, <i>audio</i> and 
+<i>ASCII</i> forms of program tapes.</p> 
+<p>Note: this program can take an audio format tape as input and can rewrite
+the tape in a different audio baud rate or quality level if required.</p> 
+<hr><h2 id="tplay">Tape Audio Player</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>uk101.utils.TapePlay</b> [options] inputfile</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>inputfile</code></dt>
+<dd>The name of an ASCII, binary or audio tape file.</dd>
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-binary</code></dt>
+<dd>Input tape is to be processed as a binary file.
+This is not normally required as the system will automatically detect
+the type of input.</dd>
+<dt><code>-sampleRate <i>sample_rate</i></code></dt>
+<dd>The audio sample rate for playback.
+Values can be between 8000 and 96000, including the CD standard 44100.
+The default is high quality 48000Hz.</dd>
+<dt><code>-sampleSize <i>sample_size</i></code></dt>
+<dd>The audio sample size for playback.
+Values can be 8 or 16.
+The default is high quality 16-bit samples</dd>
+<dt><code>-baudRate <i>baud_rate</i></code></dt>
+<dd>The baud rate for playback.
+Supported baud rates are 300, 600 or 1200; this defaults to the standard 
+300 baud.</dd>
+<dt><code>-leadIn <i>lead_in</i></code></dt>
+<dd>The number of seconds of lead-in tone for playback.
+Default value is 5 seconds.</dd>
+<dt><code>-leadOut <i>lead_out</i></code></dt>
+<dd>The number of seconds of lead-out tone for playback.
+Default value is the same as the lead-in.</dd>
+<dt><code>-inputRate <i>input_baud_rate</i></code></dt>
+<dd>The baud rate of the <i>inputfile</i> if it is audio encoded and if
+it differs from the output baud rate.</dd>
+</dl></blockquote>
+<p>This program will take an ASCII, binary or audio tape file and play it  
+in Kansas City Standard audio format to the system sound device.
+This might be useful if you wanted to connect the PC's audio output to
+a real cassette player or real UK101 machine.</p>
+<p>Note: this program can be used to play audio format files but it is not a 
+general media player - it works by decoding the input tape and recoding
+if for output.
+Different output audio baud rate or quality settings can be used if 
+required.</p> 
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>January 2014
+<tr><td align="left">Tim Baldwin<br>May 2015
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2010,2014</td></tr>
+<br><br>&copy; Tim Baldwin 2010,2015</td></tr>
 </table>
 </body>
 </html>

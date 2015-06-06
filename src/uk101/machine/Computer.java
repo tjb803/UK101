@@ -23,6 +23,10 @@ public class Computer extends Thread implements DataBus {
     
     // General debug flag
     public static boolean debug = false;
+    
+    // Some flags to control a few special hacks 
+    public static boolean videoFix1 = false;
+    public static boolean aciaFix1 = false;
 
     // Version
     public String name;
@@ -94,7 +98,11 @@ public class Computer extends Thread implements DataBus {
 
         // Create a tape recorder to load and save programs and plug it into the ACIA.
         recorder = new TapeRecorder(acia);
-    }
+        
+        // Set special flags for some emulation hacks.  Both are set true only 
+        // if we have the standard 'new monitor'.
+        aciaFix1 = videoFix1 = new String(monitor.store, "US-ASCII").contains("(C)old Start");
+    }    
 
     // Add some memory into the address space
     private void addMemory(int base, Memory m) {
@@ -132,13 +140,13 @@ public class Computer extends Thread implements DataBus {
             b = m.readByte(addr-m.base);
         } else {
             b = Data.getHiByte((short)addr);
-            // Small hack to avoid nasty video artifacts when MONUK02 scrolls the
-            // screen.  This monitor will read past the end of the video RAM when it
-            // scrolls and very briefly display garbage on the screen.  It is very 
-            // brief and presumably isn't visible on a real machine but can sometimes
-            // be seen in this emulation.  So if this looks like a read by the video 
-            // scroll routine we return 0x20 to keep the screen clean!
-            if (cpu.getPC() == 0xFB72) 
+            // TODO: When the standard monitor scrolls the screen it ends up reading
+            // past the end of video memory and very briefly writes garbage characters
+            // to the screen buffer.  It is very brief and doesn't seem to show on a
+            // real machine but can show on my simulation.  So if this looks like the
+            // monitor scroll routine we'll return a space character to keep the screen
+            // clean.
+            if (Computer.videoFix1 && cpu.getPC() == 0xFB72) 
                 b = 0x20;
         }
         return b;

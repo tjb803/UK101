@@ -1,11 +1,12 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2014
+ * (C) Copyright Tim Baldwin 2014,2015
  */
 package uk101.machine;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.sound.sampled.AudioFormat;
@@ -13,20 +14,28 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
+import uk101.io.AudioEncoder;
+
 /**
  * A simple sound output device implemented as an OutputStream. 
- *
- * Note: data is expected to be written as byte arrays containing one or 
- *       more complete sound sample frames.  Single bytes cannot be written.
- *
- * Note: Currently unused!
  */
 public class Loudspeaker extends OutputStream {
     
+    private AudioEncoder encoder;
     private SourceDataLine sound;
+    private byte[] frame;
+    int length;
     
     public Loudspeaker(AudioFormat format) throws LineUnavailableException {
         sound = AudioSystem.getSourceDataLine(format);
+        frame = new byte[format.getFrameSize()];
+        length = 0;
+    }
+    
+    public Loudspeaker(AudioEncoder enc) throws LineUnavailableException {
+        this(enc.getFormat());
+        enc.setOutputStream(this);
+        encoder = enc;
     }
     
     public void open() throws LineUnavailableException {
@@ -40,15 +49,19 @@ public class Loudspeaker extends OutputStream {
         sound.close();
     }
     
-    public void write(byte[] b) {
-        sound.write(b, 0, b.length);
+    // Cannot write single bytes, must buffer up and write complete frames
+    public void write(int b) throws IOException {
+        frame[length++] = (byte)b;
+        if (length == frame.length) {
+            sound.write(frame, 0, length);
+            length = 0;
+        }
     }
     
-    public void write(byte[] b, int offset, int length) {
-        sound.write(b, offset, length);
-    }
-
-    public void write(int b) throws IOException {
-        throw new IOException("Cannot write single bytes of sound");
+    // Utility method to play from an input stream via an encoder
+    public void play(InputStream in) throws IOException {
+        encoder.encodeStart();
+        encoder.encodeStream(in);
+        encoder.encodeEnd();
     }
 }
