@@ -117,6 +117,13 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         } else {
             row3.add(new KeyboardKey("BREAK", Keyboard.KEY_RESET, this));
         }
+        
+        // Shift characters for mapped keyboard processing
+        if (keyboard.isUK()) {
+            shiftChars = UK_SHIFT_CHARS;
+        } else {
+            shiftChars = US_SHIFT_CHARS;
+        }
 
         // Add the keyboard game mode selector
         JCheckBox game = new JCheckBox("Game mode", gameMode);
@@ -223,8 +230,11 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
      *       the square-brackets and the backslash (on a US keyboard)) will map to
      *       the LINEFEED key, and the Insert key will map to REPEAT.      
      */
-    private static final String SHIFT_CHARS = "!\"#$%&'()*=@[\\+]<>?";
+    private static final String UK_SHIFT_CHARS = "!\"#$%&'()*=@[\\+]<>?_";
+    private static final String US_SHIFT_CHARS = "!\"#$%&'()*=@[\\+]<>?_^";
+    
     private int mappedKey = 0, mappedShift = 0;
+    private String shiftChars;
 
     public void keyPressed(KeyEvent e) {
         e.consume();
@@ -299,7 +309,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     
     private void pressMapped(int key) {
         releaseMapped();
-        if (SHIFT_CHARS.indexOf(key) != -1) {
+        if (shiftChars.indexOf(key) != -1) {
             mappedShift = Keyboard.KEY_LSHIFT;
             keyboard.pressKey(mappedShift);
         }

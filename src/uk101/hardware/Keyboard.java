@@ -48,10 +48,10 @@ public class Keyboard extends Memory {
      *         ! |   " |   # |   $ |   % |   & |   ' |     |
      *         1 |   2 |   3 |   4 |   5 |   6 |   7 |     |
      *  R7 ------+-----+-----+-----+-----+-----+-----+-----+
-     *         ( |   ) |     |   * |   = | RUB |     |     |
+     *         ( |   ) |(1)  |   * |   = | RUB |     |     |
      *         8 |   9 |   0 |   : |   - | OUT |     |     |
      *  R6 ------+-----+-----+-----+-----+-----+-----+-----+
-     *         > |   \ |     |(1)  |     |     |     |     |
+     *         > |   \ |     |(2)  |     |     |     |     |
      *         . |   L |   O |   ^ |  CR |     |     |     |
      *  R5 ------+-----+-----+-----+-----+-----+-----+-----+
      *           |     |     |     |     |     |     |     |
@@ -66,14 +66,16 @@ public class Keyboard extends Memory {
      *           |     |     |     |   ? |   + |   @ |     |
      *         Q |   A |   Z |space|   / |   ; |   P |     |
      *  R1 ------+-----+-----+-----+-----+-----+-----+-----+
-     *      (2)  |     |(3)  |     |     | left|right|SHIFT|
+     *      (3)  |     |(4)  |     |     | left|right|SHIFT|
      *           | CTRL|     |     |     |SHIFT|SHIFT| LOCK|
      *  R0 ------+-----+-----+-----+-----+-----+-----+-----+
      *  
+     *  (1) Both MONUK02 and CEGMON decode shift-0 as @
+     *  
      * Notes for Ohio Superboard II keyboard:
-     *  (1) This key is labelled LINE FEED
-     *  (2) This position is the REPEAT key
-     *  (3) This position is the ESC key
+     *  (2) This key is labelled LINE FEED
+     *  (3) This position is the REPEAT key
+     *  (4) This position is the ESC key
      */
 
     private boolean isUK;
@@ -107,7 +109,7 @@ public class Keyboard extends Memory {
         addKey('7', '\'', 7, 1);
         addKey('8', '(', 6, 7);
         addKey('9', ')', 6, 6);
-        addKey('0', 0, 6, 5);
+        addKey('0', '@', 6, 5);     // Note: Shift-0 decodes as @
         addKey(':', '*', 6, 4);
         addKey('-', '=', 6, 3);
         addKey(KEY_RUBOUT, 0, 6, 2);
@@ -147,16 +149,17 @@ public class Keyboard extends Memory {
         addKey(KEY_LSHIFT, 0, 0, 2);
         addKey(KEY_RSHIFT, 0, 0, 1);
         addKey(KEY_SHIFTLOCK, 0, 0, 0);
+        addKey('\\', 0, 5, 6);
+        addKey('[', 0, 3, 1);
+        addKey(']', 0, 2, 2);
+        addKey('_', 0, 5, 5);
         if (isUK) {
             addKey(KEY_UPARROW, '^', 5, 4);
-            addKey('\\', 0, 5, 6);
-            addKey('[', 0, 3, 1);
-            addKey(']', 0, 2, 2);
-            addKey('@', 0, 1, 1);
         } else {
-            addKey(KEY_LINEFEED, '\\', 5, 4);
+            addKey(KEY_LINEFEED, 0, 5, 4);
             addKey(KEY_ESC, 0, 0, 5);
             addKey(KEY_REPEAT, 0, 0, 7);
+            addKey('^', 0, 2, 3);
         }
 
         // Start with SHIFTKOCK pressed
