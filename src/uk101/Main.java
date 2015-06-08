@@ -54,7 +54,7 @@ public class Main implements Runnable {
         options.put("p", "=properties");  
         options.put("properties", "systemProps");
         options.put("debug");
-        Args parms = new Args("uk101.Main", "[machine]", args, options);
+        Args parms = new Args(Main.class, "[machine]", args, options);
         
         Computer.debug = parms.getFlag("debug");
 

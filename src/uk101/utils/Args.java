@@ -48,6 +48,10 @@ public class Args {
     /*
      * Process a set of arguments, creating a list of options and parameters
      */
+    public Args(Class<?> cl, String parms, String[] args, Args.Map opts) {
+        this(cl.getName(), parms, args, opts);
+    }
+    
     public Args(String name, String parms, String[] args, Args.Map opts) {
         this.name = name;
         this.parms = parms;

@@ -35,7 +35,7 @@ public class TapeRead {
         Args.Map options = Args.optionMap();
         options.put("binary");
         options.put("baudRate", "baudrate (300, 600 or 1200");
-        Args parms = new Args("TapeRead", "inputtape [outputfile]", args, options);
+        Args parms = new Args(TapeRead.class, "inputtape [outputfile]", args, options);
         
         File inputFile = parms.getInputFile(1); 
         File outputFile = parms.getOutputFile(2);    

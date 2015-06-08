@@ -35,7 +35,7 @@ public class PrintDump {
         options.put("output", "outputfile");
         options.put("hex");
         options.put("code");
-        Args parms = new Args("PrintDump", "dumpfile", args, options);
+        Args parms = new Args(PrintDump.class, "dumpfile", args, options);
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile("output");
         boolean asHex = parms.getFlag("hex");

@@ -37,7 +37,7 @@ public class PrintMachine {
         Args.Map options = Args.optionMap();
         options.put("hex");
         options.put("code");
-        Args parms = new Args("PrintMachine", "machine [outputfile]", args, options);
+        Args parms = new Args(PrintMachine.class, "machine [outputfile]", args, options);
         
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile(2);

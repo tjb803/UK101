@@ -43,7 +43,7 @@ public class PrintTrace {
         // Handle parameters
         Args.Map options = Args.optionMap();
         options.put("output", "outputfile");
-        Args parms = new Args("PrintTrace", "tracefile", args, options);
+        Args parms = new Args(PrintTrace.class, "tracefile", args, options);
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile("output");
 

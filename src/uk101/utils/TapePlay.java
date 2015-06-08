@@ -45,7 +45,7 @@ public class TapePlay {
         options.put("leadIn", "+leadin");
         options.put("leadOut", "leadout");
         options.put("inputRate", "inputBaudRate (300, 600 or 1200");
-        Args parms = new Args("TapePlay", "inputfile", args, options);
+        Args parms = new Args(TapePlay.class, "inputfile", args, options);
 
         File inputFile = parms.getInputFile(1);
         int inputFormat = parms.getFlag("binary") ? Tape.STREAM_BINARY : Tape.STREAM_SELECT;

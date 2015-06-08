@@ -46,7 +46,7 @@ public class TapeWrite {
         options.put("leadIn", "+leadin");
         options.put("leadOut", "leadout");
         options.put("inputRate", "inputBaudRate (300, 600 or 1200");
-        Args parms = new Args("TapeWrite", "inputfile outputtape", args, options);
+        Args parms = new Args(TapeWrite.class, "inputfile outputtape", args, options);
 
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile(2);

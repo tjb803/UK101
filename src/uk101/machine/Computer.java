@@ -101,7 +101,12 @@ public class Computer extends Thread implements DataBus {
         
         // Set special flags for some emulation hacks.  Both are set true only 
         // if we have the standard 'new monitor'.
-        aciaFix1 = videoFix1 = new String(monitor.store, "US-ASCII").contains("(C)old Start");
+        String ms = new String(monitor.store, "US-ASCII");
+        boolean cegmon = ms.contains("CEGMON");         // Looks like CEGMON rom
+        boolean newmon = ms.contains("(C)old Start");   // Looks like New Monitor rom
+        boolean synmon = ms.contains("D/C/W/M ?");      // Looks like original/OSI rom
+        aciaFix1 = newmon | synmon;
+        videoFix1 = newmon;
     }    
 
     // Add some memory into the address space
