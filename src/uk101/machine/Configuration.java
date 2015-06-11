@@ -187,16 +187,76 @@ public class Configuration extends Properties {
     /*
      * Return config values either as integers or strings
      */
-    public int getInt(String key) {
+    public int getCpuSpeed() {
+        return getInt(CPU_SPEED);
+    }
+    
+    public String getCpuControl() {
+        return getString(CPU_CONTROL);
+    }
+    
+    public int getRamSize() {
+        return getInt(RAM_SIZE);
+    }
+    
+    public String getRomBasic() {
+        return getString(ROM_BASIC);
+    }
+    
+    public String getRomMonitor() {
+        return getString(ROM_MONITOR);
+    }
+    
+    public String getRomCharset() {
+        return getString(ROM_CHARSET);
+    }
+    
+    public String getKbdLayout() {
+        return getString(KBD_LAYOUT);
+    }
+    
+    public String getKbdMode() {
+        return getString(KBD_MODE);
+    }
+    
+    public int getVideoRows() {
+        return getInt(VIDEO_ROWS);
+    }
+    
+    public int getVideoCols() {
+        return getInt(VIDEO_COLS);
+    }
+    
+    public int getScreenWidth() {
+        return getInt(SCREEN_WIDTH);
+    }
+    
+    public int getScreenOffset() {
+        return getInt(SCREEN_OFFSET);
+    }
+    
+    public int getScreenSize() {
+        return getInt(SCREEN_SIZE);
+    }
+    
+    public String getScreenColour() {
+        return getString(SCREEN_COLOUR);
+    }
+    
+    public String getScreenUpdate() {
+        return getString(SCREEN_UPDATE);
+    }
+    
+    public int getBaudRate() {
+        return getInt(BAUD_RATE);
+    }
+    
+    private int getInt(String key) {
         return Integer.parseInt(getProperty(key));
     }
     
-    public String getValue(String key) {
+    private String getString(String key) {
         return getProperty(key);
-    }
-    
-    public void setValue(String key, String value) {
-        setProperty(key, value);
     }
     
     /*
@@ -229,6 +289,25 @@ public class Configuration extends Properties {
             }
         }
         return roms;
+    }
+    
+    /*
+     * Set config values that can be changed while running
+     */
+    public void setKbdMode(String mode) {
+        setString(KBD_MODE, mode);
+    }
+    
+    public void setCpuSpeed(int speed) {
+        setInt(CPU_SPEED, speed);
+    }
+    
+    private void setInt(String key, int value) {
+        setProperty(key, Integer.toString(value));
+    }
+    
+    private void setString(String key, String value) {
+        setProperty(key, value);
     }
     
     /*

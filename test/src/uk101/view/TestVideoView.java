@@ -7,7 +7,6 @@ package uk101.view;
 
 import uk101.hardware.ROM;
 import uk101.hardware.Video;
-import uk101.machine.Configuration;
 
 /**
  * Unit test for the video view
@@ -16,7 +15,7 @@ public class TestVideoView extends BaseViewTest {
 
     protected void setupTest() throws Exception {
         // Create the store display component and add to the frame.
-        ROM charSet = new ROM(testCfg.getValue(Configuration.ROM_CHARSET));
+        ROM charSet = new ROM(testCfg.getRomCharset());
         video = new Video(16, 64, charSet);
         vidView = new VideoView(video, testCfg);
         testView.add(vidView);

@@ -41,15 +41,15 @@ public class ComputerView extends JDesktopPane implements ActionListener {
     private KeyboardView keyboard;
     private CassetteView cassette;
 
-    public ComputerView(Computer computer, Configuration cfg) {
+    public ComputerView(Computer computer) {
         setLayout(null);
 
         this.computer = computer;
 
         // Create views for the various machine elements
-        video = new VideoView(computer.video, cfg);
-        keyboard = new KeyboardView(computer, computer.keyboard, cfg);
-        cassette = new CassetteView(computer.recorder, cfg);
+        video = new VideoView(computer.video, computer.config);
+        keyboard = new KeyboardView(computer, computer.keyboard, computer.config);
+        cassette = new CassetteView(computer.recorder, computer.config);
         machine = new MachineView(computer, this);
         
         // Attach the keyboard handler to each top level frame

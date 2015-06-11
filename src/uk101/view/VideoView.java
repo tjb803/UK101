@@ -39,14 +39,14 @@ public class VideoView extends JInternalFrame {
         // only 8 rows in the character generator ROM bitmaps).
         vrows = video.rows;  vcols = video.cols;
         srows = vrows;  
-        scols = cfg.getInt(Configuration.SCREEN_WIDTH);  
-        sstart = cfg.getInt(Configuration.SCREEN_OFFSET);
+        scols = cfg.getScreenWidth();  
+        sstart = cfg.getScreenOffset();
         int vscale = (vrows > 16) ? 1 : 2;
         int hscale = (vcols > 32) ? 1 : 2;
-        int ssize = (cfg.getInt(Configuration.SCREEN_SIZE) < 2) ? 1 : 2;
-        Color colour = getScreenColour(cfg.getValue(Configuration.SCREEN_COLOUR));
+        int ssize = (cfg.getScreenSize() < 2) ? 1 : 2;
+        Color colour = getScreenColour(cfg.getScreenColour());
         screen = new VideoScreen(video, srows, scols, hscale, vscale, ssize, colour);
-        screen.setUpdateMode(isSyncUpdate(cfg.getValue(Configuration.SCREEN_UPDATE)));
+        screen.setUpdateMode(isSyncUpdate(cfg.getScreenUpdate()));
 
         // Surround the screen by a small border (about half a character cell wide).
         Dimension cell = screen.getCellSize();

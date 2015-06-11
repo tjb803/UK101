@@ -68,16 +68,16 @@ public class Computer extends Thread implements DataBus {
         config = cfg;
         
         // A 6502 CPU
-        cpu = new CPU6502(cfg.getInt(Configuration.CPU_SPEED), cfg.getValue(Configuration.CPU_CONTROL), this);
+        cpu = new CPU6502(cfg.getCpuSpeed(), cfg.getCpuControl(), this);
 
         // Address space is 64K.  Assumption here is that any ROM/RAM or any
         // memory-mapped devices are mapped in BLKSIZE sections.
         memory = new Memory[Memory.toBlocks(Memory.K64)];
 
         // Install the system ROMs and RAM
-        ram = new RAM(cfg.getInt(Configuration.RAM_SIZE));
-        basic = new ROM(cfg.getValue(Configuration.ROM_BASIC));
-        monitor = new ROM(cfg.getValue(Configuration.ROM_MONITOR));
+        ram = new RAM(cfg.getRamSize());
+        basic = new ROM(cfg.getRomBasic());
+        monitor = new ROM(cfg.getRomMonitor());
         addMemory(0, ram);
         addMemory(0xA000, basic);
         addMemory(0xF800, monitor);
@@ -88,10 +88,10 @@ public class Computer extends Thread implements DataBus {
         }    
 
         // Keyboard, screen and ACIA are memory mapped.
-        ROM charset = new ROM(cfg.getValue(Configuration.ROM_CHARSET));
-        keyboard = new Keyboard(cfg.getValue(Configuration.KBD_LAYOUT));
-        video = new Video(cfg.getInt(Configuration.VIDEO_ROWS), cfg.getInt(Configuration.VIDEO_COLS), charset);
-        acia = new ACIA6850(cfg.getInt(Configuration.BAUD_RATE), getPriority());
+        ROM charset = new ROM(cfg.getRomCharset());
+        keyboard = new Keyboard(cfg.getKbdLayout());
+        video = new Video(cfg.getVideoRows(), cfg.getVideoCols(), charset);
+        acia = new ACIA6850(cfg.getBaudRate(), getPriority());
         addMemory(0xDF00, keyboard);
         addMemory(0xD000, video);
         addMemory(0xF000, acia);
@@ -99,8 +99,7 @@ public class Computer extends Thread implements DataBus {
         // Create a tape recorder to load and save programs and plug it into the ACIA.
         recorder = new TapeRecorder(acia);
         
-        // Set special flags for some emulation hacks.  Both are set true only 
-        // if we have the standard 'new monitor'.
+        // Set special flags for some emulation hacks.
         String ms = new String(monitor.store, "US-ASCII");
         boolean cegmon = ms.contains("CEGMON");         // Looks like CEGMON rom
         boolean newmon = ms.contains("(C)old Start");   // Looks like New Monitor rom
@@ -116,7 +115,7 @@ public class Computer extends Thread implements DataBus {
             memory[Memory.asBlock(base) + i] = m;
         }
     }
-
+    
     /*
      * Reset the computer
      */
@@ -125,10 +124,20 @@ public class Computer extends Thread implements DataBus {
     }
     
     /*
-     * Set the CPU clock speed
+     * Set the CPU clock speed and store back in config so it will be saved in 
+     * any machine image.
      */
     public void setSpeed(int mhz) {
         cpu.setMHz(mhz);
+        config.setCpuSpeed(mhz);
+    }
+    
+    /*
+     * Store the keyboard game mode back in config so it will be saved in any
+     * machine image.
+     */
+    public void setGameMode(boolean gameMode) {
+        config.setKbdMode((gameMode) ? Configuration.GAME : Configuration.NORMAL);
     }
 
     /*

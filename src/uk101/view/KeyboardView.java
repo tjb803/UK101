@@ -55,17 +55,15 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         { "Z", "X", "C", "V", "B", "N", "M", "< ,", "> .", "? /" };
 
     private Computer computer;
-    private Configuration config;
     private Keyboard keyboard;
     private boolean gameMode, ctrlMode;
 
     public KeyboardView(Computer computer, Keyboard keyboard, Configuration cfg) {
         super("Keyboard", false, false, false, false);
         this.computer = computer;
-        this.config = cfg;
         this.keyboard = keyboard;
 
-        gameMode = isGameMode(cfg.getValue(Configuration.KBD_MODE)); 
+        gameMode = isGameMode(cfg.getKbdMode()); 
                 
         // Layout the basic keys
         JPanel row1, row2, row3, row4, row5;
@@ -212,7 +210,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
                 keyboard.releaseKey(key.getCode());
         } else {    // Push game mode back to configuration so it will be saved in a machine image 
             gameMode = (e.getStateChange() == ItemEvent.SELECTED);
-            config.setValue(Configuration.KBD_MODE, (gameMode) ? Configuration.GAME : Configuration.NORMAL);
+            computer.setGameMode(gameMode);
         }
     }
 

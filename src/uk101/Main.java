@@ -78,7 +78,7 @@ public class Main implements Runnable {
         // Create a new UK101 simulation and view
         Configuration config = new Configuration(parms, imageCfg);
         Computer computer = new Computer(config);
-        ComputerView view = new ComputerView(computer, config);
+        ComputerView view = new ComputerView(computer);
 
         // Fire up the GUI
         Main gui = new Main(computer, view, image);
