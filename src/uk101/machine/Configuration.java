@@ -31,27 +31,6 @@ import uk101.utils.Args;
 public class Configuration extends Properties {
     private static final long serialVersionUID = 2L;
     
-    public static final String CPU_SPEED = "cpu.speed";
-    public static final String CPU_CONTROL = "cpu.control";
-    public static final String BAUD_RATE = "baud.rate";
-    public static final String RAM_SIZE = "ram.size";
-    public static final String ROM_MONITOR = "rom.monitor";
-    public static final String ROM_BASIC = "rom.basic";
-    public static final String ROM_CHARSET = "rom.charset";
-    public static final String KBD_LAYOUT = "keyboard.layout";
-    public static final String KBD_MODE = "keyboard.mode";
-    public static final String VIDEO_ROWS = "video.rows";
-    public static final String VIDEO_COLS = "video.cols";
-    public static final String SCREEN_SIZE = "screen.size";
-    public static final String SCREEN_WIDTH = "screen.width";
-    public static final String SCREEN_OFFSET = "screen.offset";
-    public static final String SCREEN_COLOUR = "screen.colour";
-    public static final String SCREEN_UPDATE = "screen.update";
-    public static final String AUDIO_RATE = "audio.rate";
-    public static final String AUDIO_BITS = "audio.bits";
-    public static final String AUDIO_LEAD = "audio.lead";
-    public static final String ROM = "rom.";
-    
     public static final String AUTO = "auto";
     public static final String SLEEP = "sleep";
     public static final String YIELD = "yield";
@@ -65,7 +44,31 @@ public class Configuration extends Properties {
     public static final String US = "us";
     public static final String NORMAL = "normal";
     public static final String GAME = "game";
+    public static final String SINE = "sine";
+    public static final String SYSTEM = "system";
     
+    private static final String CPU_SPEED = "cpu.speed";
+    private static final String CPU_CONTROL = "cpu.control";
+    private static final String BAUD_RATE = "baud.rate";
+    private static final String RAM_SIZE = "ram.size";
+    private static final String ROM_MONITOR = "rom.monitor";
+    private static final String ROM_BASIC = "rom.basic";
+    private static final String ROM_CHARSET = "rom.charset";
+    private static final String KBD_LAYOUT = "keyboard.layout";
+    private static final String KBD_MODE = "keyboard.mode";
+    private static final String VIDEO_ROWS = "video.rows";
+    private static final String VIDEO_COLS = "video.cols";
+    private static final String SCREEN_SIZE = "screen.size";
+    private static final String SCREEN_WIDTH = "screen.width";
+    private static final String SCREEN_OFFSET = "screen.offset";
+    private static final String SCREEN_COLOUR = "screen.colour";
+    private static final String SCREEN_UPDATE = "screen.update";
+    private static final String AUDIO_RATE = "audio.rate";
+    private static final String AUDIO_BITS = "audio.bits";
+    private static final String AUDIO_LEAD = "audio.lead";
+    private static final String AUDIO_WAVE = "audio.wave";
+    private static final String ROM = "rom.";
+
     // Additional ROMs have an address and a filename
     public static class ROM {
         public int address;
@@ -129,6 +132,7 @@ public class Configuration extends Properties {
         applyInt(props, AUDIO_RATE, 8000, 96000);
         applyStr(props, AUDIO_BITS, "8", "16");
         applyInt(props, AUDIO_LEAD, 0, 10);
+        applyStr(props, AUDIO_WAVE, SINE, SYSTEM);
         applyROM(props);
     }
     
@@ -265,7 +269,8 @@ public class Configuration extends Properties {
      */
     public AudioEncoder getAudioEncoder() {
         int baud = Math.min(Math.max(getInt(BAUD_RATE), 300), 1200);
-        KansasCityEncoder kcs = new KansasCityEncoder(getInt(AUDIO_RATE), getInt(AUDIO_BITS), baud);
+        boolean sine = getString(AUDIO_WAVE).equals(SINE);
+        KansasCityEncoder kcs = new KansasCityEncoder(getInt(AUDIO_RATE), getInt(AUDIO_BITS), baud, sine);
         kcs.setLeader(getInt(AUDIO_LEAD)*1000, getInt(AUDIO_LEAD)*1000); 
         return kcs;        
     }

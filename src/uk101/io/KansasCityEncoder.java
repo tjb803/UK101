@@ -37,7 +37,11 @@ public class KansasCityEncoder extends AudioEncoder {
     private byte[] bit0, bit1;
     
     public KansasCityEncoder(int rate, int bits, int baud) {
-        super(rate, bits);
+        this(rate, bits, baud, true);
+    }
+    
+    public KansasCityEncoder(int rate, int bits, int baud, boolean sine) {
+        super(rate, bits, sine);
         baudRate = baud;
         int n = 4/(baudRate/BAUD300);
         bit0 = getSamples(n, LO_TONE);      // n cycles of 1200Hz

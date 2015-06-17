@@ -33,6 +33,7 @@ import uk101.io.Tape;
  *    -leadIn: time to play lead-in tone (default to 5s)
  *    -leadOut: time to play lead-out tone (defaults to leadIn) 
  *    -inputRate: audio baud rate of input, if audio encoded (defaults to baudRate)
+ *    -systemWave: generate system waveform, rather than pure sine waves
  */
 public class TapeWrite {
 
@@ -46,6 +47,7 @@ public class TapeWrite {
         options.put("leadIn", "+leadin");
         options.put("leadOut", "leadout");
         options.put("inputRate", "inputBaudRate (300, 600 or 1200");
+        options.put("systemWave");
         Args parms = new Args(TapeWrite.class, "inputfile outputtape", args, options);
 
         File inputFile = parms.getInputFile(1);
@@ -57,6 +59,7 @@ public class TapeWrite {
         int leadIn = parms.getInteger("leadIn", 5);
         int leadOut = parms.getInteger("leadOut", leadIn);
         int inputRate = parms.getInteger("inputRate", baudRate);
+        boolean sineWave = !parms.getFlag("systemWave");
 
         // Check parameters
         if ((inputFile == null || outputFile == null) ||
@@ -68,7 +71,7 @@ public class TapeWrite {
         }
 
         // Create input/output streams
-        KansasCityEncoder encoder = new KansasCityEncoder(sampleRate, sampleSize, baudRate);
+        KansasCityEncoder encoder = new KansasCityEncoder(sampleRate, sampleSize, baudRate, sineWave);
         KansasCityDecoder decoder = new KansasCityDecoder(inputRate);
         encoder.setLeader(leadIn*1000, leadOut*1000);
         InputStream input = Tape.getInputStream(inputFile, Tape.STREAM_SELECT, decoder); 
