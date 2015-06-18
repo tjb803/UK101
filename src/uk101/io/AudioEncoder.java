@@ -59,13 +59,7 @@ public abstract class AudioEncoder {
         int k = 0;
         for (int i = 0; i < cycles; i++) {
             for (int j = 0; j < sampleLength; j++) {
-                double f; 
-                if (sineWave) 
-                    f = waveFn(sampleTime*j, cycleTime);
-                else 
-                    f = waveFnHw(sampleTime*j, cycleTime);
-                
-                int a = (int)(25600 * f);
+                int a = (int)(25600 * waveFn(sampleTime*j, cycleTime));
                 data[k++] = (byte)(a>>8);
                 if (bytesPerSample > 1) 
                     data[k++] = (byte)a;
@@ -74,41 +68,41 @@ public abstract class AudioEncoder {
 
         return data;
     }
-    
-    // Correct Kansas City wave form should be a pure sine wave.  Shift back  
-    // by 90deg so we start from -1 with a rising edge
+
+    // t = sample time from start of cycle
+    // w = total cycle time
     private double waveFn(double t, double w) {
-        // t = sample time from start of cycle, w = total cycle time
-        return Math.sin((Math.PI*2*t)/w - Math.PI/2);
+        return (sineWave) ? waveFnSin(t, w) : waveFnSys(t, w); 
     }
     
-    // UK101 hardware actually generated a square wave and integrated it via a 
-    // simple passive low-pass filter with R=100k and C=10n which gives a 
-    // "capacitor charge/discharge" shape instead.  Since the same filter was used 
-    // for both high and low frequencies this also had the effect of making the 
-    // high frequency slightly quieter.
-    private double waveFnHw(double t, double w) {
+    // Correct Kansas City wave form should be a pure sine wave.
+    private double waveFnSin(double t, double w) {
+        return Math.sin(Math.PI*2*(t/w));
+    }
+    
+    // UK101 hardware actually generated a 5V square wave and passed it through a
+    // network of 3 resistors and a capacitor (see R54, R55, R56 and C13 on the 
+    // schematic on page 18 of the manual).  This generates a waveform equivalent
+    // to 0.5V applied to a low-pass filter with an RC time constant of 0.0001.
+    private double waveFnSys(double t, double w) {
         // Half cycle time (time for rising or falling part of signal).
         double x = w/2;         
         
-        // Time constant - should be 100k x 10n (0.001) but a smaller value seems
-        // to give better results.
-        double rc = 0.0003;    
-        
-        // Assume we are first called for the lowest tone (which will generate the
-        // largest amplitude) and note the maximum amplitude reached for a 5V signal.
-        if (maxV == 0) {
-            maxV = 5 * (1 - Math.exp(-x/rc));
-        }    
-        
-        // Calculate the maximum amplitude for the current frequency
-        double m = 5 * (1 - Math.exp(-x/rc));
+        // Applied voltage and RC time constant values for the equivalent
+        // output network network low pass filter.
+        double ev = 0.5;
+        double rc = 0.0001;    
+   
+        // Calculate the maximum amplitude for the current frequency and note the
+        // largest possible value seen (which is used to scale the results).
+        double mv = ev * (1 - Math.exp(-x/rc));
+        maxV = Math.max(mv, maxV);
         
         // Get amplitude at sample time.  Generate identical values for each 
         // half of the cycle - we'll invert it later for the falling edge.
-        // Add an adjustment so the higher frequency (lower amplitude) signal
-        // still ends up centred around 0 when scaled.
-        double v = 5 * (1 - Math.exp(-(t%x)/rc)) + (maxV-m)/2;
+        // Add an adjustment so the higher frequency (lower amplitude) signals
+        // still end up centred around 0 when scaled.
+        double v = ev * (1 - Math.exp(-(t%x)/rc)) + (maxV-mv)/2;
         
         // Scale the result so it goes from -1 to 1 instead of 0 to maxV.
         double a = 2*v/maxV - 1;

@@ -60,12 +60,8 @@ public abstract class AudioDecoder {
     }
     
     protected int readSample() throws IOException {
-        int sample = nextSample;
-        if (hasNextSample) {
-            hasNextSample = false;
-        } else {
-            sample = nextSample();
-        }
+        int sample = peekSample();
+        hasNextSample = false;
         return sample;
     }  
     
