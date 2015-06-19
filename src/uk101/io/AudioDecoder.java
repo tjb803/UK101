@@ -70,15 +70,19 @@ public abstract class AudioDecoder {
         if (inputStream.read(frame) != bytesPerFrame)
             throw new EOFException();
 
-        int sample = 0;
+        int total = 0, count = 0;
         for (int i = 0, k = 0; i < channels; i++) {
             int a = frame[k++];
             for (int j = 1; j < bytesPerChannel; j++) {
                 a = (a<<8)|(frame[k++]&0xFF);
             }
-            sample += a;
+            if (a != 0) {       // Try to ignore blank channels
+               total += a;
+               count += 1;
+            }   
         }
-        return (sample/channels);
+        
+        return (count == 0) ? 0 : total/count;
     }
     
     /*
