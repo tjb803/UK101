@@ -10,11 +10,13 @@ build/readme.txt -text
 docs/config.html -text
 docs/extras.html -text
 docs/history.html -text
+docs/image/asteroids.gif -text
 docs/image/blackbox.gif -text
 docs/image/board1.jpg -text
 docs/image/init1.gif -text
 docs/image/inv1.gif -text
 docs/image/inv2.gif -text
+docs/image/invaders.gif -text
 docs/image/kbmode.jpg -text
 docs/image/maze.gif -text
 docs/image/opcas.jpg -text
@@ -28,7 +30,10 @@ docs/image/qsb.gif -text
 docs/image/qsh.gif -text
 docs/image/qsl.gif -text
 docs/image/qsr.gif -text
+docs/image/sinvaders.gif -text
+docs/image/sinwave.gif -text
 docs/image/startrek.gif -text
+docs/image/syswave.gif -text
 docs/image/tapeastr.jpg -text
 docs/image/tapeex.jpg -text
 docs/image/tapeinv.jpg -text

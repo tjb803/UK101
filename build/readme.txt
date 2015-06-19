@@ -49,12 +49,16 @@ Latest Improvements
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
 
-v1.2.1
+v1.3.0
  - More improvements to host CPU usage
  - Bug fixes for some page-0 and indexed addressing modes
  - Support emulated CPU speeds up to 4MHz
+ - MONUK01 monitor included in package
  - Allow CPU speed to be changed when running
- - Additional games: "Labyrinth", "Real Time Star Trek" 
+ - '@' key works correctly with CEGMON monitor 
+ - Additional games: "Labyrinth", "Real-Time Star Trek" 
+ - Add TapePlay utility to play tapes to the speaker
+ - Generate audio waveforms to match the real hardware
 
 v1.2.0
  - "rom.XXXX" property to allow extra plug-in ROMs
@@ -83,6 +87,7 @@ v0.6.0  January 2011   Bug fixes
 v1.0.0  February 2011  Add Ohio Superboard II support
 v1.1.0  October 2011   ACIA support for 8K Super Invaders
 v1.2.0  January 2014   Support additional plug-in ROMs and audio encoded tapes
+v1.2.1  May 2015       Index addressing mode bug fixes and more CPU speed options
 
 ===========
 Tim Baldwin

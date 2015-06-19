@@ -292,6 +292,17 @@ Higher bits values give higher quality sound but larger files.</td></tr>
 <td align="center"><code>5</code></td>
 <td>This is the number of seconds of carrier tone played before the
 start and after the end of the data.</td></tr>
+<tr><td><code>audio.wave</code></td>
+<td><code>system</code> or <code>sine</code></td>
+<td align="center"><code>system</code></td>
+<td>This defines the shape of the audio waveform.
+<table frame="void">
+<tr valign="top"><td><code>system&nbsp;</code></td> 
+<td>generates a waveform that closely matches that produced by the real 
+UK101 hardware.</td></tr>
+<tr valign="top"><td><code>sine&nbsp;</code></td>
+<td>encodes the audio as pure sine waves.</td></tr>
+</table></td></tr>
 </table>
 <p><i>Note:</i> The <a href="#acia">baud rate</a> setting is also required 
 when reading or writing audio data, however it is restricted to the values

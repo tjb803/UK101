@@ -42,8 +42,23 @@ v1.2.0
    - Support reading and writing Kansas City Standard audio files
    - Include CEGMON monitor option
    
-   Main bug fixes:
+  Main bug fixes:
    - Problem pushing and popping 2-byte values when the stack wraps 
      around.
    - Add additional mappings for Right-Shift key to workaround issues
      on Windows.
+
+v1.3.0
+------
+  Improvements:
+   - Allow CPU clock speed up to 4MHz
+   - Allow CPU clock speed to be changed while running
+   - More potential Java CPU usage reductions
+   - Include MONUK01 option
+   - Restore colour to the manual PDF scan
+   - Audio waveforms match the real hardware output
+  
+  Main bug fixes:
+   - Some 64K address wrapping issues in indexed address modes
+   - Ensure @ key is decoded correctly with CEGMON
+   - Fix some Superboard keyboard mappings
