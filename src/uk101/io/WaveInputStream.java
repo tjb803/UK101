@@ -20,6 +20,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class WaveInputStream extends InputStream {
  
+    private InputStream inputStream;
     private AudioDecoder audioDecoder;
 
     public WaveInputStream(InputStream in, AudioDecoder decoder) throws UnsupportedAudioFileException, IOException {
@@ -35,7 +36,8 @@ public class WaveInputStream extends InputStream {
         // should be able to convert the input to a suitable format, provided we keep all
         // the other parameters (such as sample rate, frame size, etc) the same.
         AudioFormat af2 = new AudioFormat(af1.getSampleRate(), af1.getSampleSizeInBits(), af1.getChannels(), true, true);
-        audioDecoder.setInputStream(AudioSystem.getAudioInputStream(af2, audio), af2);
+        inputStream = AudioSystem.getAudioInputStream(af2, audio);
+        audioDecoder.setInputStream(inputStream, af2);
         audioDecoder.decodeStart();
     }
 
@@ -49,5 +51,6 @@ public class WaveInputStream extends InputStream {
     
     public void close() throws IOException {
         audioDecoder.decodeEnd();
+        inputStream.close();
     }
 }

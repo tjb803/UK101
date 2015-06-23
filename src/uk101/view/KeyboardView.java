@@ -119,8 +119,10 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         // Shift characters for mapped keyboard processing
         if (keyboard.isUK()) {
             shiftChars = UK_SHIFT_CHARS;
+            lfChar = Keyboard.KEY_UPARROW;
         } else {
             shiftChars = US_SHIFT_CHARS;
+            lfChar = Keyboard.KEY_LINEFEED;
         }
 
         // Add the keyboard game mode selector
@@ -233,6 +235,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     
     private int mappedKey = 0, mappedShift = 0;
     private String shiftChars;
+    private int lfChar;
 
     public void keyPressed(KeyEvent e) {
         e.consume();
@@ -269,11 +272,11 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         
         int key = 0;
         switch (code) {
-        case KeyEvent.VK_ENTER:        key = Keyboard.KEY_RETURN;  break;
-        case KeyEvent.VK_BACK_SPACE:   key = Keyboard.KEY_RUBOUT;  break;
-        case KeyEvent.VK_ESCAPE:       key = Keyboard.KEY_ESC;     break;
-        case KeyEvent.VK_INSERT:       key = Keyboard.KEY_REPEAT;  break;
-        case KeyEvent.VK_DELETE:       key = Keyboard.KEY_RUBOUT;  break;
+        case KeyEvent.VK_ENTER:        key = Keyboard.KEY_RETURN;    break;
+        case KeyEvent.VK_BACK_SPACE:   key = Keyboard.KEY_RUBOUT;    break;
+        case KeyEvent.VK_ESCAPE:       key = Keyboard.KEY_ESC;       break;
+        case KeyEvent.VK_INSERT:       key = Keyboard.KEY_LINEFEED;  break;
+        case KeyEvent.VK_DELETE:       key = Keyboard.KEY_REPEAT;    break;
         
         case KeyEvent.VK_CONTROL:   
             if (gameMode && location == KeyEvent.KEY_LOCATION_RIGHT) {
@@ -296,7 +299,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         default:                            
             if (gameMode || ctrlMode) {     
                 if (code == KeyEvent.VK_OPEN_BRACKET || code == KeyEvent.VK_CLOSE_BRACKET)
-                    key = Keyboard.KEY_UPARROW;     // The key(s) to the right of the 
+                    key = lfChar;                   // The key(s) to the right of the 
                 else if (code > 31 && code < 127)   // 'P' key map to UPARROW/LINE FEED
                     key = code;
             }

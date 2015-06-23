@@ -72,7 +72,7 @@ values that can be used.
 Note that property names and values are case-sensitive.</p>
 <hr>
 <h2 id="cpu">CPU</h2>
-<p>This setting controls details of the CPU.</p>
+<p>These settings control details of the CPU.</p>
 <table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
 <tr><th width="15%">Name</th><th width="15%">Values</th>
 <th width="8%">Default</th><th width="62%">Notes</th></tr>
@@ -84,8 +84,8 @@ A standard 6502 ran at 1Mhz but most could be over-clocked to 2Mhz quite
 successfully, which doubles the speed of the machine (although some
 games may then run too fast).
 The simulation allows any speed from 1MHz to 4Mhz to be specified.
-<p>Setting a value of <code>0</code> will cause the simulation to
-run as fast as it can.</p></td></tr>
+<br><br>Setting a value of <code>0</code> will cause the simulation to
+run as fast as it can.</td></tr>
 <tr><td><code>cpu.control</code></td>
 <td><code>auto</code>, <code>sleep</code>, <code>yield</code> or <code>spin</code></td>
 <td align="center"><code>auto</code></td>
@@ -94,19 +94,19 @@ instruction timings.
 Generally this is best left set to <code>auto</code> to let the system decide
 the method based on measured system performance.  
 The other options are mainly for experimentation and debug.
-<table frame="void">
-<tr valign="top"><td><code>sleep&nbsp;</code></td> 
+<table frame="void" rules="none">
+<tr valign="baseline"><td><code>sleep&nbsp;</code></td> 
 <td>causes the processor thread to <i>sleep</i> when possible.
 This uses least host system CPU but may give a less smooth emulation
 on some slow machines.</td></tr>
-<tr valign="top"><td><code>yield&nbsp;</code></td>
+<tr valign="baseline"><td><code>yield&nbsp;</code></td>
 <td>uses spin-loops to manage timings but causes the processor thread
 to <i>yield</i> when spinning.
 This uses more host CPU but the rest of the system should remain fairly
 responsive.</td></tr>
-<tr valign="top"><td><code>spin&nbsp;</code></td>
+<tr valign="baseline"><td><code>spin&nbsp;</code></td>
 <td>uses spin-loops to manage timings.
-This uses a lot of  host CPU but should give a smooth emulation although
+This uses a lot of host CPU but should give a smooth emulation although
 the rest of the system may be less responsive.</td></tr>
 </table></td></tr>
 </table>
@@ -135,13 +135,17 @@ installed giving an absolute maximum contiguous RAM of 40KB.</td></tr>
 The value can be one of the built-in names <code>MONUK01</code>,
 <code>MONUK02</code> or <code>CEGMON</code>, or it can be the name of a
 file containing a replacement ROM.
-<br>MONUK01 was the original monitor shipped with the early machines. 
-<br>MONUK02 was the standard 
+<table frame="void" rules="none">
+<tr valign="baseline"><td><code>MONUK01&nbsp;</code></td>
+<td>was the original monitor shipped with the early machines.</td></tr> 
+<tr valign="baseline"><td><code>MONUK02&nbsp;</code></td>
+<td>was the standard 
 <a href="http://uk101.sourceforge.net/docs/pdf/newmon.pdf">New Monitor</a>
-shipped with later machines.
-<br>CEGMON is the UK101 version of the popular replacement
-<a href="http://uk101.sourceforge.net/docs/pdf/cegmon.pdf">CEGMON</a> monitor.
-</td>
+shipped with later machines.</td></tr>
+<tr valign="baseline"><td><code>CEGMON&nbsp;</code></td>
+<td>is the UK101 version of the popular replacement
+<a href="http://uk101.sourceforge.net/docs/pdf/cegmon.pdf">CEGMON</a> monitor.</td></tr>
+</table></td>
 <tr><td><code>rom.basic</code></td>
 <td><code>BASUK101</code><br>or <code>filename</code></td><td/>
 <td>This defines the BASIC ROM that is installed.
@@ -173,9 +177,9 @@ the system ROM address spaces.<p/>
 <code>2400</code>, <code>4800</code> or <code>9600</code></td>
 <td align="center"><code>300</code></td>
 <td>This defines default baud rate of the ACIA. 
-<p>Some programs (in particular some games) relied on the ACIA control
+<br><br>Some programs (in particular some games) relied on the ACIA control
 signals to generate accurate timings that were independent of the CPU 
-speed.</p></td></tr>
+speed.</td></tr>
 </table>
 <p><i>Note:</i> The ACIA baud rate setting is ignored when reading or 
 writing to a simulated cassette tape, these operations simply run as fast
@@ -192,8 +196,12 @@ together with the default keyboard input mode.</p>
 <td><code>uk</code> or <code>us</code></td>
 <td align="center"><code>uk</code></td>
 <td>This defines keyboard layout and the available keys.
-The setting <code>uk</code> gives a UK101 keyboard and the setting
-<code>us</code> gives an Ohio Scientific Superboard II keyboard.</td></tr>
+<table frame="void" rules="none">
+<tr valign="baseline"><td><code>uk&nbsp;</code></td>
+<td>gives a UK101 keyboard layout.</td></tr>
+<tr valign="baseline"><td><code>us&nbsp;</code></td>
+<td>gives an Ohio Scientific Superboard II keyboard.</td></tr>
+</table></td></tr>
 <tr><td><code>keyboard.mode</code></td>
 <td><code>normal</code> or <code>game</code></td>
 <td align="center"><code>normal</code></td>
@@ -253,12 +261,12 @@ a smaller display, <code>2</code> is a larger display.</td>
 <td><code>async</code> or <code>sync</code></td>
 <td align="center"><code>async</code></td>
 <td>This defines how screen updates are performed.
-<table frame="void">
-<tr valign="top"><td><code>async&nbsp;</code></td> 
+<table frame="void" rules="none">
+<tr valign="baseline"><td><code>async&nbsp;</code></td> 
 <td>performs all updates via the Java Swing event dispatch thread.
 This is a more correct way to update the screen but can give slower
 results on older PCs.</td></tr>
-<tr valign="top"><td><code>sync&nbsp;</code></td>
+<tr valign="baseline"><td><code>sync&nbsp;</code></td>
 <td>performs updates to each character cell as they are written
 by the simulation - this may give faster output but can lead to 
 some screen corruption if there are windows overlapping the video
@@ -266,7 +274,7 @@ window.</td></tr>
 </table></td></tr>
 </table>
 <p><i>Note:</i> On any modern PC, especially anything with a dual
-or multicore processor, the default <i>async</i> screen update option
+or multi-core processor, the default <i>async</i> screen update option
 is likely to produce the best results.
 On older hardware the <i>sync</i> option may result in faster and/or
 smoother operation.</p>
@@ -286,7 +294,7 @@ Higher sample values give higher quality sound but larger files.</td></tr>
 <td><code>8</code> or <code>16</code></td>
 <td align="center"><code>16</code></td>
 <td>This defines the number of bits for each sample.
-Higher bits values give higher quality sound but larger files.</td></tr>
+Higher bit values give higher quality sound but larger files.</td></tr>
 <tr><td><code>audio.lead</code></td>
 <td>from <code>0</code> to <code>10</code></td>
 <td align="center"><code>5</code></td>
@@ -296,11 +304,11 @@ start and after the end of the data.</td></tr>
 <td><code>system</code> or <code>sine</code></td>
 <td align="center"><code>system</code></td>
 <td>This defines the shape of the audio waveform.
-<table frame="void">
-<tr valign="top"><td><code>system&nbsp;</code></td> 
+<table frame="void" rules="none">
+<tr valign="baseline"><td><code>system&nbsp;</code></td> 
 <td>generates a waveform that closely matches that produced by the real 
 UK101 hardware.</td></tr>
-<tr valign="top"><td><code>sine&nbsp;</code></td>
+<tr valign="baseline"><td><code>sine&nbsp;</code></td>
 <td>encodes the audio as pure sine waves.</td></tr>
 </table></td></tr>
 </table>
