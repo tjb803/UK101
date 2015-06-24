@@ -60,8 +60,10 @@ public class Loudspeaker extends OutputStream {
     
     // Utility method to play from an input stream via an encoder
     public void play(InputStream in) throws IOException {
-        encoder.encodeStart();
-        encoder.encodeStream(in);
-        encoder.encodeEnd();
+        if (encoder != null) {
+            encoder.encodeStart();
+            encoder.encodeStream(in);
+            encoder.encodeEnd();
+        }    
     }
 }
