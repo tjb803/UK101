@@ -831,7 +831,7 @@ public class CPU6502 {
     private short fetchWord() {
         byte bl = bus.readByte(Data.asAddr(PC++));
         byte bh = bus.readByte(Data.asAddr(PC++));
-        Short w = Data.getWord(bh, bl);
+        short w = Data.getWord(bh, bl);
         if (traceEntry != null) {
             traceEntry.addWord(w);
         }

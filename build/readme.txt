@@ -87,7 +87,7 @@ v0.6.0  January 2011   Bug fixes
 v1.0.0  February 2011  Add Ohio Superboard II support
 v1.1.0  October 2011   ACIA support for 8K Super Invaders
 v1.2.0  January 2014   Support additional plug-in ROMs and audio encoded tapes
-v1.2.1  May 2015       Index addressing mode bug fixes and more CPU speed options
+v1.3.0  June 2015      Index addressing mode bug fixes and more CPU speed options
 
 ===========
 Tim Baldwin
