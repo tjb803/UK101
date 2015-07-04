@@ -143,7 +143,11 @@ public class Main implements Runnable {
                 else if (metalTheme.equalsIgnoreCase("Ocean")) 
                     MetalLookAndFeel.setCurrentTheme(new OceanTheme());
             }
-    
+            
+            // Nimbus look-and-feel has some bugs it looks better to workaround
+            if (lafClass.contains("nimbus"))
+                Computer.nimbusFix1 = true;
+            
             UIManager.setLookAndFeel(lafClass);
             JFrame.setDefaultLookAndFeelDecorated(true);
         }

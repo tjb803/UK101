@@ -191,6 +191,12 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     }
 
     public void mouseClicked(MouseEvent e) {
+        KeyboardKey key = (KeyboardKey)e.getSource();
+        if (key.getCode() == Keyboard.KEY_RESET) {
+            if (e.getClickCount() > 1) {
+                computer.reset();
+            }
+        }
     }
 
     public void mouseEntered(MouseEvent e) {
