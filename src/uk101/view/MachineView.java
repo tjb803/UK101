@@ -6,6 +6,7 @@
 package uk101.view;
 
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +15,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
@@ -77,41 +77,41 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
         ip.add(baud);
         ip.add(new DisplayText("RAM", computer.ram.kBytes() + "KB"));
         ip.add(new DisplayText("ROM", computer.monitor.getName()));
-
-        // Debug panel
-        JPanel dp = new JPanel();
-        dp.setAlignmentY(CENTER_ALIGNMENT);
-        dp.setBorder(BorderFactory.createTitledBorder("Debug"));
-        if (!Computer.nimbusFix1) {
-            // Adding small buttons to a JToolBar seems to work and look 
-            // better in most look-and-feels ...
-            JToolBar db = new JToolBar(JToolBar.HORIZONTAL);
-            db.setFloatable(false);
-            db.addSeparator();
-            db.add(new SmallButton(MACHINE_DUMP, this));  db.addSeparator();
-            db.add(new SmallToggle(MACHINE_TRACE, this)); db.addSeparator();
-            db.add(new SmallButton(MACHINE_RESET, this)); db.addSeparator();
-            db.add(new SmallButton(MACHINE_NMI, this));   db.addSeparator();
-            db.add(new SmallButton(MACHINE_IRQ, this));   db.addSeparator(); 
-            dp.add(db);
-        } else {
-            // ... however not in Nimbus as it gets JToolBar sizes wrong.  So
-            // we just use a regular flow panel here.  Annoying.
-            JPanel db = new JPanel();
-            db.add(new SmallButton(MACHINE_DUMP, this));
-            db.add(new SmallToggle(MACHINE_TRACE, this)); 
-            db.add(new SmallButton(MACHINE_RESET, this));
-            db.add(new SmallButton(MACHINE_NMI, this));
-            db.add(new SmallButton(MACHINE_IRQ, this)); 
-            dp.add(db);
-        }    
-    
+        
         // CPU Speed control panel
         JPanel sp = new JPanel();
         sp.setAlignmentY(CENTER_ALIGNMENT);
         sp.setBorder(BorderFactory.createTitledBorder("CPU Clock Speed"));
         cpuClock = new SpeedSelector(4, computer.cpu.getMHz(), this);
         sp.add(cpuClock);
+        
+        // Debug panel
+        JPanel dp = new JPanel();
+        dp.setAlignmentY(CENTER_ALIGNMENT);
+        dp.setBorder(BorderFactory.createTitledBorder("Debug"));
+        if (!Computer.aquaFix1) {
+            // Normally we get the best look for the debug buttons by adding 
+            // the SmallButton instances to a one-line grid layout ... 
+            dp.setLayout(new GridLayout(1, 0));
+            dp.add(new SmallButton(MACHINE_DUMP, this));
+            dp.add(new SmallToggle(MACHINE_TRACE, this)); 
+            dp.add(new SmallButton(MACHINE_RESET, this));
+            dp.add(new SmallButton(MACHINE_NMI, this));
+            dp.add(new SmallButton(MACHINE_IRQ, this)); 
+        } else {
+            // ... but not on Mac Aqua when the buttons end up too large.  
+            // Adding via a JToolBar keeps them nice and small (but looks 
+            // ugly on non-aqua look and feels - especially nimbus!).
+            JToolBar dt = new JToolBar(JToolBar.HORIZONTAL);
+            dt.setFloatable(false);
+            dt.addSeparator();
+            dt.add(new SmallButton(MACHINE_DUMP, this));  dt.addSeparator();
+            dt.add(new SmallToggle(MACHINE_TRACE, this)); dt.addSeparator();
+            dt.add(new SmallButton(MACHINE_RESET, this)); dt.addSeparator();
+            dt.add(new SmallButton(MACHINE_NMI, this));   dt.addSeparator();
+            dt.add(new SmallButton(MACHINE_IRQ, this));   dt.addSeparator(); 
+            dp.add(dt);
+        }    
    
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

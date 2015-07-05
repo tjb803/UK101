@@ -17,7 +17,7 @@ import javax.swing.JButton;
 public class SmallButton extends JButton {
     private static final long serialVersionUID = 1L;
     
-    static final Insets MARGIN = new Insets(0, 2, 0, 1);
+    static final Insets MARGIN = new Insets(0, 0, 0, 0);
     static final Font FONT = Font.decode("Dialog-10");
     
     public SmallButton(String text, ActionListener listener) {

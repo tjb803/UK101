@@ -65,6 +65,7 @@ public class Main implements Runnable {
         } else {
             setLookAndFeel(look);
         }
+        Computer.aquaFix1 = UIManager.getLookAndFeel().getID().equals("Aqua");
 
         // Get machine image to restore
         File imageFile = parms.getInputFile(1);
@@ -143,11 +144,7 @@ public class Main implements Runnable {
                 else if (metalTheme.equalsIgnoreCase("Ocean")) 
                     MetalLookAndFeel.setCurrentTheme(new OceanTheme());
             }
-            
-            // Nimbus look-and-feel has some bugs it looks better to workaround
-            if (lafClass.contains("nimbus"))
-                Computer.nimbusFix1 = true;
-            
+
             UIManager.setLookAndFeel(lafClass);
             JFrame.setDefaultLookAndFeelDecorated(true);
         }

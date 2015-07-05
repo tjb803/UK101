@@ -27,7 +27,7 @@ public class Computer extends Thread implements DataBus {
     // Some flags to control a few special hacks 
     public static boolean videoFix1 = false;
     public static boolean aciaFix1 = false;
-    public static boolean nimbusFix1 = false;
+    public static boolean aquaFix1 = false;
 
     // Version
     public String name;
