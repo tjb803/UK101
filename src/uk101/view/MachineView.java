@@ -6,26 +6,25 @@
 package uk101.view;
 
 import java.awt.Container;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
+import javax.swing.JToggleButton;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import uk101.machine.Computer;
+import uk101.view.component.DebugPanel;
 import uk101.view.component.DisplayText;
-import uk101.view.component.SmallButton;
-import uk101.view.component.SmallToggle;
 import uk101.view.component.SpeedSelector;
 
 /**
@@ -64,7 +63,8 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
         JButton save = new JButton(ComputerView.IMAGE_SAVE);
         load.addActionListener(computerView);
         save.addActionListener(computerView);
-        mp.add(load);  mp.add(Box.createHorizontalStrut(5));
+        mp.add(load);  
+        mp.add(Box.createHorizontalStrut(5));
         mp.add(save);
 
         // Information panel
@@ -86,33 +86,17 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
         sp.add(cpuClock);
         
         // Debug panel
-        JPanel dp = new JPanel();
-        dp.setAlignmentY(CENTER_ALIGNMENT);
+        AbstractButton[] db = new AbstractButton[5];
+        db[0] = new JButton(MACHINE_DUMP); 
+        db[1] = new JToggleButton(MACHINE_TRACE);
+        db[2] = new JButton(MACHINE_RESET);
+        db[3] = new JButton(MACHINE_NMI); 
+        db[4] = new JButton(MACHINE_IRQ);
+        
+        JPanel dp = new DebugPanel(db, this);
         dp.setBorder(BorderFactory.createTitledBorder("Debug"));
-        if (!Computer.aquaFix1) {
-            // Normally we get the best look for the debug buttons by adding 
-            // the SmallButton instances to a one-line grid layout ... 
-            dp.setLayout(new GridLayout(1, 0));
-            dp.add(new SmallButton(MACHINE_DUMP, this));
-            dp.add(new SmallToggle(MACHINE_TRACE, this)); 
-            dp.add(new SmallButton(MACHINE_RESET, this));
-            dp.add(new SmallButton(MACHINE_NMI, this));
-            dp.add(new SmallButton(MACHINE_IRQ, this)); 
-        } else {
-            // ... but not on Mac Aqua when the buttons end up too large.  
-            // Adding via a JToolBar keeps them nice and small (but looks 
-            // ugly on non-aqua look and feels - especially nimbus!).
-            JToolBar dt = new JToolBar(JToolBar.HORIZONTAL);
-            dt.setFloatable(false);
-            dt.addSeparator();
-            dt.add(new SmallButton(MACHINE_DUMP, this));  dt.addSeparator();
-            dt.add(new SmallToggle(MACHINE_TRACE, this)); dt.addSeparator();
-            dt.add(new SmallButton(MACHINE_RESET, this)); dt.addSeparator();
-            dt.add(new SmallButton(MACHINE_NMI, this));   dt.addSeparator();
-            dt.add(new SmallButton(MACHINE_IRQ, this));   dt.addSeparator(); 
-            dp.add(dt);
-        }    
-   
+        dp.setAlignmentY(CENTER_ALIGNMENT);
+
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(mp);  panel.add(Box.createVerticalStrut(3));
@@ -137,7 +121,7 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
         } else if (e.getActionCommand().equals(MACHINE_DUMP)) {
             computer.dump();
         } else if (e.getActionCommand().equals(MACHINE_TRACE)) {
-            computer.trace(((SmallToggle)e.getSource()).isSelected());
+            computer.trace(((JToggleButton)e.getSource()).isSelected());
         } else if (e.getActionCommand().equals(MACHINE_RESET)) {
             computer.cpu.signalReset();
         } else if (e.getActionCommand().equals(MACHINE_NMI)) {

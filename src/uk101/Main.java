@@ -11,6 +11,7 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.lang.reflect.Method;
 
 import javax.swing.JFrame;
 import javax.swing.LookAndFeel;
@@ -65,7 +66,6 @@ public class Main implements Runnable {
         } else {
             setLookAndFeel(look);
         }
-        Computer.aquaFix1 = UIManager.getLookAndFeel().getID().equals("Aqua");
 
         // Get machine image to restore
         File imageFile = parms.getInputFile(1);
@@ -168,6 +168,16 @@ public class Main implements Runnable {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setIconImage(icon);
         frame.setContentPane(view);
+        
+        // Hack to try to set the dock icon on a Mac
+        try {
+            Class<?> ac = Class.forName("com.mac.eawt.Application");
+            Method ga = ac.getMethod("getApplication");
+            Method si = ac.getMethod("setDockIconImage", Image.class);
+            Image icon48 = Toolkit.getDefaultToolkit().createImage(Main.class.getResource("icon/uk101-48.png"));
+            si.invoke(ga.invoke(null), icon48);
+        } catch (Exception e) {
+        }
 
         // Ensure we start-up and shut-down cleanly
         frame.addWindowListener(new WindowAdapter() {
