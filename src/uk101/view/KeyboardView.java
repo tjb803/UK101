@@ -30,7 +30,7 @@ import uk101.view.component.KeyboardLock;
  *
  * The keyboard can operate in two modes: game or normal.  In game mode basic
  * key presses and releases are used and the keyboard layout closely matches
- * the UK101 (so for example SHIFT-3 gives a '#').  In normal mode an attempt
+ * the UK101 (so for example SHIFT-6 gives '&').  In normal mode an attempt
  * is made to use the PC characters to press the appropriate key (this ought to
  * make general typing easier but may not work correctly for games).
  */
@@ -39,14 +39,14 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
 
     static final String[] KB_ROW1 =
         { "! 1", "\" 2", "# 3", "$ 4", "% 5", "& 6", "' 7", "( 8", ") 9", "0", "* :", "= -" };
-    
+
     static final String[] UK_ROW2 =
         { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "@ P", "\u2191 ^" };
     static final String[] UK_ROW3 =
         { "A", "S", "D", "F", "G", "H", "LF J", "[ K", "\\ L", "+ ;" };
     static final String[] UK_ROW4 =
         { "Z", "X", "ETX C", "V", "B", "N", "] M", "< ,", "> .", "? /" };
-    
+
     static final String[] US_ROW2 =
         { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" };
     static final String[] US_ROW3 =
@@ -59,12 +59,12 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     private boolean gameMode, ctrlMode;
 
     public KeyboardView(Computer computer, Keyboard keyboard, Configuration cfg) {
-        super("Keyboard", false, false, false, false);
+        super("Keyboard", false, false, false, true);
         this.computer = computer;
         this.keyboard = keyboard;
 
-        gameMode = isGameMode(cfg.getKbdMode()); 
-                
+        gameMode = isGameMode(cfg.getKbdMode());
+
         // Layout the basic keys
         JPanel row1, row2, row3, row4, row5;
         row1 = makeRow(KB_ROW1);
@@ -78,7 +78,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
             row3 = makeRow(US_ROW3);
             row4 = makeRow(US_ROW4);
         }
-        
+
         // Add various additional keys to the rows.  Note the SHIFT-LOCK key starts in
         // the pressed state.
         row1.add(new KeyboardKey("RUB OUT", Keyboard.KEY_RUBOUT, this));
@@ -107,15 +107,15 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
             row5.add(KeyboardKey.getOffset(KeyboardKey.KEY_HALF+KeyboardKey.KEY_BIG+KeyboardKey.KEY_STD), 0);
         }
 
-        // Add the RESET/BREAK keys, these must be clicked with both mouse buttons to 
+        // Add the RESET/BREAK keys, these must be clicked with both mouse buttons to
         // reset the machine
-        if (keyboard.isUK()) {        
+        if (keyboard.isUK()) {
             row3.add(new KeyboardKey("RESET", Keyboard.KEY_RESET, this));
             row3.add(new KeyboardKey("RESET", Keyboard.KEY_RESET, this));
         } else {
             row3.add(new KeyboardKey("BREAK", Keyboard.KEY_RESET, this));
         }
-        
+
         // Shift characters for mapped keyboard processing
         if (keyboard.isUK()) {
             shiftChars = UK_SHIFT_CHARS;
@@ -131,6 +131,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         game.addItemListener(this);
         row5.add(Box.createHorizontalGlue());
         row5.add(game);
+        row5.add(Box.createHorizontalStrut(5));
 
         // Build the full keyboard
         Container content = getContentPane();
@@ -154,7 +155,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         }
         return row;
     }
-    
+
     // Map configuration keyboard mode
     private boolean isGameMode(String name) {
         return name.equals(Configuration.GAME);
@@ -216,7 +217,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
                 keyboard.pressKey(key.getCode());
             else
                 keyboard.releaseKey(key.getCode());
-        } else {    // Push game mode back to configuration so it will be saved in a machine image 
+        } else {    // Push game mode back to configuration so it will be saved in a machine image
             gameMode = (e.getStateChange() == ItemEvent.SELECTED);
             computer.setGameMode(gameMode);
         }
@@ -228,17 +229,17 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
      * In normal mode we try to interpret the real PC keys and try to press the
      * matching character on the UK101 keyboard.  In game mode we just process
      * basic key-ups and key-downs.
-     * 
+     *
      * Note: when the left-Ctrl key is pressed we always process as if in game mode,
      *       this is to ensure the BASIC editor works correctly.
-     *       
+     *
      * Note: for Superboard II mappings, any of the keys to right of the P key (ie
      *       the square-brackets and the backslash (on a US keyboard)) will map to
-     *       the LINEFEED key, and the Insert key will map to REPEAT.      
+     *       the LINEFEED key, and the Insert key will map to REPEAT.
      */
     private static final String UK_SHIFT_CHARS = "!\"#$%&'()*=@[\\+]<>?_";
     private static final String US_SHIFT_CHARS = "!\"#$%&'()*=@[\\+]<>?_^";
-    
+
     private int mappedKey = 0, mappedShift = 0;
     private String shiftChars;
     private int lfChar;
@@ -267,7 +268,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     public void keyTyped(KeyEvent e) {
         if (!gameMode && !ctrlMode) {
             char key = e.getKeyChar();
-            if (key > 31 && key < 127) 
+            if (key > 31 && key < 127)
                 pressMapped(key);
         }
     }
@@ -275,7 +276,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     private int mapKey(KeyEvent e) {
         int code = e.getKeyCode();
         int location = e.getKeyLocation();
-        
+
         int key = 0;
         switch (code) {
         case KeyEvent.VK_ENTER:        key = Keyboard.KEY_RETURN;    break;
@@ -283,17 +284,17 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         case KeyEvent.VK_ESCAPE:       key = Keyboard.KEY_ESC;       break;
         case KeyEvent.VK_INSERT:       key = Keyboard.KEY_LINEFEED;  break;
         case KeyEvent.VK_DELETE:       key = Keyboard.KEY_REPEAT;    break;
-        
-        case KeyEvent.VK_CONTROL:   
+
+        case KeyEvent.VK_CONTROL:
             if (gameMode && location == KeyEvent.KEY_LOCATION_RIGHT) {
                 key = Keyboard.KEY_RSHIFT;  // Right-ctrl is treated as an
             } else {                        // alternative to right-shift in
                 key = Keyboard.KEY_CTRL;    // game mode.
-            }    
+            }
             break;
-        
-        case KeyEvent.VK_CONTEXT_MENU:      // Menu-key can be used as an 
-        case KeyEvent.VK_SHIFT:             // alternative to right-shift.   
+
+        case KeyEvent.VK_CONTEXT_MENU:      // Menu-key can be used as an
+        case KeyEvent.VK_SHIFT:             // alternative to right-shift.
             if (gameMode || ctrlMode) {
                 if (location == KeyEvent.KEY_LOCATION_LEFT)
                     key = Keyboard.KEY_LSHIFT;
@@ -301,11 +302,11 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
                     key = Keyboard.KEY_RSHIFT;
             }
             break;
-            
-        default:                            
-            if (gameMode || ctrlMode) {     
+
+        default:
+            if (gameMode || ctrlMode) {
                 if (code == KeyEvent.VK_OPEN_BRACKET || code == KeyEvent.VK_CLOSE_BRACKET)
-                    key = lfChar;                   // The key(s) to the right of the 
+                    key = lfChar;                   // The key(s) to the right of the
                 else if (code > 31 && code < 127)   // 'P' key map to UPARROW/LINE FEED
                     key = code;
             }
@@ -313,7 +314,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         }
         return key;
     }
-    
+
     private void pressMapped(int key) {
         releaseMapped();
         if (shiftChars.indexOf(key) != -1) {
@@ -323,7 +324,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         mappedKey = key;
         keyboard.pressKey(mappedKey);
     }
-    
+
     private void releaseMapped() {
         if (mappedKey != 0) {
             keyboard.releaseKey(mappedKey);

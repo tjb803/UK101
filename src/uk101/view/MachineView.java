@@ -19,6 +19,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.Timer;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -32,7 +33,7 @@ import uk101.view.component.SpeedSelector;
  */
 public class MachineView extends JInternalFrame implements ActionListener, ChangeListener {
     private static final long serialVersionUID = 1L;
-    
+
     static final String MACHINE_DUMP = "Dump";
     static final String MACHINE_TRACE = "Trace";
     static final String MACHINE_RESET = "Reset";
@@ -40,7 +41,7 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
     static final String MACHINE_IRQ = " IRQ ";
 
     private Computer computer;
-    
+
     private DisplayText speed, baud;
     private SpeedSelector cpuClock;
     private Timer speedTimer;
@@ -63,36 +64,38 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
         JButton save = new JButton(ComputerView.IMAGE_SAVE);
         load.addActionListener(computerView);
         save.addActionListener(computerView);
-        mp.add(load);  
+        mp.add(load);
         mp.add(Box.createHorizontalStrut(5));
         mp.add(save);
 
         // Information panel
         JPanel ip = new JPanel(new GridLayout(0, 2, 5, 5));
         ip.setAlignmentY(CENTER_ALIGNMENT);
-        ip.setBorder(BorderFactory.createTitledBorder("Configuration"));
+        Border b1 = BorderFactory.createTitledBorder("Configuration");
+        Border b2 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+        ip.setBorder(BorderFactory.createCompoundBorder(b1, b2));
         speed = new DisplayText("CPU", computer.cpu.getMHz() + ".00MHz");
         baud = new DisplayText("Baud Rate", computer.acia.getBaudRate() + "");
         ip.add(speed);
         ip.add(baud);
         ip.add(new DisplayText("RAM", computer.ram.kBytes() + "KB"));
         ip.add(new DisplayText("ROM", computer.monitor.getName()));
-        
+
         // CPU Speed control panel
         JPanel sp = new JPanel();
         sp.setAlignmentY(CENTER_ALIGNMENT);
         sp.setBorder(BorderFactory.createTitledBorder("CPU Clock Speed"));
         cpuClock = new SpeedSelector(4, computer.cpu.getMHz(), this);
         sp.add(cpuClock);
-        
+
         // Debug panel
         AbstractButton[] db = new AbstractButton[5];
-        db[0] = new JButton(MACHINE_DUMP); 
+        db[0] = new JButton(MACHINE_DUMP);
         db[1] = new JToggleButton(MACHINE_TRACE);
         db[2] = new JButton(MACHINE_RESET);
-        db[3] = new JButton(MACHINE_NMI); 
+        db[3] = new JButton(MACHINE_NMI);
         db[4] = new JButton(MACHINE_IRQ);
-        
+
         JPanel dp = new DebugPanel(db, this);
         dp.setBorder(BorderFactory.createTitledBorder("Debug"));
         dp.setAlignmentY(CENTER_ALIGNMENT);
@@ -103,7 +106,7 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
         panel.add(ip);  panel.add(Box.createVerticalStrut(3));
         panel.add(sp);  panel.add(Box.createVerticalStrut(3));
         panel.add(dp);
-        
+
         Container content = getContentPane();
         content.add(panel);
         pack();
@@ -134,12 +137,12 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
     /*
      * CPU clock speed slider
      */
-    
+
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == cpuClock) {
             if (!cpuClock.getValueIsAdjusting()) {
                 computer.setSpeed(cpuClock.getSpeed());
-            }    
+            }
         }
     }
 }

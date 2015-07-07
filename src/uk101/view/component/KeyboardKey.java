@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010, 2015
  */
 package uk101.view.component;
 
@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
@@ -20,7 +21,7 @@ import javax.swing.border.Border;
 /**
  * Displays a single keyboard key.
  */
-public class KeyboardKey extends JButton {
+public class KeyboardKey extends JButton implements MouseListener {
     private static final long serialVersionUID = 1L;
 
     public static final int KEY_STD = 2;
@@ -29,11 +30,12 @@ public class KeyboardKey extends JButton {
     public static final int KEY_BAR = 16;
 
     static Font KEY_FONT;
-    static Border KEY_BORDER;
+    static Border KEY_BORDER_UP, KEY_BORDER_DOWN;
     static Dimension KEY_SIZE;
     static {
         KEY_FONT = Font.decode("Dialog-bold-9");
-        KEY_BORDER = BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(3,0,3,0));
+        KEY_BORDER_UP = BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(3,0,3,0));
+        KEY_BORDER_DOWN = BorderFactory.createCompoundBorder(BorderFactory.createLoweredBevelBorder(), BorderFactory.createEmptyBorder(3,0,3,0));
         int kw = new JLabel().getFontMetrics(KEY_FONT).stringWidth(" RESET ");
         KEY_SIZE = new Dimension(kw, kw);
     }
@@ -44,16 +46,17 @@ public class KeyboardKey extends JButton {
     }
 
     private int code;
-    
+
     public KeyboardKey(String text, int keycode, MouseListener handler) {
         this(text, KEY_STD, keycode, handler);
     }
 
     public KeyboardKey(String text, int size, int keycode, MouseListener handler) {
         setLayout(new BorderLayout());
-        setBorder(KEY_BORDER);
+        setBorder(KEY_BORDER_UP);
         setAlignmentY(BOTTOM_ALIGNMENT);
         addMouseListener(handler);
+        addMouseListener(this);
 
         // Default key size is 2.  Other sizes need to be scaled in width.
         Dimension d = KEY_SIZE;
@@ -97,5 +100,23 @@ public class KeyboardKey extends JButton {
 
     public int getCode() {
         return code;
+    }
+
+    // Mouse listener to change key border
+    public void mousePressed(MouseEvent e) {
+        setBorder(KEY_BORDER_DOWN);
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        setBorder(KEY_BORDER_UP);
+    }
+
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    public void mouseExited(MouseEvent e) {
     }
 }
