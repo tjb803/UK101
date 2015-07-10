@@ -57,6 +57,7 @@ v1.3.0
    - Include original MONUK01 monitor option
    - Restore colour to the manual PDF scan
    - Audio waveforms match the real hardware output
+   - Better appearance on Mac and classic Windows
   
   Main bug fixes:
    - Some 64K address wrapping issues in indexed address modes

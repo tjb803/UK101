@@ -171,7 +171,7 @@ public class Main implements Runnable {
         
         // Hack to try to set the dock icon on a Mac
         try {
-            Class<?> ac = Class.forName("com.mac.eawt.Application");
+            Class<?> ac = Class.forName("com.apple.eawt.Application");
             Method ga = ac.getMethod("getApplication");
             Method si = ac.getMethod("setDockIconImage", Image.class);
             Image icon48 = Toolkit.getDefaultToolkit().createImage(Main.class.getResource("icon/uk101-48.png"));

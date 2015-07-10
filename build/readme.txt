@@ -59,6 +59,7 @@ v1.3.0
  - Additional games: "Labyrinth", "Real-Time Star Trek" 
  - Add TapePlay utility to play tapes to the speaker
  - Generate audio waveforms to match the real hardware
+ - Improve appearance in some look-and-feels (especially Mac)
 
 v1.2.0
  - "rom.XXXX" property to allow extra plug-in ROMs

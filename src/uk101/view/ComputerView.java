@@ -64,7 +64,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         add(keyboard);  // they appear on top.
 
         // Create a file chooser dialog for the load/save image function
-        imageSelect = new JFileChooser(new File("."));
+        imageSelect = new JFileChooser(new File(".").getAbsolutePath());
         imageSelect.setDialogTitle("UK101 Machine Image");
         imageSelect.setFileFilter(new FileFilter() {
             public boolean accept(File f) {

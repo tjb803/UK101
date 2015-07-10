@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
@@ -37,6 +38,7 @@ public class DebugPanel extends JPanel {
             JToolBar dt = new JToolBar(JToolBar.HORIZONTAL);
             dt.setFloatable(false);
             for (AbstractButton b : buttons) {
+                b.setBorder(BorderFactory.createEtchedBorder());
                 b.addActionListener(listener);
                 dt.add(b);
             }

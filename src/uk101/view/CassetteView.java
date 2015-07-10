@@ -97,7 +97,7 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
         stop.button.setSelected(true);
 
         // File selection dialog
-        select = new JFileChooser(new File("."));
+        select = new JFileChooser(new File(".").getAbsolutePath());
         select.setDialogTitle(getTitle() + " - Select Tape");
 
         JButton open = new JButton("Open...");
