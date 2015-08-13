@@ -61,11 +61,7 @@ public class Main implements Runnable {
 
         // Set the Swing look and feel
         String look = parms.getOption("look");
-        if (look == null) {
-            setDefaultLookAndFeel();
-        } else {
-            setLookAndFeel(look);
-        }
+        setLookAndFeel(look);
 
         // Get machine image to restore
         File imageFile = parms.getInputFile(1);
@@ -86,16 +82,6 @@ public class Main implements Runnable {
         SwingUtilities.invokeLater(gui);
     }
 
-    // Set the default look and feel.  Try to force the platform look unless
-    // the user has overridden it with something specific.
-    private static void setDefaultLookAndFeel() throws Exception {
-        LookAndFeel laf = UIManager.getLookAndFeel();
-        if (laf == null || laf.getID().equals("Metal")) {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            JFrame.setDefaultLookAndFeelDecorated(true);
-        }
-    }
-    
     // Try to set a specific look and feel from the command line parameter name.
     private static void setLookAndFeel(String look) throws Exception {
         String lafClass = null;
@@ -110,27 +96,35 @@ public class Main implements Runnable {
                 System.out.println("  " + name);
             }    
         }
-
-        // Look for an exact match first, then a likely match
-
-        // "Steel" and "Ocean" are themes for "Metal"
-        if (look.equalsIgnoreCase("Steel") || look.equalsIgnoreCase("Ocean")) {
-            metalTheme = look;
-            look = "Metal";
-        }
-            
-        for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-            if (info.getName().equalsIgnoreCase(look)) {
-                lafClass = info.getClassName();
-                break;
+        
+        if (look == null) {
+            // No parameter so use the platform look, unless some other
+            // override has been set (eg via swing.properties).
+            LookAndFeel laf = UIManager.getLookAndFeel();
+            if (laf == null || laf.getID().equals("Metal")) {
+                lafClass = UIManager.getSystemLookAndFeelClassName();
             }
-        }
-        if (lafClass == null) {
-            look = look.toUpperCase();
+        } else {
+            // "Steel" and "Ocean" are themes for "Metal"
+            if (look.equalsIgnoreCase("Steel") || look.equalsIgnoreCase("Ocean")) {
+                metalTheme = look;
+                look = "Metal";
+            }
+            
+            // Look for an exact match first, then a likely match
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if (info.getName().toUpperCase().contains(look)) {
+                if (info.getName().equalsIgnoreCase(look)) {
                     lafClass = info.getClassName();
                     break;
+                }
+            }
+            if (lafClass == null) {
+                look = look.toUpperCase();
+                for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                    if (info.getName().toUpperCase().contains(look)) {
+                        lafClass = info.getClassName();
+                        break;
+                    }
                 }
             }
         }
@@ -144,7 +138,6 @@ public class Main implements Runnable {
                 else if (metalTheme.equalsIgnoreCase("Ocean")) 
                     MetalLookAndFeel.setCurrentTheme(new OceanTheme());
             }
-
             UIManager.setLookAndFeel(lafClass);
             JFrame.setDefaultLookAndFeelDecorated(true);
         }
@@ -169,7 +162,7 @@ public class Main implements Runnable {
         frame.setIconImage(icon);
         frame.setContentPane(view);
         
-        // Hack to try to set the dock icon on a Mac
+        // Try to set the dock icon on a Mac
         try {
             Class<?> ac = Class.forName("com.apple.eawt.Application");
             Method ga = ac.getMethod("getApplication");
