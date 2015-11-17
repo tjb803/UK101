@@ -108,12 +108,18 @@ public class Computer extends Thread implements DataBus {
         videoFix1 = newmon;
     }    
 
-    // Add some memory into the address space
+    // Add some memory into the address space, applying any patches if 
+    // we are installing a ROM.
     private void addMemory(int base, Memory m) {
         m.base = base;
         for (int i = 0; i < m.blocks; i++) {
             memory[Memory.asBlock(base) + i] = m;
         }
+    }
+    
+    private void addMemory(int base, ROM r) {
+        addMemory(base, (Memory)r);
+        r.patch();
     }
     
     /*

@@ -58,6 +58,7 @@ v1.3.0
    - Restore colour to the manual PDF scan
    - Audio waveforms match the real hardware output
    - Better appearance on Mac and classic Windows
+   - Provide option to patch ROM images when loaded
   
   Main bug fixes:
    - Some 64K address wrapping issues in indexed address modes

@@ -97,7 +97,15 @@ public class Configuration extends Properties {
         }
         String s = parms.getOption("properties");
         if (s != null) {
-            s = s.replace("\\", "\\\\").replace(";", "\n").replace(",", "\n");
+            s = s.replace("\\", "\\\\");
+            String[] ss = s.split("\\[");
+            s = ss[0].replace(',', '\n').replace(';', '\n');
+            for (int i = 1; i < ss.length; i++) {
+                String[] sss = ss[i].split("\\]", 2);
+                s += "[" + sss[0] + "]";
+                if (sss.length > 1)     
+                    s += sss[1].replace(',', '\n').replace(';', '\n');
+            }
             in = new ByteArrayInputStream(s.getBytes("ISO-8859-1"));
             props.load(in);
             in.close();

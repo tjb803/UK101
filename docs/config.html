@@ -166,6 +166,34 @@ and the value should be the name of a file containing the ROM code.</td></tr>
 <p><i>Note:</i> The additional ROMs are processed and installed after the 
 system monitor and BASIC ROMs, so they can be used to replace some or all of 
 the system ROM address spaces.<p/>
+<h3 id="patch">Patching ROM Images</h3>
+<p>When a ROM image is loaded it is possible to define a set of patches to be
+applied to the ROM data.
+This can be useful, for example, to force a ROM to default correctly for a 32
+line screen, or to change timings such as typing auto-repeat rate for use with
+faster CPU clocks.
+Patching can also be done by creating a completly separate ROM image, but for 
+quick testing and simple changes adding the patches to the configuration can
+often be easier.</p>
+<p>Patches are defined using the following syntax appended to the name of the
+ROM to be loaded:
+<blockquote
+><pre>
+<code>ROMNAME[ADDR/BB,BB,..;ADDR/BB,BB,...]</code>
+</pre>
+<table frame="void" rules="none" cellpadding="3">
+<tr><td><code>ADDR&nbsp;</code></td>
+<td>Is a four-digit hexadecimal address at which to begin patching.</td></tr>
+<tr><td><code>BB</code></td>
+<td>Are one or more two-digit hexadecimal bytes to update the ROM.</td></tr>
+</table>
+</blockquote>
+Some common patches include:
+<table frame="box" rules="all" cellpadding="3" width="100%">
+<tr><td width="30%"><code>CEGMON[FBC0/D7]</code></td>
+<td>Default CEGMON for a 32-line display</td></tr>
+</table>
+<p/>
 <hr>
 <h2 id="acia">ACIA Baud Rate</h2>
 <p>This setting controls the default baud rate for the ACIA.</p>
@@ -316,7 +344,7 @@ UK101 hardware.</td></tr>
 when reading or writing audio data, however it is restricted to the values
 300, 600 or 1200 only.
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>May 2015
+<tr><td align="left">Tim Baldwin<br>November 2015
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
 <br><br>&copy; Tim Baldwin 2010,2015</td></tr>
