@@ -188,10 +188,14 @@ ROM to be loaded:
 <td>Are one or more two-digit hexadecimal bytes to update the ROM.</td></tr>
 </table>
 </blockquote>
-Some common patches include:
+Some useful patches include:
 <table frame="box" rules="all" cellpadding="3" width="100%">
 <tr><td width="30%"><code>CEGMON[FBC0/D7]</code></td>
-<td>Default CEGMON for a 32-line display</td></tr>
+<td>Default CEGMON for a 32-line display.</td></tr>
+<tr><td width="30%"><code>CEGMON[FCE0/00]</code></td>
+<td>Disables the CEGMON auto-repeat when typing.  
+This can also be set to non-zero values to alter the auto-repeat rate,
+the default value being 10.</td></tr>
 </table>
 <p/>
 <hr>
