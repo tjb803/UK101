@@ -97,16 +97,14 @@ public class Configuration extends Properties {
         }
         String s = parms.getOption("properties");
         if (s != null) {
-            s = s.replace("\\", "\\\\");
-            String[] ss = s.split("\\[");
-            s = ss[0].replace(',', '\n').replace(';', '\n');
-            for (int i = 1; i < ss.length; i++) {
-                String[] sss = ss[i].split("\\]", 2);
-                s += "[" + sss[0] + "]";
-                if (sss.length > 1)     
-                    s += sss[1].replace(',', '\n').replace(';', '\n');
+            StringBuffer sb = new StringBuffer();
+            String[] ss = s.replace("\\", "\\\\").split("\\[|\\]");
+            for (int i = 0; i < ss.length; i+=2) {
+                sb.append(ss[i].replace(',', '\n').replace(';', '\n'));
+                if (i+1 < ss.length)
+                    sb.append("[").append(ss[i+1]).append("]");
             }
-            in = new ByteArrayInputStream(s.getBytes("ISO-8859-1"));
+            in = new ByteArrayInputStream(sb.toString().getBytes("ISO-8859-1"));
             props.load(in);
             in.close();
         }

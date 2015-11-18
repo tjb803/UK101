@@ -177,27 +177,36 @@ quick testing and simple changes adding the patches to the configuration can
 often be easier.</p>
 <p>Patches are defined using the following syntax appended to the name of the
 ROM to be loaded:
-<blockquote
-><pre>
+<blockquote><pre>
 <code>ROMNAME[ADDR/BB,BB,..;ADDR/BB,BB,...]</code>
-</pre>
+</pre></blockquote>
 <table frame="void" rules="none" cellpadding="3">
 <tr><td><code>ADDR&nbsp;</code></td>
 <td>Is a four-digit hexadecimal address at which to begin patching.</td></tr>
 <tr><td><code>BB</code></td>
-<td>Are one or more two-digit hexadecimal bytes to update the ROM.</td></tr>
+<td>Are one or more two-digit hexadecimal bytes used to update the ROM starting 
+at the specified address.</td></tr>
 </table>
-</blockquote>
-Some useful patches include:
-<table frame="box" rules="all" cellpadding="3" width="100%">
-<tr><td width="30%"><code>CEGMON[FBC0/D7]</code></td>
-<td>Default CEGMON for a 32-line display.</td></tr>
-<tr><td width="30%"><code>CEGMON[FCE0/00]</code></td>
-<td>Disables the CEGMON auto-repeat when typing.  
+<p>Some useful patches include:</p>
+<ul>
+<li><code>CEGMON[FBC0/D7]</code>
+<blockquote>
+<p>Default CEGMON for a 32-line display.</p>
+</blockquote></li>
+<li><code>CEGMON[FCE0/00]</code>
+<blockquote>
+<p>Disables the CEGMON auto-repeat when typing. 
 This can also be set to non-zero values to alter the auto-repeat rate,
-the default value being 10.</td></tr>
-</table>
-<p/>
+the default value being 10.</p>
+</blockquote></li>
+<li><code>MONUK02[FACA/20;FAF1/20;FB2D/D8;FB61/D8;FB85/D7;FB8D/A9,1A,85,E4,AD,08,02,0A,0A,0A,0A,26,E4,0A,26,E4,0A,26,E4,6D,07,02,69,0D,85,E3,60]</code>
+<blockquote>
+<p>Updates to the standard monitor for a 32-line screen. 
+These changes were listed in <i>Practical Electronics</i> April 1982, page 57.
+This is quite a complex patch; a version of the ROM with these patches
+already applied can be found in the <samp>samples/roms</samp>> directory.</p>
+</blockquote></li>
+</ul>
 <hr>
 <h2 id="acia">ACIA Baud Rate</h2>
 <p>This setting controls the default baud rate for the ACIA.</p>

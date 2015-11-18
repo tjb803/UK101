@@ -50,21 +50,13 @@ public class ROM extends Memory {
     // Apply any patches to the ROM image
     public void patch() {
         if (patches != null) {
-            System.out.println(patches);
             StringTokenizer t1 = new StringTokenizer(patches, "[];: ");
             while (t1.hasMoreTokens()) {
-                String s1 = t1.nextToken();
-                System.out.println(s1);
-                StringTokenizer t2 = new StringTokenizer(s1, "/,");
+                StringTokenizer t2 = new StringTokenizer(t1.nextToken(), "/,");
                 if (t2.hasMoreTokens()) {
-                    String s2 = t2.nextToken();
-                    System.out.println(s2);
-                    int addr = Integer.parseInt(s2, 16) - base;
-                    while (t2.hasMoreTokens()) {
-                        s2 = t2.nextToken();
-                        System.out.println(s2);
-                        store[addr++] = (byte)Integer.parseInt(s2, 16);
-                    }    
+                    int addr = Integer.parseInt(t2.nextToken(), 16) - base;
+                    while (t2.hasMoreTokens())
+                        store[addr++] = (byte)Integer.parseInt( t2.nextToken(), 16);
                 }
             }
         }
