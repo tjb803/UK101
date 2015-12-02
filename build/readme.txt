@@ -49,6 +49,11 @@ Latest Improvements
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
 
+v1.3.1
+ - "ram.xxxx" property to allow extra RAM blocks
+ - "eprom.xxxx" property to allow programmable ROMs
+ - Add EraseROM utility to erase or create a ROM image
+
 v1.3.0
  - More improvements to host CPU usage
  - Bug fixes for some page-0 and indexed addressing modes

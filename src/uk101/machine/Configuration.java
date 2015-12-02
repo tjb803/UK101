@@ -68,14 +68,19 @@ public class Configuration extends Properties {
     private static final String AUDIO_LEAD = "audio.lead";
     private static final String AUDIO_WAVE = "audio.wave";
     private static final String ROM = "rom.";
+    private static final String RAM = "ram.";
+    private static final String EPROM = "eprom.";
 
-    // Additional ROMs have an address and a filename
-    public static class ROM {
-        public int address;
+    // Additional ROM/RAM/EPROM have an address and a filename or size
+    public static class Mem {
+        public int address, size;
         public String name;
-        private ROM(String addr, String value) {
+        private Mem(String addr, String value, boolean ram) {
             address = Integer.parseInt(addr, 16);
             name = value;
+            if (ram) {
+                size = Integer.parseInt(value);
+            }
         }
     }
     
@@ -139,7 +144,9 @@ public class Configuration extends Properties {
         applyStr(props, AUDIO_BITS, "8", "16");
         applyInt(props, AUDIO_LEAD, 0, 10);
         applyStr(props, AUDIO_WAVE, SINE, SYSTEM);
-        applyROM(props);
+        applyMem(props, ROM, 0, 0);
+        applyMem(props, RAM, 1, 64);
+        applyMem(props, EPROM, 0, 0);
     }
     
     private void applyInt(Properties props, String key, int min, int max) {
@@ -173,20 +180,20 @@ public class Configuration extends Properties {
         }
     }
     
-    private void applyROM(Properties props) {
+    private void applyMem(Properties props, String prefix, int min, int max) {
         for (Enumeration<?> k = props.propertyNames(); k.hasMoreElements(); ) {
             String key = (String)k.nextElement();
-            String addr = hasAddr(key);
+            String addr = hasAddr(key, prefix);
             if (addr != null) {
-                setProperty(ROM+addr, props.getProperty(key).trim());
+                apply(props, prefix+addr, key, min, max);
             }
         }
     }
     
-    private String hasAddr(String key) {
+    private String hasAddr(String key, String prefix) {
         String addr = null;
-        if (key.startsWith(ROM)) {
-            String hex = key.substring(ROM.length()).toUpperCase();
+        if (key.startsWith(prefix)) {
+            String hex = key.substring(prefix.length()).toUpperCase();
             if (hex.matches("[0-9A-F]{4}")) {
                 addr = hex;
             }
@@ -288,15 +295,27 @@ public class Configuration extends Properties {
     }
     
     /*
-     * Return any additional ROMs listed
+     * Return any additional ROMs, RAM or EEPROMs listed
      */
-    public Collection<ROM> getROMs() {
-        Collection<ROM> roms = new ArrayList<ROM>();
+    public Collection<Mem> getROMs() {
+        return getMem(ROM, false);
+    }
+    
+    public Collection<Mem> getRAMs() {
+        return getMem(RAM, true);
+    }
+    
+    public Collection<Mem> getEPROMs() {
+        return getMem(EPROM, false);
+    }
+    
+    private Collection<Mem> getMem(String prefix, boolean ram) {
+        Collection<Mem> roms = new ArrayList<Mem>();
         for (Enumeration<?> k = propertyNames(); k.hasMoreElements(); ) {
             String key = (String)k.nextElement();
-            String addr = hasAddr(key);
+            String addr = hasAddr(key, prefix);
             if (addr != null) {
-                roms.add(new ROM(addr, getProperty(key)));
+                roms.add(new Mem(addr, getProperty(key), ram));
             }
         }
         return roms;

@@ -115,7 +115,7 @@ simulation speed.
 It is possible that an older or slower PC will not be able reach 
 the maximum requested.</p>
 <hr>
-<h2 id="memory">RAM and ROM</h2>
+<h2 id="memory">RAM, ROM and EPROM</h2>
 <p>These settings control details of the installed RAM and ROMs.</p>
 <table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
 <tr><th width="15%">Name</th><th width="15%">Values</th>
@@ -128,9 +128,17 @@ the standard machine came with 4KB and there were sockets on the
 board to allow up to 8KB to be installed.
 In theory, with an expansion board, up to another 32KB could be
 installed giving an absolute maximum contiguous RAM of 40KB.</td></tr>
+<tr><td><code>ram.XXXX</code></td>
+<td>from <code>1</code> to <code>64</code></td><td/>
+<td>This allows additional RAM blocks to be installed in otherwise empty
+<a href="history.html#arch">address space</a>.
+The RAM is installed at address <code>XXXX</code> which must be a valid
+four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
+and the value should be the required RAM size in KBytes.</td></tr>
 <tr><td><code>rom.monitor</code></td>
 <td><code>MONUK01</code><br><code>MONUK02</code><br>
-<code>CEGMON</code><br>or <code>filename</code></td><td/>
+<code>CEGMON</code><br>or <code>filename</code></td>
+<td align="center"><code>MONUK02</code></td>
 <td>This defines the monitor ROM that is installed.
 The value can be one of the built-in names <code>MONUK01</code>,
 <code>MONUK02</code> or <code>CEGMON</code>, or it can be the name of a
@@ -147,12 +155,14 @@ shipped with later machines.</td></tr>
 <a href="http://uk101.sourceforge.net/docs/pdf/cegmon.pdf">CEGMON</a> monitor.</td></tr>
 </table></td>
 <tr><td><code>rom.basic</code></td>
-<td><code>BASUK101</code><br>or <code>filename</code></td><td/>
+<td><code>BASUK101</code><br>or <code>filename</code></td>
+<td align="center"><code>BASUK101</code></td>
 <td>This defines the BASIC ROM that is installed.
 The value can be the built-in name <code>BASUK101</code> or it can
 be the name of a file containing a replacement ROM.</td></tr>
 <tr><td><code>rom.charset</code></td>
-<td><code>CHGUK101</code><br>or <code>filename</code></td><td/>
+<td><code>CHGUK101</code><br>or <code>filename</code></td>
+<td align="center"><code>CHGUK101</code></td>
 <td>This defines the video character generator ROM that is installed.
 The value can be the built-in name <code>CHGUK101</code> or it can
 be the name of a file containing a replacement ROM.</td></tr>
@@ -161,10 +171,20 @@ be the name of a file containing a replacement ROM.</td></tr>
 <td>This allows additional ROMs to be installed.
 The ROM is installed at address <code>XXXX</code> which must be a valid
 four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
-and the value should be the name of a file containing the ROM code.</td></tr>
+and the value should be the name of a file containing the ROM image.</td></tr>
+<tr><td><code>eprom.XXXX</code></td>
+<td><code>filename</code></td><td/>
+<td>This allows additional EPROMs to be installed; unlike ROMs, EPROMs can
+be written to and the updates will be persisted in the disk image file.
+The EPROM is installed at address <code>XXXX</code> which must be a valid
+four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
+and the value should be the name of a file containing the initial EPROM image.
+Empty EPROM images can be created with the 
+<a href="utilities.html#eprom">EraseROM</a> utility program.
+</td></tr>
 </table>
-<p><i>Note:</i> The additional ROMs are processed and installed after the 
-system monitor and BASIC ROMs, so they can be used to replace some or all of 
+<p><i>Note:</i> The additional ROMs and EPROMs are processed and installed after 
+the system monitor and BASIC ROMs, so they can be used to replace some or all of 
 the system ROM address spaces.<p/>
 <h3 id="patch">Patching ROM Images</h3>
 <p>When a ROM image is loaded it is possible to define a set of patches to be
@@ -205,7 +225,7 @@ the default value being 10.</p>
 <p>Updates to the standard monitor for a 32-line screen. 
 These changes were listed in <i>Practical Electronics</i> April 1982, page 57.
 This is quite a complex patch; a version of the ROM with these patches
-already applied can be found in the <samp>samples/roms</samp>> directory.</p>
+already applied can be found in the <samp>samples/roms</samp> directory.</p>
 </blockquote></li>
 </ul>
 <hr>

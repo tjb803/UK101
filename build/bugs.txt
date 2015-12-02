@@ -65,3 +65,9 @@ v1.3.0
    - Ensure @ key is decoded correctly with CEGMON
    - Fix some Superboard keyboard mappings
    
+v1.3.1
+------
+  Improvements:
+   - Add support for additional RAM blocks in empty address space
+   - Add support for Programmable ROMs which persist changes
+ 

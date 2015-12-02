@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2014
+ * (C) Copyright Tim Baldwin 2010,2015
  */
 package uk101.hardware;
 
@@ -19,32 +19,30 @@ import uk101.Main;
  */
 public class ROM extends Memory {
     
-    private String name;
+    public String name;
+    private String romid;
     private String patches;
 
     /*
      * Attempt to load a ROM from a binary image
      */
     public ROM(String id) throws IOException {
-        super(load(name(id)));
+        super(load(findName(id)));
+        name = id;
+        readOnly = true;
         
         // Save the name of the ROM
-        name = new File(name(id)).getName().toUpperCase();
-        if (name.lastIndexOf('.') != -1)
-            name = name.substring(0, name.lastIndexOf('.'));
+        romid = new File(findName(id)).getName().toUpperCase();
+        if (romid.lastIndexOf('.') != -1)
+            romid = romid.substring(0, romid.lastIndexOf('.'));
         
         // Save any patch details for later
-        patches = patch(id);
-    }
-
-    // Disable writes to ROMs.
-    public void writeByte(int offset, byte b) {
-        return;
+        patches = findPatch(id);
     }
 
     // Return ROM name
     public String getName() {
-        return name;
+        return romid;
     }
     
     // Apply any patches to the ROM image
@@ -90,7 +88,7 @@ public class ROM extends Memory {
     }
     
     // Extract name part of ROM id (excluding any patch information
-    private static String name(String id) {
+    private static String findName(String id) {
         String name = id;
         if (id.indexOf('[') != -1)
             name = id.substring(0, id.indexOf('[')).trim();
@@ -98,7 +96,7 @@ public class ROM extends Memory {
     }
     
     // Extract patch information or null
-    private static String patch(String id) {
+    private static String findPatch(String id) {
         String patch = null;
         if (id.indexOf('[') != -1)
             patch = id.substring(id.indexOf('[')).trim();

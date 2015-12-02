@@ -6,9 +6,12 @@
 package uk101.machine;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import uk101.hardware.ACIA6850;
 import uk101.hardware.CPU6502;
+import uk101.hardware.EPROM;
 import uk101.hardware.Keyboard;
 import uk101.hardware.Memory;
 import uk101.hardware.RAM;
@@ -38,6 +41,10 @@ public class Computer extends Thread implements DataBus {
     public RAM ram;
     public ROM basic;
     public ROM monitor;
+    
+    public Collection<ROM> roms;
+    public Collection<RAM> rams;
+    public Collection<EPROM> eproms;
 
     public Keyboard keyboard;
     public Video video;
@@ -73,6 +80,14 @@ public class Computer extends Thread implements DataBus {
         // Address space is 64K.  Assumption here is that any ROM/RAM or any
         // memory-mapped devices are mapped in BLKSIZE sections.
         memory = new Memory[Memory.toBlocks(Memory.K64)];
+        
+        // Install additional RAM blocks first so they do not overwrite ROMs
+        rams = new ArrayList<RAM>();
+        for (Configuration.Mem ram : cfg.getRAMs()) {
+            RAM r = new RAM(ram.size);
+            addMemory(ram.address, r);
+            rams.add(r);
+        } 
 
         // Install the system ROMs and RAM
         ram = new RAM(cfg.getRamSize());
@@ -82,10 +97,19 @@ public class Computer extends Thread implements DataBus {
         addMemory(0xA000, basic);
         addMemory(0xF800, monitor);
         
-        // Install any additional ROMs
-        for (Configuration.ROM rom : cfg.getROMs()) {
-            addMemory(rom.address, new ROM(rom.name));
-        }    
+        // Install any additional ROMs and EPROMS
+        roms = new ArrayList<ROM>();
+        for (Configuration.Mem rom : cfg.getROMs()) {
+            ROM r = new ROM(rom.name);
+            addMemory(rom.address, r);
+            roms.add(r);
+        }
+        eproms = new ArrayList<EPROM>();
+        for (Configuration.Mem eeprom : cfg.getEPROMs()) {
+            EPROM e = new EPROM(eeprom.name);
+            addMemory(eeprom.address, e);
+            eproms.add(e);
+        } 
 
         // Keyboard, screen and ACIA are memory mapped.
         ROM charset = new ROM(cfg.getRomCharset());
@@ -112,8 +136,10 @@ public class Computer extends Thread implements DataBus {
     // we are installing a ROM.
     private void addMemory(int base, Memory m) {
         m.base = base;
+        int bb = Memory.asBlock(base);
         for (int i = 0; i < m.blocks; i++) {
-            memory[Memory.asBlock(base) + i] = m;
+            if (bb+i < memory.length)
+               memory[bb+i] = m;
         }
     }
     
@@ -191,6 +217,9 @@ public class Computer extends Thread implements DataBus {
     public void shutdown() {
         trace(false);
         recorder.shutdown();
+        for (EPROM e : eproms) {
+            e.close();
+        }    
     }
 
     /*

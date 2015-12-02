@@ -198,18 +198,21 @@ public class Args {
     private int getHexIntegerValue(String value, int defaultValue) {
         int result = defaultValue;
         if (value != null) {
+            int radix = 10, factor = 1;
+            if (value.startsWith("$")) {
+                value = value.substring(1);
+                radix = 16;
+            } else if (value.startsWith("0x") || value.startsWith("0X")) {
+                value = value.substring(2);
+                radix = 16;
+            } else if (value.endsWith("K") || value.endsWith("k")) {
+                value = value.substring(0, value.length()-1);
+                factor = 1024;
+            }
             try {
-                result = Integer.parseInt(value);
+                result = Integer.parseInt(value, radix) * factor;
             } catch (NumberFormatException e) {
-                if (value.startsWith("$"))
-                    value = value.substring(1);
-                else if (value.startsWith("0x") || value.startsWith("0X"))
-                    value = value.substring(2);
-                try {
-                    result = Integer.parseInt(value, 16);
-                } catch (NumberFormatException ee) {
-                    error("Expected decimal or hex parameter", value, true);
-                }
+                error("Expected decimal or hex parameter", value, true);
             }
         }
         return result;

@@ -85,6 +85,7 @@ src/uk101/Main.java -text
 src/uk101/hardware/ACIA6850.java -text
 src/uk101/hardware/ALU6502.java -text
 src/uk101/hardware/CPU6502.java -text
+src/uk101/hardware/EPROM.java -text
 src/uk101/hardware/Keyboard.java -text
 src/uk101/hardware/Memory.java -text
 src/uk101/hardware/RAM.java -text
@@ -120,6 +121,7 @@ src/uk101/rom/MONUK02.ROM -text
 src/uk101/rom/uk101.properties -text
 src/uk101/utils/Args.java -text
 src/uk101/utils/Disassembler.java -text
+src/uk101/utils/EraseROM.java -text
 src/uk101/utils/PrintBytes.java -text
 src/uk101/utils/PrintCode.java -text
 src/uk101/utils/PrintDump.java -text

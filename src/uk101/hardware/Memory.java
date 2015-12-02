@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2013
+ * (C) Copyright Tim Baldwin 2010,2015
  */
 package uk101.hardware;
 
@@ -18,10 +18,11 @@ public abstract class Memory {
     public static final int K1 = 1024;
     public static final int K64 = 64*K1;
 
-    public int base;        // Stores the starting memory address
-    public int blocks;      // Stores the number of blocks
+    public int base;            // Stores the starting memory address
+    public int blocks;          // Stores the number of blocks
 
-    public byte[] store;    // Storage area, if present     
+    public byte[] store;        // Storage area, if present    
+    public boolean readOnly;    // true if readonly storage
     
     public Memory(int bytes) {
         blocks = toBlocks(bytes);
@@ -37,14 +38,21 @@ public abstract class Memory {
     }
 
     public void writeByte(int offset, byte b) {
-        store[offset] = b;
+        if (!readOnly) {
+            store[offset] = b;
+        }    
+    }
+    
+    // Memory size in bytes
+    public int bytes() {
+        return blocks*BLKSIZE;
     }
     
     // Memory size in Kbytes 
     public int kBytes() {
-        return toK(blocks*BLKSIZE);
+        return toK(bytes());
     }
-
+    
     // Round up to the nearest 1K
     public static final int toK(int bytes) {
         return (bytes + K1-1)/K1;

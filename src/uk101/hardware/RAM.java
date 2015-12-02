@@ -15,6 +15,7 @@ public class RAM extends Memory {
      */
     public RAM(int k) {
         super(new byte[k*K1]);
+        readOnly = false;
     }
     
     // Allow RAM to restored from a saved image
