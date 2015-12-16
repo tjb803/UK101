@@ -19,7 +19,7 @@ import uk101.Main;
  */
 public class ROM extends Memory {
     
-    public String name;
+    protected String name;
     private String romid;
     private String patches;
 
@@ -27,9 +27,12 @@ public class ROM extends Memory {
      * Attempt to load a ROM from a binary image
      */
     public ROM(String id) throws IOException {
-        super(load(findName(id)));
+        this(id, true);
+    }
+    
+    protected ROM(String id, boolean ro) throws IOException {
+        super(load(findName(id)), ro);
         name = id;
-        readOnly = true;
         
         // Save the name of the ROM
         romid = new File(findName(id)).getName().toUpperCase();
@@ -40,8 +43,8 @@ public class ROM extends Memory {
         patches = findPatch(id);
     }
 
-    // Return ROM name
-    public String getName() {
+    // Return ROM identifier
+    public String id() {
         return romid;
     }
     

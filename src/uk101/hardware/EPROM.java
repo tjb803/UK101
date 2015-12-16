@@ -23,8 +23,7 @@ public class EPROM extends ROM {
      * EPROM should only be installed if the file is available for writing
      */
     public EPROM(String id) throws IOException {
-        super(validate(id));
-        readOnly = false;
+        super(validate(id), false);
         file = new RandomAccessFile(name, "rwd");
         file.setLength(bytes());
     }

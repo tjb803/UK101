@@ -22,14 +22,15 @@ public abstract class Memory {
     public int blocks;          // Stores the number of blocks
 
     public byte[] store;        // Storage area, if present    
-    public boolean readOnly;    // true if readonly storage
+    private boolean readOnly;   // true if readonly storage
     
     public Memory(int bytes) {
         blocks = toBlocks(bytes);
     }
     
-    public Memory(byte[] sb) {
+    public Memory(byte[] sb, boolean ro) {
         store = sb;
+        readOnly = ro;
         blocks = toBlocks(sb.length);
     }
 
