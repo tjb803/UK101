@@ -15,7 +15,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.Timer;
@@ -27,11 +26,12 @@ import uk101.machine.Computer;
 import uk101.view.component.DebugPanel;
 import uk101.view.component.DisplayText;
 import uk101.view.component.SpeedSelector;
+import uk101.view.component.ViewFrame;
 
 /**
  * The control and debug panel.
  */
-public class MachineView extends JInternalFrame implements ActionListener, ChangeListener {
+public class MachineView extends ViewFrame implements ActionListener, ChangeListener {
     private static final long serialVersionUID = 1L;
 
     static final String MACHINE_DUMP = "Dump";
@@ -47,7 +47,7 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
     private Timer speedTimer;
 
     public MachineView(Computer computer, ComputerView computerView) {
-        super("Machine", false, false, false, true);
+        super("Machine", true);
         this.computer = computer;
 
         // Timer to update CPU actual speed
@@ -79,7 +79,7 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
         ip.add(speed);
         ip.add(baud);
         ip.add(new DisplayText("RAM", computer.ram.kBytes() + "KB"));
-        ip.add(new DisplayText("ROM", computer.monitor.getName()));
+        ip.add(new DisplayText("ROM", computer.monitor.id()));
 
         // CPU Speed control panel
         JPanel sp = new JPanel();
@@ -109,8 +109,6 @@ public class MachineView extends JInternalFrame implements ActionListener, Chang
 
         Container content = getContentPane();
         content.add(panel);
-        pack();
-        setVisible(true);
     }
 
     /*

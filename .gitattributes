@@ -146,6 +146,7 @@ src/uk101/view/component/KeyboardLock.java -text
 src/uk101/view/component/SpeedSelector.java -text
 src/uk101/view/component/TapeFormat.java -text
 src/uk101/view/component/VideoScreen.java -text
+src/uk101/view/component/ViewFrame.java -text
 test/UK101[!!-~]Main.launch -text
 test/src/uk101/data/TestUK101Streams.java -text
 test/src/uk101/hardware/TestALU.java -text

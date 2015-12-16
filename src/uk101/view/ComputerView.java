@@ -5,18 +5,15 @@
  */
 package uk101.view;
 
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 import java.beans.PropertyVetoException;
 import java.io.File;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
-import javax.swing.JInternalFrame;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
 import uk101.machine.Computer;
@@ -29,6 +26,10 @@ import uk101.view.component.ImageFormat;
  */
 public class ComputerView extends JDesktopPane implements ActionListener {
     private static final long serialVersionUID = 1L;
+    
+    static {    // Improve appearance on GTK look-and-feel
+        UIManager.put("InternalFrame.useTaskBar", Boolean.FALSE);
+    }
 
     static final String IMAGE_LOAD = "Load...";
     static final String IMAGE_SAVE = "Save...";
@@ -53,15 +54,15 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         machine = new MachineView(computer, this);
         
         // Attach the keyboard handler to each top level frame
-        attachKeyboard(video, keyboard);
-        attachKeyboard(keyboard, keyboard);
-        attachKeyboard(cassette, keyboard);
-        attachKeyboard(machine, keyboard);
+        video.attachKeyboard(keyboard);
+        keyboard.attachKeyboard(keyboard);
+        cassette.attachKeyboard(keyboard);
+        machine.attachKeyboard(keyboard);
 
-        add(machine);
-        add(cassette);
-        add(video);     // Add video and keyboard last to make sure
-        add(keyboard);  // they appear on top.
+        add(machine.display());
+        add(cassette.display());
+        add(video.display());     // Add video and keyboard last to make sure
+        add(keyboard.display());  // they appear on top.
 
         // Create a file chooser dialog for the load/save image function
         imageSelect = new JFileChooser(new File(".").getAbsolutePath());
@@ -78,17 +79,6 @@ public class ComputerView extends JDesktopPane implements ActionListener {
 
     // Layout all the windows in their default positions
     public boolean defaultLayout() {
-        // First some messiness related to the GTK+ look and feel on Linux.  This seems
-        // to want to add a TaskBar at the bottom in a layer that overlays our windows
-        // (in the default layer).  If we can find something resembling this bar (in the
-        // non-default layer) we need to adjust our size to allow for it.
-        int extraY = 0;
-        for (Component c: getComponents()) {    // Only handle TaskBar at the bottom
-            if (getLayer(c) > DEFAULT_LAYER && c.getY() < 0) {
-                extraY = Math.max(extraY, c.getHeight()-1);
-            }
-        }
-        
         int maxX1 = video.getWidth() + machine.getWidth() + 5;
         int maxX2 = keyboard.getWidth() + cassette.getWidth() + 10;
         int maxX = Math.max(maxX1, maxX2);
@@ -117,31 +107,12 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         int casX = kybX + keyboard.getWidth() + 10, casY = maxY - cassette.getHeight();
         cassette.setLocation(casX, casY);
 
-        Dimension size = new Dimension(maxX, maxY + extraY);
+        Dimension size = new Dimension(maxX, maxY);
         setPreferredSize(size);
 
         return false;       // Layout is incomplete (frame is unsized)
     }
-    
-    // Attach a keyListener to a top level window and ensure that no 
-    // subcomponents can grab focus.
-    private void attachKeyboard(JInternalFrame frame, KeyListener listener) {
-        frame.setFocusable(true);
-        frame.addKeyListener(listener);
-        for (Component c : frame.getComponents()) {
-            removeFocus(c);
-        }
-    }
-    
-    private void removeFocus(Component c) {
-        c.setFocusable(false);
-        if (c instanceof Container) {
-            for (Component cc : ((Container)c).getComponents()) {
-                removeFocus(cc);
-            }
-        }
-    }
-    
+
     // Set focus to the keyboard
     public void focusKeyboard() {
         try {

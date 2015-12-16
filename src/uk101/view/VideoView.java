@@ -10,17 +10,17 @@ import java.awt.Container;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 import uk101.hardware.Video;
 import uk101.machine.Configuration;
 import uk101.view.component.VideoScreen;
+import uk101.view.component.ViewFrame;
 
 /**
  * A visual representation of the video display output.
  */
-public class VideoView extends JInternalFrame {
+public class VideoView extends ViewFrame {
     private static final long serialVersionUID = 1L;
 
     private VideoScreen screen;
@@ -28,7 +28,7 @@ public class VideoView extends JInternalFrame {
     private int srows, scols, sstart;
 
     public VideoView(Video video, Configuration cfg) {
-        super("Video", false, false, false, false);
+        super("Video", false);
 
         video.setView(this);
 
@@ -59,8 +59,6 @@ public class VideoView extends JInternalFrame {
         Container content = getContentPane();
         content.setBackground(VideoScreen.SCREEN_BLACK);
         content.add(tv);
-        pack();
-        setVisible(true);
     }
 
     // Map configuration screen colour

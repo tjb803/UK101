@@ -22,7 +22,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -36,11 +35,12 @@ import uk101.machine.TapeRecorder;
 import uk101.view.component.CassetteButton;
 import uk101.view.component.DisplayText;
 import uk101.view.component.TapeFormat;
+import uk101.view.component.ViewFrame;
 
 /**
  * A visual representation of the cassette recorder.
  */
-public class CassetteView  extends JInternalFrame implements ActionListener, ItemListener {
+public class CassetteView  extends ViewFrame implements ActionListener, ItemListener {
     private static final long serialVersionUID = 1L;
 
     private TapeRecorder recorder;
@@ -57,7 +57,7 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
     private AudioDecoder audioDecoder;
 
     public CassetteView(TapeRecorder recorder, Configuration cfg) {
-        super("Cassette Recorder", false, false, false, true);
+        super("Cassette Recorder", true);
         this.recorder = recorder;
 
         recorder.setView(this);
@@ -109,8 +109,6 @@ public class CassetteView  extends JInternalFrame implements ActionListener, Ite
         Container content = getContentPane();
         content.add(tp, BorderLayout.NORTH);
         content.add(bp, BorderLayout.SOUTH);
-        pack();
-        setVisible(true);
     }
 
     /*

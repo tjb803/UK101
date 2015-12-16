@@ -16,7 +16,6 @@ import java.awt.event.MouseListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 import uk101.hardware.Keyboard;
@@ -24,6 +23,7 @@ import uk101.machine.Computer;
 import uk101.machine.Configuration;
 import uk101.view.component.KeyboardKey;
 import uk101.view.component.KeyboardLock;
+import uk101.view.component.ViewFrame;
 
 /**
  * A visual representation of the keyboard.
@@ -34,7 +34,7 @@ import uk101.view.component.KeyboardLock;
  * is made to use the PC characters to press the appropriate key (this ought to
  * make general typing easier but may not work correctly for games).
  */
-public class KeyboardView extends JInternalFrame implements ItemListener, MouseListener, KeyListener {
+public class KeyboardView extends ViewFrame implements ItemListener, MouseListener, KeyListener {
     private static final long serialVersionUID = 1L;
 
     static final String[] KB_ROW1 =
@@ -59,7 +59,7 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
     private boolean gameMode, ctrlMode;
 
     public KeyboardView(Computer computer, Keyboard keyboard, Configuration cfg) {
-        super("Keyboard", false, false, false, true);
+        super("Keyboard", true);
         this.computer = computer;
         this.keyboard = keyboard;
 
@@ -141,8 +141,6 @@ public class KeyboardView extends JInternalFrame implements ItemListener, MouseL
         content.add(row3);
         content.add(row4);
         content.add(row5);
-        pack();
-        setVisible(true);
     }
 
     // Build a row of standard keys
