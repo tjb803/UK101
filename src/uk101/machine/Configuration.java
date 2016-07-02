@@ -243,7 +243,7 @@ public class Configuration extends Properties {
     }
     
     public int getKbdAddr() {
-        return getInt(KBD_ADDR);
+        return getHex(KBD_ADDR);
     }
     
     public String getKbdLayout() {
@@ -255,7 +255,7 @@ public class Configuration extends Properties {
     }
     
     public int getVideoAddr() {
-        return getInt(VIDEO_ADDR);
+        return getHex(VIDEO_ADDR);
     }
     
     public int getVideoRows() {
@@ -287,7 +287,7 @@ public class Configuration extends Properties {
     }
     
     public int getAciaAddr() {
-        return getInt(ACIA_ADDR);
+        return getHex(ACIA_ADDR);
     }
     
     public int getAciaRate() {
@@ -296,6 +296,10 @@ public class Configuration extends Properties {
     
     private int getInt(String key) {
         return Integer.parseInt(getProperty(key));
+    }
+    
+    private int getHex(String key) {
+        return Integer.parseInt(getProperty(key), 16);
     }
     
     private String getString(String key) {
