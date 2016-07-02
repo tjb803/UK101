@@ -9,7 +9,10 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.KeyListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JInternalFrame;
+
+import uk101.view.ComputerView;
 
 /**
  * Base class for the internal window elements/
@@ -22,7 +25,10 @@ public class ViewFrame extends JInternalFrame {
 
         // Only affects Mac: removes attempts to draw shadows under the windows
         // which doesn't work properly on many OS X versions and/or JDK levels.
-        putClientProperty("JInternalFrame.frameType", "normal");
+        if (ComputerView.isMac) {
+            putClientProperty("JInternalFrame.frameType", "normal");
+            setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(1,1,1,1), getBorder()));
+        }    
     }
     
     // Attach a keyListener to a top level window and ensure that no 

@@ -33,6 +33,8 @@ public class ComputerView extends JDesktopPane implements ActionListener {
 
     static final String IMAGE_LOAD = "Load...";
     static final String IMAGE_SAVE = "Save...";
+    
+    public static boolean isMac = false;
 
     private Computer computer;
     private JFileChooser imageSelect;

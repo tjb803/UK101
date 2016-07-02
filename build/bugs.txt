@@ -68,6 +68,7 @@ v1.3.0
 v1.3.1
 ------
   Improvements:
+   - Allow configuration of memory address for keyboard, video and ACIA
    - Add support for additional RAM blocks in empty address space
    - Add support for Programmable ROMs which persist changes
  

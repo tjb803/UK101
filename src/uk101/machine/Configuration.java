@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2015
+ * (C) Copyright Tim Baldwin 2010,2016
  */
 package uk101.machine;
 
@@ -49,13 +49,16 @@ public class Configuration extends Properties {
     
     private static final String CPU_SPEED = "cpu.speed";
     private static final String CPU_CONTROL = "cpu.control";
-    private static final String BAUD_RATE = "baud.rate";
+    private static final String ACIA_ADDR = "acia.address";
+    private static final String ACIA_RATE = "acia.rate";
     private static final String RAM_SIZE = "ram.size";
     private static final String ROM_MONITOR = "rom.monitor";
     private static final String ROM_BASIC = "rom.basic";
     private static final String ROM_CHARSET = "rom.charset";
+    private static final String KBD_ADDR = "keyboard.address";
     private static final String KBD_LAYOUT = "keyboard.layout";
     private static final String KBD_MODE = "keyboard.mode";
+    private static final String VIDEO_ADDR = "video.address";
     private static final String VIDEO_ROWS = "video.rows";
     private static final String VIDEO_COLS = "video.cols";
     private static final String SCREEN_SIZE = "screen.size";
@@ -124,21 +127,25 @@ public class Configuration extends Properties {
     private void applyProperties(Properties props) {
         applyInt(props, CPU_SPEED, 0, 4);
         applyStr(props, CPU_CONTROL, AUTO, SLEEP, YIELD, SPIN);
-        applyStr(props, BAUD_RATE, "110", "300", "600", "1200", "2400", "4800", "9600");
+        applyHex(props, ACIA_ADDR, 0, 0xFFFF);
+        applyStr(props, ACIA_RATE, "110", "300", "600", "1200", "2400", "4800", "9600");
+        apply(props, ACIA_RATE, "baud.rate", 0, 0, 0, "110", "300", "600", "1200", "2400", "4800", "9600");
         applyInt(props, RAM_SIZE, 4, 40);
         applyStr(props, ROM_MONITOR);
         applyStr(props, ROM_BASIC);
         applyStr(props, ROM_CHARSET);
+        applyHex(props, KBD_ADDR, 0, 0xFFFF);
         applyStr(props, KBD_LAYOUT, UK, US);
-        apply(props, KBD_LAYOUT, "keyboard", 0, 0, UK, US);
+        apply(props, KBD_LAYOUT, "keyboard", 0, 0, 0, UK, US);
         applyStr(props, KBD_MODE, NORMAL, GAME);
+        applyHex(props, VIDEO_ADDR, 0, 0xFFFF);
         applyInt(props, VIDEO_ROWS, 16, 32);
         applyInt(props, VIDEO_COLS, 32, 64);
         applyInt(props, SCREEN_SIZE, 1, 2);
         applyInt(props, SCREEN_WIDTH, 16, 64);
         applyInt(props, SCREEN_OFFSET, 0, 63);
         applyStr(props, SCREEN_COLOUR, WHITE, GREEN, AMBER);
-        apply(props, SCREEN_COLOUR, "screen.color", 0, 0, WHITE, GREEN, AMBER);
+        apply(props, SCREEN_COLOUR, "screen.color", 0, 0, 0, WHITE, GREEN, AMBER);
         applyStr(props, SCREEN_UPDATE, SYNC, ASYNC);
         applyInt(props, AUDIO_RATE, 8000, 96000);
         applyStr(props, AUDIO_BITS, "8", "16");
@@ -151,21 +158,28 @@ public class Configuration extends Properties {
     
     private void applyInt(Properties props, String key, int min, int max) {
         try {
-            apply(props, key, key, min, max);
+            apply(props, key, key, 10, min, max);
+        } catch (NumberFormatException e) { // Ignore bad numeric values
+        }
+    }
+    
+    private void applyHex(Properties props, String key, int min, int max) {
+        try {
+            apply(props, key, key, 16, min, max);
         } catch (NumberFormatException e) { // Ignore bad numeric values
         }
     }
     
     private void applyStr(Properties props, String key, String... range) {
-        apply(props, key, key, 0, 0, range);
+        apply(props, key, key, 0, 0, 0, range);
     }
     
-    private void apply(Properties props, String key, String ukey, int min, int max, String... range) {
+    private void apply(Properties props, String key, String ukey, int radix, int min, int max, String... range) {
         String value = props.getProperty(ukey);
         if (value != null) {
             value = value.trim();
-            if (max > 0) {
-                int i = Integer.parseInt(value);
+            if (radix > 0) {
+                int i = Integer.parseInt(value, radix);
                 if (i >= min && i <= max) 
                     setProperty(key, Integer.toString(i));
             } else if (range.length > 0) {
@@ -185,7 +199,7 @@ public class Configuration extends Properties {
             String key = (String)k.nextElement();
             String addr = hasAddr(key, prefix);
             if (addr != null) {
-                apply(props, prefix+addr, key, min, max);
+                apply(props, prefix+addr, key, 10, min, max);
             }
         }
     }
@@ -228,12 +242,20 @@ public class Configuration extends Properties {
         return getString(ROM_CHARSET);
     }
     
+    public int getKbdAddr() {
+        return getInt(KBD_ADDR);
+    }
+    
     public String getKbdLayout() {
         return getString(KBD_LAYOUT);
     }
     
     public String getKbdMode() {
         return getString(KBD_MODE);
+    }
+    
+    public int getVideoAddr() {
+        return getInt(VIDEO_ADDR);
     }
     
     public int getVideoRows() {
@@ -264,8 +286,12 @@ public class Configuration extends Properties {
         return getString(SCREEN_UPDATE);
     }
     
-    public int getBaudRate() {
-        return getInt(BAUD_RATE);
+    public int getAciaAddr() {
+        return getInt(ACIA_ADDR);
+    }
+    
+    public int getAciaRate() {
+        return getInt(ACIA_RATE);
     }
     
     private int getInt(String key) {
@@ -281,7 +307,7 @@ public class Configuration extends Properties {
      * Note: baud rate is limited to 300, 600 or 1200. 
      */
     public AudioEncoder getAudioEncoder() {
-        int baud = Math.min(Math.max(getInt(BAUD_RATE), 300), 1200);
+        int baud = Math.min(Math.max(getInt(ACIA_RATE), 300), 1200);
         boolean sine = getString(AUDIO_WAVE).equals(SINE);
         KansasCityEncoder kcs = new KansasCityEncoder(getInt(AUDIO_RATE), getInt(AUDIO_BITS), baud, sine);
         kcs.setLeader(getInt(AUDIO_LEAD)*1000, getInt(AUDIO_LEAD)*1000); 
@@ -289,7 +315,7 @@ public class Configuration extends Properties {
     }
     
     public AudioDecoder getAudioDecoder() {
-        int baud = Math.min(Math.max(getInt(BAUD_RATE), 300), 1200);
+        int baud = Math.min(Math.max(getInt(ACIA_RATE), 300), 1200);
         KansasCityDecoder kcs = new KansasCityDecoder(baud);
         return kcs;        
     }

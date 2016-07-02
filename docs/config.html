@@ -116,7 +116,7 @@ It is possible that an older or slower PC will not be able reach
 the maximum requested.</p>
 <hr>
 <h2 id="memory">RAM, ROM and EPROM</h2>
-<p>These settings control details of the installed RAM and ROMs.</p>
+<p>These settings control details of the installed RAM, ROMs and EPROMs.</p>
 <table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
 <tr><th width="15%">Name</th><th width="15%">Values</th>
 <th width="8%">Default</th><th width="62%">Notes</th></tr>
@@ -229,12 +229,17 @@ already applied can be found in the <samp>samples/roms</samp> directory.</p>
 </blockquote></li>
 </ul>
 <hr>
-<h2 id="acia">ACIA Baud Rate</h2>
-<p>This setting controls the default baud rate for the ACIA.</p>
+<h2 id="acia">ACIA</h2>
+<p>This setting controls settings for the ACIA.</p>
 <table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
 <tr><th width="15%">Name</th><th width="15%">Values</th>
 <th width="8%">Default</th><th width="62%">Notes</th></tr>
-<tr><td><code>baud.rate</code></td>
+<tr><td><code>acia.address</code></td>
+<td>from <code>0000</code> to <code>FFFF</code></td>
+<td align="center"><code>F000</code></td>
+<td>This sets the memory address for the ACIA.
+This should normally be left set to the default value.</td></tr>
+<tr><td><code>acia.rate</code><br><code>baud.rate</code></td>
 <td><code>110</code>, <code>300</code>, <code>600</code>, <code>1200</code>,
 <code>2400</code>, <code>4800</code> or <code>9600</code></td>
 <td align="center"><code>300</code></td>
@@ -254,6 +259,11 @@ together with the default keyboard input mode.</p>
 <table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
 <tr><th width="15%">Name</th><th width="15%">Values</th>
 <th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>keyboard.address</code></td>
+<td>from <code>0000</code> to <code>FFFF</code></td>
+<td align="center"><code>DF00</code></td>
+<td>This sets the memory address for the keyboard.
+This should normally be left set to the default value.</td></tr>
 <tr><td><code>keyboard.layout</code></td>
 <td><code>uk</code> or <code>us</code></td>
 <td align="center"><code>uk</code></td>
@@ -277,6 +287,11 @@ See <a href="operation.html#kbmode">keyboard mode</a> for details.</td></tr>
 <table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
 <tr><th width="15%">Name</th><th width="15%">Values</th>
 <th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>video.address</code></td>
+<td>from <code>0000</code> to <code>FFFF</code></td>
+<td align="center"><code>D000</code></td>
+<td>This sets the memory address for the video RAM.
+This should normally be left set to the default value.</td></tr>
 <tr><td><code>video.rows</code></td>
 <td>from <code>16</code> to <code>32</code></td>
 <td align="center"><code>16</code></td>
@@ -378,10 +393,10 @@ UK101 hardware.</td></tr>
 when reading or writing audio data, however it is restricted to the values
 300, 600 or 1200 only.
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>November 2015
+<tr><td align="left">Tim Baldwin<br>July 2016
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2010,2015</td></tr>
+<br><br>&copy; Tim Baldwin 2010,2016</td></tr>
 </table>
 </body>
 </html>

@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2015
+ * (C) Copyright Tim Baldwin 2010,2016
  */
 package uk101.machine;
 
@@ -115,10 +115,10 @@ public class Computer extends Thread implements DataBus {
         ROM charset = new ROM(cfg.getRomCharset());
         keyboard = new Keyboard(cfg.getKbdLayout());
         video = new Video(cfg.getVideoRows(), cfg.getVideoCols(), charset);
-        acia = new ACIA6850(cfg.getBaudRate(), getPriority());
-        addMemory(0xDF00, keyboard);
-        addMemory(0xD000, video);
-        addMemory(0xF000, acia);
+        acia = new ACIA6850(cfg.getAciaRate(), getPriority());
+        addMemory(cfg.getKbdAddr(), keyboard);
+        addMemory(cfg.getVideoAddr(), video);
+        addMemory(cfg.getAciaAddr(), acia);
 
         // Create a tape recorder to load and save programs and plug it into the ACIA.
         recorder = new TapeRecorder(acia);
