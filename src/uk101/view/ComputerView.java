@@ -13,6 +13,7 @@ import java.io.File;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
+import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
@@ -27,14 +28,18 @@ import uk101.view.component.ImageFormat;
 public class ComputerView extends JDesktopPane implements ActionListener {
     private static final long serialVersionUID = 1L;
     
-    static {    // Improve appearance on GTK look-and-feel
+    public static boolean isMac;
+    
+    // Improve appearance on GTK look-and-feel and detect native Mac as
+    // some things need special handling on the Mac.
+    static { 
         UIManager.put("InternalFrame.useTaskBar", Boolean.FALSE);
+        LookAndFeel lf = UIManager.getLookAndFeel();
+        isMac = (lf != null && (lf.getID().equals("Mac") || lf.getID().equals("Aqua")));
     }
 
     static final String IMAGE_LOAD = "Load...";
     static final String IMAGE_SAVE = "Save...";
-    
-    public static boolean isMac = false;
 
     private Computer computer;
     private JFileChooser imageSelect;

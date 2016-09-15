@@ -59,12 +59,9 @@ public class Main implements Runnable {
         
         Computer.debug = parms.getFlag("debug");
 
-        // Set the Swing look and feel.  Sadly we have to detect the 
-        // native Mac L+F, as it needs some special tweaks to make it 
-        // look right :-(
+        // Set the Swing look and feel.
         String look = parms.getOption("look");
         setLookAndFeel(look);
-        ComputerView.isMac = "Mac".equals(UIManager.getLookAndFeel().getID());
 
         // Get machine image to restore
         File imageFile = parms.getInputFile(1);
