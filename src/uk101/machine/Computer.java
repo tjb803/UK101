@@ -93,9 +93,9 @@ public class Computer extends Thread implements DataBus {
         ram = new RAM(cfg.getRamSize());
         basic = new ROM(cfg.getRomBasic());
         monitor = new ROM(cfg.getRomMonitor());
-        addMemory(0, ram);
-        addMemory(0xA000, basic);
-        addMemory(0xF800, monitor);
+        addMemory(cfg.getRamAddr(), ram);
+        addMemory(cfg.getBasicAddr(), basic);
+        addMemory(cfg.getMonitorAddr(), monitor);
         
         // Install any additional ROMs and EPROMS
         roms = new ArrayList<ROM>();
@@ -128,6 +128,7 @@ public class Computer extends Thread implements DataBus {
         boolean cegmon = ms.contains("CEGMON");         // Looks like CEGMON rom
         boolean newmon = ms.contains("(C)old Start");   // Looks like New Monitor rom
         boolean synmon = ms.contains("D/C/W/M ?");      // Looks like original/OSI rom
+        boolean wemon = ms.contains("WEMON");           // Looks like WEMON rom
         aciaFix1 = newmon | synmon;
         videoFix1 = newmon;
     }    

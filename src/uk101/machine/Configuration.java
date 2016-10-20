@@ -14,8 +14,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 import uk101.Main;
@@ -51,7 +54,10 @@ public class Configuration extends Properties {
     private static final String CPU_CONTROL = "cpu.control";
     private static final String ACIA_ADDR = "acia.address";
     private static final String ACIA_RATE = "acia.rate";
+    private static final String RAM_ADDR = "ram.address";
     private static final String RAM_SIZE = "ram.size";
+    private static final String MONITOR_ADDR = "monitor.address";
+    private static final String BASIC_ADDR = "basic.address";
     private static final String ROM_MONITOR = "rom.monitor";
     private static final String ROM_BASIC = "rom.basic";
     private static final String ROM_CHARSET = "rom.charset";
@@ -73,6 +79,8 @@ public class Configuration extends Properties {
     private static final String ROM = "rom.";
     private static final String RAM = "ram.";
     private static final String EPROM = "eprom.";
+    
+    private static final String WEMON = "WEMON";
 
     // Additional ROM/RAM/EPROM have an address and a filename or size
     public static class Mem {
@@ -122,18 +130,36 @@ public class Configuration extends Properties {
         if (initial != null)
             applyProperties(initial);
         applyProperties(props);
+        
+        if (Computer.debug) {
+            List<String> keys = Arrays.asList(keySet().toArray(new String[0]));
+            Collections.sort(keys);
+            System.out.println("Configuration:");
+            for (String key : keys) 
+                System.out.println("  " + key + "=" + get(key));
+        }
     }
     
     private void applyProperties(Properties props) {
+        applyStr(props, ROM_MONITOR);
+        // For WEMON only reset the default monitor and ACIA address before
+        // processing any user provided overrides.  Can only go by the monitor
+        // name here as we are not reading the contents.
+        File f = new File(getRomMonitor());
+        if (f.getName().toUpperCase().startsWith(WEMON)) {
+            setProperty(MONITOR_ADDR, "F000");
+            setProperty(ACIA_ADDR, "E000");
+            setProperty(SCREEN_OFFSET, Integer.toString(getScreenOffset()-1));
+        }
+        
+        applyStr(props, ROM_BASIC);
+        applyStr(props, ROM_CHARSET);
         applyInt(props, CPU_SPEED, 0, 4);
         applyStr(props, CPU_CONTROL, AUTO, SLEEP, YIELD, SPIN);
+        applyInt(props, RAM_SIZE, 4, 40);
         applyHex(props, ACIA_ADDR, 0, 0xFFFF);
         applyStr(props, ACIA_RATE, "110", "300", "600", "1200", "2400", "4800", "9600");
         apply(props, ACIA_RATE, "baud.rate", 0, 0, 0, "110", "300", "600", "1200", "2400", "4800", "9600");
-        applyInt(props, RAM_SIZE, 4, 40);
-        applyStr(props, ROM_MONITOR);
-        applyStr(props, ROM_BASIC);
-        applyStr(props, ROM_CHARSET);
         applyHex(props, KBD_ADDR, 0, 0xFFFF);
         applyStr(props, KBD_LAYOUT, UK, US);
         apply(props, KBD_LAYOUT, "keyboard", 0, 0, 0, UK, US);
@@ -181,7 +207,7 @@ public class Configuration extends Properties {
             if (radix > 0) {
                 int i = Integer.parseInt(value, radix);
                 if (i >= min && i <= max) 
-                    setProperty(key, Integer.toString(i));
+                    setProperty(key, Integer.toString(i, radix));
             } else if (range.length > 0) {
                 String s = value.toLowerCase();
                 for (int i = 0; i < range.length; i++) {
@@ -199,7 +225,7 @@ public class Configuration extends Properties {
             String key = (String)k.nextElement();
             String addr = hasAddr(key, prefix);
             if (addr != null) {
-                apply(props, prefix+addr, key, 10, min, max);
+                apply(props, prefix+addr, key, (max>0) ? 10 : 0, min, max);
             }
         }
     }
@@ -226,16 +252,28 @@ public class Configuration extends Properties {
         return getString(CPU_CONTROL);
     }
     
+    public int getRamAddr() {
+        return getHex(RAM_ADDR);
+    }
+    
     public int getRamSize() {
         return getInt(RAM_SIZE);
     }
+  
+    public int getMonitorAddr() {
+        return getHex(MONITOR_ADDR);
+    }
     
-    public String getRomBasic() {
-        return getString(ROM_BASIC);
+    public int getBasicAddr() {
+        return getHex(BASIC_ADDR);
     }
     
     public String getRomMonitor() {
         return getString(ROM_MONITOR);
+    }
+    
+    public String getRomBasic() {
+        return getString(ROM_BASIC);
     }
     
     public String getRomCharset() {
@@ -386,17 +424,5 @@ public class Configuration extends Properties {
          ObjectInputStream in = new ObjectInputStream(stream);
          Configuration cfg = (Configuration)in.readObject();
          return cfg;
-    }
-    
-    /*
-     * Print configuration
-     */
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        for (Enumeration<?> k = propertyNames(); k.hasMoreElements(); ) {
-            String key = (String)k.nextElement();
-            s.append(key).append("=").append(getProperty(key)).append("\n");
-        }
-        return s.toString();
     }
 }
