@@ -120,6 +120,11 @@ the maximum requested.</p>
 <table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3">
 <tr><th width="15%">Name</th><th width="15%">Values</th>
 <th width="8%">Default</th><th width="62%">Notes</th></tr>
+<tr><td><code>ram.address</code></td>
+<td>from <code>0000</code> to <code>FFFF</code></td>
+<td align="center"><code>0</code></td>
+<td>This sets the memory address for the RAM. 
+This should normally be left set to the default value.</td></tr>
 <tr><td><code>ram.size</code></td>
 <td>from <code>4</code> to <code>40</code></td>
 <td align="center"><code>8</code></td>
@@ -135,14 +140,19 @@ installed giving an absolute maximum contiguous RAM of 40KB.</td></tr>
 The RAM is installed at address <code>XXXX</code> which must be a valid
 four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
 and the value should be the required RAM size in KBytes.</td></tr>
+<tr><td><code>monitor.address</code></td>
+<td>from <code>0000</code> to <code>FFFF</code></td>
+<td align="center"><code>F800</code></td>
+<td>This sets the memory address for the monitor ROM. 
+This should normally be left set to the default value.</td></tr>
 <tr><td><code>rom.monitor</code></td>
 <td><code>MONUK01</code><br><code>MONUK02</code><br>
-<code>CEGMON</code><br>or <code>filename</code></td>
+<code>CEGMON</code><br><code>WEMON</code><br>
+or <code>filename</code></td>
 <td align="center"><code>MONUK02</code></td>
 <td>This defines the monitor ROM that is installed.
-The value can be one of the built-in names <code>MONUK01</code>,
-<code>MONUK02</code> or <code>CEGMON</code>, or it can be the name of a
-file containing a replacement ROM.
+The value can be the name of a file containing a replacement ROM or
+one of the following built-in names:
 <table frame="void" rules="none">
 <tr valign="baseline"><td><code>MONUK01&nbsp;</code></td>
 <td>was the original monitor shipped with the early machines.</td></tr> 
@@ -153,7 +163,14 @@ shipped with later machines.</td></tr>
 <tr valign="baseline"><td><code>CEGMON&nbsp;</code></td>
 <td>is the UK101 version of the popular replacement
 <a href="http://uk101.sourceforge.net/docs/pdf/cegmon.pdf">CEGMON</a> monitor.</td></tr>
+<tr valign="baseline"><td><code>WEMON&nbsp;</code></td>
+<td>was another popular replacement monitor from Watford Electronics.</td></tr>
 </table></td>
+<tr><td><code>basic.address</code></td>
+<td>from <code>0000</code> to <code>FFFF</code></td>
+<td align="center"><code>A000</code></td>
+<td>This sets the memory address for the BASIC ROM. 
+This should normally be left set to the default value.</td></tr>
 <tr><td><code>rom.basic</code></td>
 <td><code>BASUK101</code><br>or <code>filename</code></td>
 <td align="center"><code>BASUK101</code></td>
@@ -393,7 +410,7 @@ UK101 hardware.</td></tr>
 when reading or writing audio data, however it is restricted to the values
 300, 600 or 1200 only.
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>July 2016
+<tr><td align="left">Tim Baldwin<br>October 2016
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
 <br><br>&copy; Tim Baldwin 2010,2016</td></tr>
