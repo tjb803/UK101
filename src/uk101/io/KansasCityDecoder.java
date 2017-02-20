@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2014
+ * (C) Copyright Tim Baldwin 2014,2017
  */
 package uk101.io;
 
@@ -23,8 +23,13 @@ public class KansasCityDecoder extends AudioDecoder {
 
     private int cycles0, cycles1;
     private int sampleCheck;
-        
+    
     public KansasCityDecoder(int baud) {
+        this(baud, 0);
+    }
+        
+    public KansasCityDecoder(int baud, int phase) {
+        super(phase);
         int n = 4/(baud/KansasCityEncoder.BAUD300);
         cycles0 = n;        // Number of cycles of LO_TONE for a "0" bit
         cycles1 = 2*n;      // Number of cycles of HI_TONE for a "1" bit
@@ -84,7 +89,7 @@ public class KansasCityDecoder extends AudioDecoder {
         // generate the average, so we can determine whether a read cycle is LO or HI.
         int lo = (int)(audioFormat.getSampleRate() + KansasCityEncoder.LO_TONE/2)/KansasCityEncoder.LO_TONE;
         int hi = (int)(audioFormat.getSampleRate() + KansasCityEncoder.HI_TONE/2)/KansasCityEncoder.HI_TONE;
-        sampleCheck = (lo + hi)/2;
+        sampleCheck = (int)Math.round(Math.sqrt(lo*hi));
      }
     
     public void decodeEnd() throws IOException {

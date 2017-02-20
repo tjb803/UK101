@@ -87,6 +87,10 @@ public class Args {
     /*
      * Return options/parameters in various forms
      */
+    public int getParameterCount() {
+        return parameters.size();
+    }
+    
     public String getParameter(int position) {
         String result = null;
         if (position <= parameters.size()) {
@@ -95,14 +99,10 @@ public class Args {
         return result;
     }
 
-    public List<String> getParameters(int firstPos) {
-        return getParameters(firstPos, 0);
-    }
-
-    public List<String> getParameters(int firstPos, int lastPos) {
+    public List<String> getParameters(int firstPos, int count) {
         List<String> results = new ArrayList<String>();
-        for (int i = firstPos; lastPos == 0 || i <= lastPos; i++) {
-            String result = getParameter(i);
+        for (int i = 0; i < count ; i++) {
+            String result = getParameter(firstPos+i);
             if (result == null)
                 break;
             results.add(result);
@@ -137,8 +137,8 @@ public class Args {
         return result;
     }
 
-    public List<File> getInputFiles(int position) {
-        return getNamedInputFiles(getParameters(position));
+    public List<File> getInputFiles(int position, int count) {
+        return getNamedInputFiles(getParameters(position, count));
     }
 
     private List<File> getNamedInputFiles(List<String> names) {

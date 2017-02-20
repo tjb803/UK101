@@ -24,7 +24,7 @@ public class Loudspeaker extends OutputStream {
     private AudioEncoder encoder;
     private SourceDataLine sound;
     private byte[] frame;
-    int length;
+    private int length;
     
     public Loudspeaker(AudioFormat format) throws LineUnavailableException {
         sound = AudioSystem.getSourceDataLine(format);
@@ -40,7 +40,7 @@ public class Loudspeaker extends OutputStream {
     
     public void open() throws LineUnavailableException {
         sound.open();
-        sound.start();          
+        sound.start();
     }
     
     public void close() {
@@ -48,7 +48,7 @@ public class Loudspeaker extends OutputStream {
         sound.stop();
         sound.close();
     }
-    
+
     // Cannot write single bytes, must buffer up and write complete frames
     public void write(int b) throws IOException {
         frame[length++] = (byte)b;

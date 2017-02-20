@@ -30,6 +30,12 @@ public class Computer extends Thread implements DataBus {
     // Some flags to control a few special hacks 
     public static boolean videoFix1 = false;
     public static boolean aciaFix1 = false;
+    
+    // Monitor versions
+    private static int MONITOR_MONUK01 = 0;
+    private static int MONITOR_MONUK02 = 1;
+    private static int MONITOR_CEGMON = 2;
+    private static int MONITOR_WEMON = 3;
 
     // Version
     public String name;
@@ -125,12 +131,15 @@ public class Computer extends Thread implements DataBus {
         
         // Set special flags for some emulation hacks.
         String ms = new String(monitor.store, "US-ASCII");
-        boolean cegmon = ms.contains("CEGMON");         // Looks like CEGMON rom
-        boolean newmon = ms.contains("(C)old Start");   // Looks like New Monitor rom
-        boolean synmon = ms.contains("D/C/W/M ?");      // Looks like original/OSI rom
-        boolean wemon = ms.contains("WEMON");           // Looks like WEMON rom
-        aciaFix1 = newmon | synmon;
-        videoFix1 = newmon;
+        int mon = MONITOR_MONUK01;          // Assume original/OSI rom
+        if (ms.contains("(C)old Start"))    // Looks like New Monitor rom
+            mon = MONITOR_MONUK02;    
+        else if (ms.contains("CEGMON"))     // Looks like CEGMON rom
+            mon = MONITOR_CEGMON;
+        else if (ms.contains("WEMON"))      // Looks like WEMON rom
+            mon = MONITOR_WEMON;
+        aciaFix1 = (mon == MONITOR_MONUK01 || mon == MONITOR_MONUK02);
+        videoFix1 = (mon == MONITOR_MONUK02);
     }    
 
     // Add some memory into the address space, applying any patches if 

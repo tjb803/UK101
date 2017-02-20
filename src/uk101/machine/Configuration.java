@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2016
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.machine;
 
@@ -76,6 +76,7 @@ public class Configuration extends Properties {
     private static final String AUDIO_BITS = "audio.bits";
     private static final String AUDIO_LEAD = "audio.lead";
     private static final String AUDIO_WAVE = "audio.wave";
+    private static final String AUDIO_PHASE = "audio.phase";
     private static final String ROM = "rom.";
     private static final String RAM = "ram.";
     private static final String EPROM = "eprom.";
@@ -177,6 +178,7 @@ public class Configuration extends Properties {
         applyStr(props, AUDIO_BITS, "8", "16");
         applyInt(props, AUDIO_LEAD, 0, 10);
         applyStr(props, AUDIO_WAVE, SINE, SYSTEM);
+        applyStr(props, AUDIO_PHASE, "0", "90", "180", "270");
         applyMem(props, ROM, 0, 0);
         applyMem(props, RAM, 1, 64);
         applyMem(props, EPROM, 0, 0);
@@ -358,7 +360,8 @@ public class Configuration extends Properties {
     
     public AudioDecoder getAudioDecoder() {
         int baud = Math.min(Math.max(getInt(ACIA_RATE), 300), 1200);
-        KansasCityDecoder kcs = new KansasCityDecoder(baud);
+        int phase = getInt(AUDIO_PHASE);
+        KansasCityDecoder kcs = new KansasCityDecoder(baud, phase);
         return kcs;        
     }
     

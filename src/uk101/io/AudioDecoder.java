@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2014
+ * (C) Copyright Tim Baldwin 2014,2017
  */
 package uk101.io;
 
@@ -26,8 +26,11 @@ public abstract class AudioDecoder {
      * Format must be linear PCM with signed big-endian data.
      */
     
-    protected AudioDecoder() {
+    protected AudioDecoder(int phase) {
         audioFormat = new AudioFormat(AudioEncoder.RATE48K, AudioEncoder.BIT16, 1, true, true);
+        phase = (phase%360)/90;
+        phaseShift = (phase == 1 || phase == 3);
+        phaseInvert = (phase == 2 || phase == 3);
     }
     
     public void setInputStream(InputStream in, AudioFormat format) {
@@ -48,19 +51,20 @@ public abstract class AudioDecoder {
      */
     
     private int bytesPerFrame, bytesPerChannel, channels;
+    private boolean phaseShift, phaseInvert;
     private boolean hasNextSample;
     private int nextSample;
     
-    protected int peekSample() throws IOException {
+    protected int peekSample(boolean invert) throws IOException {
         if (!hasNextSample) {
             nextSample = nextSample();
             hasNextSample = true;
         }
-        return nextSample;
+        return (invert) ? -nextSample : nextSample;
     }
     
-    protected int readSample() throws IOException {
-        int sample = peekSample();
+    protected int readSample(boolean invert) throws IOException {
+        int sample = peekSample(invert);
         hasNextSample = false;
         return sample;
     }  
@@ -87,24 +91,34 @@ public abstract class AudioDecoder {
     
     /*
      * Read the next tone cycle and return the number of samples it spanned.
-     * Assumes we are positioned at the start of a new cycle (zero amplitude)
-     * and reads until we reach the next start point.
-     * TODO: This will be confused by glitches in the signal. 
+     * Assumes we are positioned at the start of a new cycle and reads until
+     * we reach the next cycle start point.  This can be confused by glitches 
+     * in the signal. 
      */
     
     protected int readCycle() throws IOException {
-        int count = 0;
-        while (peekSample() >= 0) {
-            readSample();
+        // For phase angles of 0 or 180 we start at zero amplitude, read 
+        // the pair of +ve/-ve half-cycles and return to zero.
+        int count = 0, last = 0;
+        while (peekSample(phaseInvert) >= 0) {
+            last = readSample(phaseInvert);
             count += 1;
         }
-        while (peekSample() < 0) {
-            readSample();
+        while (peekSample(phaseInvert) < 0) {
+            last = readSample(phaseInvert);
             count += 1;
         }
+        if (phaseShift) {
+            // For phase angles of 90 or 270 we start at the max/min amplitude
+            // so need to continue until we reach the next max/min.
+            while (peekSample(phaseInvert) > last) {
+                last = readSample(phaseInvert);
+                count += 1;
+            }
+        }    
         return count;
     }
-    
+   
     /*
      * Decoding methods need to be supplied by the concrete subclass
      */

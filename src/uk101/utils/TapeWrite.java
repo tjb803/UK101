@@ -1,85 +1,66 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2014
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.utils;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
-import uk101.io.AudioEncoder;
 import uk101.io.KansasCityDecoder;
 import uk101.io.KansasCityEncoder;
 import uk101.io.Tape;
 
 /**
- * Utility program to take ASCII, binary or audio input and write an 
- * equivalent UK101 binary or audio tape
+ * Utility program to produce a UK101 binary format tape.  Input can be one 
+ * or more ASCII, binary or audio tapes which are combined into a single output.
  *
  * Usage:
- *    TapeWrite [options] inputfile outputtape
+ *    TapeWrite [options] inputfile(s) outputtape
  *
  * where:
- *    inputfile: the name of the ASCII, binary or audio input file
+ *    inputfile(s): the names of the ASCII, binary or audio input files
  *    outputtape: the name for the output tape
  *
  * options:
- *    -audio: create audio tape (default is binary)
- *    -sampleRate: audio sample rate (default 48kHz)
- *    -sampleSize: audio sample size (default 16 bits)
- *    -baudRate: audio baud rate (default 300)
- *    -leadIn: time to play lead-in tone (default to 5s)
- *    -leadOut: time to play lead-out tone (defaults to leadIn) 
- *    -inputRate: audio baud rate of input, if audio encoded (defaults to baudRate)
- *    -sineWave: generate pure sinewave audio tones 
- */
+ *    -baudRate: the baud rate if the file is an audio file, defaults to 300
+ *    -phase: the audio phase angle if the file is an audio file, defaults to 90
+  */
 public class TapeWrite {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
         Args.Map options = Args.optionMap();
-        options.put("audio");
-        options.put("sampleRate", "samplerate (8000 to 96000)");
-        options.put("sampleSize", "samplesize (8 or 16)");
         options.put("baudRate", "baudrate (300, 600 or 1200)");
-        options.put("leadIn", "+leadin");
-        options.put("leadOut", "leadout");
-        options.put("inputRate", "inputbaudrate (300, 600 or 1200)");
-        options.put("sineWave");
-        Args parms = new Args(TapeWrite.class, "inputfile outputtape", args, options);
-
-        File inputFile = parms.getInputFile(1);
-        File outputFile = parms.getOutputFile(2);
-        int outputFormat = parms.getFlag("audio") ? Tape.STREAM_AUDIO : Tape.STREAM_BINARY;
-        int sampleRate = parms.getInteger("sampleRate", AudioEncoder.RATE48K);
-        int sampleSize = parms.getInteger("sampleSize", AudioEncoder.BIT16);
+        options.put("phase", "phaseangle (0, 90, 180 or 270)");
+        Args parms = new Args(TapeWrite.class, "inputfile(s) outputtape", args, options);
+        int count = parms.getParameterCount();
+ 
+        List<File> inputFiles = parms.getInputFiles(1, count-1);
+        File outputFile = parms.getOutputFile(count);
         int baudRate = parms.getInteger("baudRate", KansasCityEncoder.BAUD300);
-        int leadIn = parms.getInteger("leadIn", 5);
-        int leadOut = parms.getInteger("leadOut", leadIn);
-        int inputRate = parms.getInteger("inputRate", baudRate);
-        boolean sineWave = parms.getFlag("sineWave");
+        int phase = parms.getInteger("phase", 90);
 
         // Check parameters
-        if ((inputFile == null || outputFile == null) ||
-                (sampleRate < 8000 || sampleRate > 96000) ||
-                (sampleSize != 8 && sampleSize != 16) ||
+        if ((inputFiles.isEmpty() || outputFile == null) ||
                 (baudRate != 300 && baudRate != 600 && baudRate != 1200) ||
-                (inputRate != 300 && inputRate != 600 && inputRate != 1200)) {
+                (phase%90 != 0)) {
             parms.usage();
         }
 
-        // Create input/output streams
-        KansasCityEncoder encoder = new KansasCityEncoder(sampleRate, sampleSize, baudRate, sineWave);
-        KansasCityDecoder decoder = new KansasCityDecoder(inputRate);
-        encoder.setLeader(leadIn*1000, leadOut*1000);
-        InputStream input = Tape.getInputStream(inputFile, Tape.STREAM_SELECT, decoder); 
-        OutputStream output = Tape.getOutputStream(outputFile, outputFormat, encoder);
-
-        // Copy the input to the output
-        Tape.copy(input, output);
+        // Create decoder for audio input and create output stream
+        KansasCityDecoder decoder = new KansasCityDecoder(baudRate, phase);
+        OutputStream output = Tape.getOutputStream(outputFile, Tape.STREAM_BINARY, null);
+        
+        // Copy the inputs to the output
+        for (File inputFile : inputFiles) {    
+            InputStream input = Tape.getInputStream(inputFile, Tape.STREAM_SELECT, decoder);
+            Tape.copy(input, output);
+            input.close();
+        }    
         output.close();
-        input.close();
     }
 }

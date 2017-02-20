@@ -1,29 +1,32 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2015,2016
+ * (C) Copyright Tim Baldwin 2017
  */
 package uk101.utils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import uk101.io.AudioEncoder;
 import uk101.io.KansasCityDecoder;
 import uk101.io.KansasCityEncoder;
 import uk101.io.Tape;
-import uk101.machine.Loudspeaker;
+import uk101.io.WaveOutputStream;
 
 /**
- * Utility program to take ASCII, binary or audio input and play as 
- * Kansas City encoded audio to the speaker.
+ * Utility program to produce audio encoded tapes.  Input can be one 
+ * or more ASCII, binary or audio tapes which are combined into a single
+ * output WAV file.
  *
  * Usage:
- *    TapePlay [options] inputfile(s) 
+ *    TapeRecord [options] inputfile(s) outputfile 
  *
  * where:
  *    inputfile(s): the names of the ASCII, binary or audio input files
+ *    outputfile: the name for the output WAV file
  *
  * options:
  *    -binary: input is binary, defaults to auto-selected
@@ -37,7 +40,7 @@ import uk101.machine.Loudspeaker;
  *    -inputRate: audio baud rate of input, if audio encoded (defaults to baudRate)
  *    -inputPhase: audio phase angle of input, if audio encoded (defaults to 90) 
  */
-public class TapePlay {
+public class TapeRecord {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
@@ -52,10 +55,11 @@ public class TapePlay {
         options.put("sineWave");
         options.put("inputRate", "inputbaudrate (300, 600 or 1200)");
         options.put("inputPhase", "inputphaseangle (0, 90, 180 or 270)");
-        Args parms = new Args(TapePlay.class, "inputfile(s)", args, options);
+        Args parms = new Args(TapeRecord.class, "inputfile(s) outputfile", args, options);
         int count = parms.getParameterCount();
-
-        List<File> inputFiles = parms.getInputFiles(1, count);
+        
+        List<File> inputFiles = parms.getInputFiles(1, count-1);
+        File outputFile = parms.getOutputFile(count);
         int inputFormat = parms.getFlag("binary") ? Tape.STREAM_BINARY : Tape.STREAM_SELECT;
         int sampleRate = parms.getInteger("sampleRate", AudioEncoder.RATE48K);
         int sampleSize = parms.getInteger("sampleSize", AudioEncoder.BIT16);
@@ -68,7 +72,7 @@ public class TapePlay {
         boolean sineWave = parms.getFlag("sineWave");
 
         // Check parameters
-        if ((inputFiles.isEmpty()) ||
+        if ((inputFiles.isEmpty() || outputFile == null) ||
                 (sampleRate < 8000 || sampleRate > 96000) ||
                 (sampleSize != 8 && sampleSize != 16) ||
                 (baudRate != 300 && baudRate != 600 && baudRate != 1200) ||
@@ -76,24 +80,24 @@ public class TapePlay {
                 (inputPhase%90 != 0)) {
             parms.usage();
         }
-
-        // Create encoders/decoders and loudspeaker output device
+        
+        // Create encoder/decoder and audio output stream.
         KansasCityDecoder decoder = new KansasCityDecoder(inputRate, inputPhase);
         KansasCityEncoder encoder = new KansasCityEncoder(sampleRate, sampleSize, baudRate, sineWave);
         encoder.setLeader(leadIn*1000, leadOut*1000);
-        Loudspeaker speaker = new Loudspeaker(encoder);
+        OutputStream output = Tape.getOutputStream(outputFile, Tape.STREAM_AUDIO, encoder);
         
-        // Play the input files to the speaker
+        // Copy the inputs to the output
         count = 0;
-        speaker.open();
-        for (File inputFile : inputFiles) {
+        for (File inputFile : inputFiles) {    
             InputStream input = Tape.getInputStream(inputFile, inputFormat, decoder);
             if (count++ > 0) {
                 encoder.setLeader(leadGap*1000, leadOut*1000);
+                ((WaveOutputStream)output).reset();
             }
-            speaker.play(input);
-            input.close(); 
+            Tape.copy(input, output);
+            input.close();
         }    
-        speaker.close();
+        output.close();
     }
 }

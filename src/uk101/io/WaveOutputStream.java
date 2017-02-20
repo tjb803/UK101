@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2014
+ * (C) Copyright Tim Baldwin 2014,2017
  */
 package uk101.io;
 
@@ -27,12 +27,18 @@ public class WaveOutputStream extends OutputStream {
     private OutputStream outputStream;
     private AudioEncoder audioEncoder;
     private ByteArrayOutputStream audioStream;
+    private boolean startStream;
 
     public WaveOutputStream(OutputStream out, AudioEncoder encoder) {
         outputStream = out;
         audioEncoder = encoder;
         audioStream = new ByteArrayOutputStream();
         audioEncoder.setOutputStream(audioStream);
+        reset();
+    }
+    
+    public void reset() {
+        startStream = true;
     }
     
     /*
@@ -40,8 +46,9 @@ public class WaveOutputStream extends OutputStream {
      */
 
     public void write(int b) throws IOException {
-        if (audioStream.size() == 0) {
+        if (startStream) {
             audioEncoder.encodeStart();
+            startStream = false;
         }    
         audioEncoder.encodeByte(b);
     }

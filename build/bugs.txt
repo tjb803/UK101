@@ -69,6 +69,12 @@ v1.3.1
 ------
   Improvements:
    - Allow configuration of memory address for keyboard, video and ACIA
+   - Allow configuration of memory address for RAM, Monitor and BASIC
    - Add support for additional RAM blocks in empty address space
    - Add support for Programmable ROMs which persist changes
+   - Add WEMON monitor
+   - Improve audio encoding and decoding
+   
+  Main bug fixes:
+   -  Fix minor appearance issues on Mac
  

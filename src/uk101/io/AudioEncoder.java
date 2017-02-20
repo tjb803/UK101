@@ -43,8 +43,8 @@ public abstract class AudioEncoder {
         return audioFormat;
     }
     
-    private int bytesPerSample;
     private boolean sineWave;
+    private int bytesPerSample;
     private double maxV;
     
     // Generate a set of sound samples that produce a number of cycles of
@@ -102,7 +102,7 @@ public abstract class AudioEncoder {
         // half of the cycle - we'll invert it later for the falling edge.
         // Add an adjustment so the higher frequency (lower amplitude) signals
         // still end up centred around 0 when scaled.
-        double v = ev * (1 - Math.exp(-(t%x)/rc)) + (maxV-mv)/2;
+        double v = ev * (1 - Math.exp((t%x-x)/rc)) + (maxV-mv)/2;
         
         // Scale the result so it goes from -1 to 1 instead of 0 to maxV.
         double a = 2*v/maxV - 1;

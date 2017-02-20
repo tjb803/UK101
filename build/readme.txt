@@ -54,6 +54,8 @@ v1.3.1
  - "ram.xxxx" property to allow extra RAM blocks
  - "eprom.xxxx" property to allow programmable ROMs
  - Add EraseROM utility to erase or create a ROM image
+ - WEMON monitor included in package
+ - Improved audio encoding and decoding
 
 v1.3.0
  - More improvements to host CPU usage
@@ -70,7 +72,7 @@ v1.3.0
 
 v1.2.0
  - "rom.XXXX" property to allow extra plug-in ROMs
- - Additional games: "8K Super Invaders", "Asteroids" and "Le Passe-Temp"
+ - Additional games: "8K Super Invaders", "Asteroids" and "Le Passe-Temps"
  - CEGMON monitor included in package
  - Default screen size to support CEGMON and MONUK02
  - Support for reading and writing Kansas City Standard audio tapes
@@ -96,7 +98,7 @@ v1.0.0  February 2011  Add Ohio Superboard II support
 v1.1.0  October 2011   ACIA support for 8K Super Invaders
 v1.2.0  January 2014   Support additional plug-in ROMs and audio encoded tapes
 v1.3.0  November 2015  Index addressing mode bug fixes and more CPU speed options
-v1.3.1  July 2016      Additional configuration and EPROM support 
+v1.3.1  October 2016   Additional configuration and EPROM support 
 
 ===========
 Tim Baldwin

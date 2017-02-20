@@ -130,6 +130,7 @@ src/uk101/utils/PrintMachine.java -text
 src/uk101/utils/PrintTrace.java -text
 src/uk101/utils/TapePlay.java -text
 src/uk101/utils/TapeRead.java -text
+src/uk101/utils/TapeRecord.java -text
 src/uk101/utils/TapeWrite.java -text
 src/uk101/view/CassetteView.java -text
 src/uk101/view/ComputerView.java -text

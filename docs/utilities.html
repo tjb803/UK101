@@ -21,8 +21,9 @@ various off-line tasks.</p>
 <li><a href="#ptrace">Trace File Formatter</a></li>
 <li><a href="#eprom">ROM Image Eraser</a></li>
 <li><a href="#tread">Binary and Audio Tape Reader</a></li>
-<li><a href="#twrite">Binary and Audio Tape Writer</a></li>
-<li><a href="#tplay">Tape Audio Player</a>
+<li><a href="#twrite">Binary Tape Writer</a></li>
+<li><a href="#trecord">Audio Recorder</a>
+<li><a href="#tplay">Audio Player</a>
 </ul>
 <p>To run any of these utility programs you must ensure the simulator JAR
 file is on the Java CLASSPATH.</p>
@@ -217,76 +218,123 @@ Typically an empty ROM image would be created to be installed as an
 <h4>Parameters</h4>
 <blockquote><dl>
 <dt><code>inputtape</code></dt>
-<dd>The name of a binary UK101 decoded cassette tape file or the 
-name of a Kansas City Standard encoded audio WAV file.</dd>
+<dd>The name of a binary or ASCII tape file or a Kansas City Standard 
+encoded audio WAV file.</dd>
 <dt><code>outputfile</code></dt>
-<dd>The name of an output file.  
+<dd>The name of an ASCII format output file.  
 Defaults to standard out.</dd> 
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
 <dt><code>-binary</code></dt>
-<dd>Input tape is to be processed as a binary file.
+<dd>Input should be processed as a binary file.
 This is not normally required as the system will automatically detect
 the type of input.</dd>
 <dt><code>-baudRate <i>baud_rate</i></code></dt>
-<dd>The baud rate of an audio file.
+<dd>The baud rate of an audio encoding.
 Supported baud rates are 300, 600 or 1200; this defaults to the standard 
 300 baud.</dd>
+<dt><code>-phase <i>phase_angle</i></code></dt>
+<dd>The phase angle of an audio encoding.
+Supported values are 0, 90, 180 or 270; this defaults to 90&deg;.</dd>
 </dl></blockquote>
-<p>This program will take a decoded binary cassette tape file or a Kansas
-City Standard encoded audio WAV file and print or save it
-in a standard ASCII character format for ease of viewing or editing on 
-the PC.</p>
+<p>This program will write an <i>ASCII</i> format version of input file.
+The <i>ASCII</i> format is useful for viewing and editing on the PC.</p>
+<p>It may be necessary to experiment with the <code>-phase</code> parameter
+to get accurate decoding of audio files, although the default value is correct 
+for any tapes written using the <a href="#trecord">Tape Recorder</a> utility.</p>
 <p>See <a href="samples.html#format">tape formats</a> for 
 details on the differences between the <i>binary</i>, <i>audio</i> and 
 <i>ASCII</i> forms of program tapes.</p> 
-<hr><h2 id="twrite">Binary and Audio Tape Writer</h2>
+<hr><h2 id="twrite">Binary Tape Writer</h2>
 <h3>Command</h3>
 <blockquote><pre>
-<code>java <b>uk101.utils.TapeWrite</b> [options] inputfile outputtape</code>
+<code>java <b>uk101.utils.TapeWrite</b> [options] inputfile(s) outputtape</code>
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>inputfile</code></dt>
-<dd>The name of an ASCII or binary file representation of a decoded 
-cassette tape.</dd>
+<dt><code>inputfile(s)</code></dt>
+<dd>The names of one or more binary or ASCII tape files or a Kansas City 
+Standard encoded audio WAV files</dd>
 <dt><code>outputtape</code></dt>
-<dd>The name of a binary or Kansas City Standard audio WAV output file.</dd> 
+<dd>The name of a binary format output file.</dd> 
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
-<dt><code>-audio</code></dt>
-<dd>Write an audio WAV file as output.
-The default is to write a binary file.</dd>
-<dt><code>-sampleRate <i>sample_rate</i></code></dt>
-<dd>The audio sample rate if writing a WAV file.
-Values can be between 8000 and 96000, including the CD standard 44100.
-The default is high quality 48000Hz.</dd>
-<dt><code>-sampleSize <i>sample_size</i></code></dt>
-<dd>The audio sample size if writing a WAV file.
-Values can be 8 or 16.
-The default is high quality 16-bit samples</dd>
 <dt><code>-baudRate <i>baud_rate</i></code></dt>
-<dd>The baud rate if writing a WAV file.
+<dd>The baud rate of an audio encoding.
 Supported baud rates are 300, 600 or 1200; this defaults to the standard 
 300 baud.</dd>
-<dt><code>-leadIn <i>lead_in</i></code></dt>
-<dd>The number of seconds of lead-in tone if writing a WAV file.
-Default value is 5 seconds.</dd>
-<dt><code>-leadOut <i>lead_out</i></code></dt>
-<dd>The number of seconds of lead-out tone if writing a WAV file.
-Default value is the same as the lead-in.</dd>
-<dt><code>-inputRate <i>input_baud_rate</i></code></dt>
-<dd>The baud rate of the <i>inputfile</i> if it is audio encoded and if
-it differs from the output baud rate.</dd>
+<dt><code>-phase <i>phase_angle</i></code></dt>
+<dd>The phase angle of an audio encoding.
+Supported values are 0, 90, 180 or 270; this defaults to 90&deg;.</dd>
+</dl></blockquote>
+<p>This program will write a single <i>binary</i> format version of all the 
+provided input files.
+The <i>binary</i> format is the best format to use when archiving UK101 
+programs and data on the PC.
+The input files may be in <i>binary</i>, <i>ASCII</i> or <i>audio</i> encoded 
+formats or a mix of the three.</p>
+<p>See <a href="samples.html#format">tape formats</a> for
+details on the differences between the <i>binary</i>, <i>audio</i> and 
+<i>ASCII</i> forms of program tapes.</p>
+<hr><h2 id="twrite">Audio Recorder</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>uk101.utils.TapeRecord</b> [options] inputfile(s) outputwav</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>inputfile(s)</code></dt>
+<dd>The names of one or more binary or ASCII tape files or a Kansas City 
+Standard encoded audio WAV files</dd>
+<dt><code>outputwav</code></dt>
+<dd>The name of a Kansas City Standard audio WAV output file.</dd> 
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-binary</code></dt>
+<dd>Input should be processed as a binary files.
+This is not normally required as the system will automatically detect
+the type of input.</dd>
 <dt><code>-sineWave</code></dt>
 <dd>Generate audio files using pure sine waves rather than the system
 hardware wave shape.</dd>
+<dt><code>-sampleRate <i>sample_rate</i></code></dt>
+<dd>The audio sample rate for the WAV encoded file.
+Values can be between 8000 and 96000, including the CD standard 44100.
+The default is high quality 48000Hz.</dd>
+<dt><code>-sampleSize <i>sample_size</i></code></dt>
+<dd>The audio sample size for the WAV encoded file.
+Values can be 8 or 16.
+The default is high quality 16-bit samples</dd>
+<dt><code>-baudRate <i>baud_rate</i></code></dt>
+<dd>The baud rate of the WAV encoded file.
+Supported baud rates are 300, 600 or 1200; this defaults to the standard 
+300 baud.</dd>
+<dt><code>-leadIn <i>lead_in</i></code></dt>
+<dd>The number of seconds of lead-in carrier tone.
+Default value is 5 seconds.</dd>
+<dt><code>-leadOut <i>lead_out</i></code></dt>
+<dd>The number of seconds of lead-out carrier tone.
+Default value is the same as the lead-in.</dd>
+<dt><code>-leadGap <i>segment_gap</i></code></dt>
+<dd>The number of seconds of blank carrier tone between output file
+segments.
+Default value is 2 seconds.</dd>
+<dt><code>-inputRate <i>input_baud_rate</i></code></dt>
+<dd>The baud rate of the <code>inputfile</code> if it is audio encoded and if
+it differs from the output baud rate.</dd>
+<dt><code>-inputPhase <i>input_phase_angle</i></code></dt>
+<dd>The phase angle of the <code>inputfile</code> if it is audio encoded.
+Supported values are 0, 90, 180 or 270; this defaults to 90&deg;.</dd>
 </dl></blockquote>
-<p>This program will take an ASCII, binary or audio representation of a decoded 
-cassette tape and write it in the original binary format or in Kansas City
-Standard audio WAV format.
+<p>This program will write a single Kansas City Standard <i>audio</i> format
+WAV file of all the provided input files. 
+A small segment gap of blank carrier tone will be left between eaxh file
+written.
+The input files may be in <i>binary</i>, <i>ASCII</i> or <i>audio</i> encoded 
+formats or a mix of the three.</p>
 <p>See <a href="samples.html#format">tape formats</a> for
 details on the differences between the <i>binary</i>, <i>audio</i> and 
 <i>ASCII</i> forms of program tapes.</p> 
@@ -295,46 +343,54 @@ the tape in a different audio baud rate or quality level if required.</p>
 <hr><h2 id="tplay">Tape Audio Player</h2>
 <h3>Command</h3>
 <blockquote><pre>
-<code>java <b>uk101.utils.TapePlay</b> [options] inputfile</code>
+<code>java <b>uk101.utils.TapePlay</b> [options] inputfile(s)</code>
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>inputfile</code></dt>
-<dd>The name of an ASCII, binary or audio tape file.</dd>
+<dt><code>inputfile(s)</code></dt>
+<dd>The names of one or more binary or ASCII tape files or a Kansas City 
+Standard encoded audio WAV files</dd>
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
 <dt><code>-binary</code></dt>
-<dd>Input tape is to be processed as a binary file.
+<dd>Input should be processed as a binary files.
 This is not normally required as the system will automatically detect
 the type of input.</dd>
+<dt><code>-sineWave</code></dt>
+<dd>Generate audio files using pure sine waves rather than the system
+hardware wave shape.</dd>
 <dt><code>-sampleRate <i>sample_rate</i></code></dt>
-<dd>The audio sample rate for playback.
+<dd>The audio sample rate for the WAV encoded file.
 Values can be between 8000 and 96000, including the CD standard 44100.
 The default is high quality 48000Hz.</dd>
 <dt><code>-sampleSize <i>sample_size</i></code></dt>
-<dd>The audio sample size for playback.
+<dd>The audio sample size for the WAV encoded file.
 Values can be 8 or 16.
 The default is high quality 16-bit samples</dd>
 <dt><code>-baudRate <i>baud_rate</i></code></dt>
-<dd>The baud rate for playback.
+<dd>The baud rate of the WAV encoded file.
 Supported baud rates are 300, 600 or 1200; this defaults to the standard 
 300 baud.</dd>
 <dt><code>-leadIn <i>lead_in</i></code></dt>
-<dd>The number of seconds of lead-in tone for playback.
+<dd>The number of seconds of lead-in carrier tone.
 Default value is 5 seconds.</dd>
 <dt><code>-leadOut <i>lead_out</i></code></dt>
-<dd>The number of seconds of lead-out tone for playback.
+<dd>The number of seconds of lead-out carrier tone.
 Default value is the same as the lead-in.</dd>
+<dt><code>-leadGap <i>segment_gap</i></code></dt>
+<dd>The number of seconds of blank carrier tone between output file
+segments.
+Default value is 2 seconds.</dd>
 <dt><code>-inputRate <i>input_baud_rate</i></code></dt>
-<dd>The baud rate of the <i>inputfile</i> if it is audio encoded and if
+<dd>The baud rate of the <code>inputfile</code> if it is audio encoded and if
 it differs from the output baud rate.</dd>
-<dt><code>-sineWave</code></dt>
-<dd>Generate sound using pure sine waves rather than the system
-hardware wave shape.</dd>
+<dt><code>-inputPhase <i>input_phase_angle</i></code></dt>
+<dd>The phase angle of the <code>inputfile</code> if it is audio encoded.
+Supported values are 0, 90, 180 or 270; this defaults to 90&deg;.</dd>
 </dl></blockquote>
-<p>This program will take an ASCII, binary or audio tape file and play it  
-in Kansas City Standard audio format to the system sound device.
+<p>This program will take one or more ASCII, binary or audio tape file and 
+play them in Kansas City Standard audio format to the system sound device.
 This might be useful if you wanted to connect the PC's audio output to
 a real cassette player or real UK101 machine.</p>
 <p>Note: this program can be used to play audio format files but it is not a 
@@ -343,10 +399,10 @@ it for output.
 Different output audio baud rate or quality settings can be used for playback 
 if required.</p> 
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>May 2015
+<tr><td align="left">Tim Baldwin<br>February 2017
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2010,2015</td></tr>
+<br><br>&copy; Tim Baldwin 2010,2017</td></tr>
 </table>
 </body>
 </html>
