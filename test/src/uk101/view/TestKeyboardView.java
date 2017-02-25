@@ -21,7 +21,7 @@ public class TestKeyboardView extends BaseViewTest {
     public void testKeysUK() throws Exception {
         testCfg.setKbdMode(Configuration.NORMAL);
         kbView = new KeyboardView(testComputer, new Keyboard("uk"), testCfg);
-        testView.add(kbView);
+        testView.add(kbView.display());
         while (true) {
             Thread.yield();
         }
@@ -30,7 +30,7 @@ public class TestKeyboardView extends BaseViewTest {
     public void testKeysUS() throws Exception {
         testCfg.setKbdMode(Configuration.GAME);
         kbView = new KeyboardView(testComputer, new Keyboard("us"), testCfg);
-        testView.add(kbView);
+        testView.add(kbView.display());
         while (true) {
             Thread.yield();
         }

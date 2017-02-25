@@ -13,7 +13,7 @@ public class TestMachinelView extends BaseViewTest {
     protected void setupTest() throws Exception {
         // Create the store display component and add to the frame.
         machineView = new MachineView(testComputer, null);
-        testView.add(machineView);
+        testView.add(machineView.display());
     }
 
     private MachineView machineView;

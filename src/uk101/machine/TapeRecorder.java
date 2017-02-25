@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2013
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.machine;
 
@@ -78,7 +78,7 @@ public class TapeRecorder implements IOBus {
                 System.err.println(e);
             }
             if (view != null) {
-                view.setActive();
+                view.setRead();
             }
         }
         return b;
@@ -92,7 +92,7 @@ public class TapeRecorder implements IOBus {
                 System.err.println(e);
             }
             if (view != null) {
-                view.setActive();
+                view.setWrite();
             }
         }
     }

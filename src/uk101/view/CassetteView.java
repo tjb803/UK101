@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2014
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.view;
 
@@ -33,6 +33,7 @@ import uk101.io.Tape;
 import uk101.machine.Configuration;
 import uk101.machine.TapeRecorder;
 import uk101.view.component.CassetteButton;
+import uk101.view.component.CassetteLight;
 import uk101.view.component.DisplayText;
 import uk101.view.component.TapeFormat;
 import uk101.view.component.ViewFrame;
@@ -48,6 +49,7 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
     private JLabel name;
     private DisplayText format;
     private CassetteButton record, play, stop;
+    private CassetteLight indicator;
     private JFileChooser select;
     private Timer autoStop;
 
@@ -99,12 +101,20 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
         // File selection dialog
         select = new JFileChooser(new File(".").getAbsolutePath());
         select.setDialogTitle(getTitle() + " - Select Tape");
-
+        
+        JPanel ip = new JPanel();
+        ip.setLayout(new BoxLayout(ip, BoxLayout.Y_AXIS));
+        indicator = new CassetteLight();
+        indicator.setAlignmentX(RIGHT_ALIGNMENT);
+        ip.add(indicator);
+        ip.add(Box.createVerticalStrut(8));
         JButton open = new JButton("Open...");
-        open.setAlignmentY(BOTTOM_ALIGNMENT);
+        open.setAlignmentX(RIGHT_ALIGNMENT);
         open.addActionListener(this);
+        ip.add(open);
+        ip.setAlignmentY(BOTTOM_ALIGNMENT);
         bp.add(Box.createHorizontalStrut(25));
-        bp.add(open);
+        bp.add(ip);
 
         Container content = getContentPane();
         content.add(tp, BorderLayout.NORTH);
@@ -212,7 +222,13 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
     /*
      * Called when tapes are being actively read or written
      */
-    public void setActive() {
+    public void setRead() {
+        indicator.setOn(Color.GREEN);
         autoStop.restart();
+    }
+    
+    public void setWrite() {
+        indicator.setOn(Color.RED);
+        autoStop.restart();  
     }
 }

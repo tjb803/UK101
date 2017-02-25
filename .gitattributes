@@ -140,6 +140,7 @@ src/uk101/view/MachineView.java -text
 src/uk101/view/VideoView.java -text
 src/uk101/view/ViewImage.java -text
 src/uk101/view/component/CassetteButton.java -text
+src/uk101/view/component/CassetteLight.java -text
 src/uk101/view/component/DebugPanel.java -text
 src/uk101/view/component/DisplayText.java -text
 src/uk101/view/component/ImageFormat.java -text

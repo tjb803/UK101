@@ -18,7 +18,7 @@ public class TestVideoView extends BaseViewTest {
         ROM charSet = new ROM(testCfg.getRomCharset());
         video = new Video(16, 64, charSet);
         vidView = new VideoView(video, testCfg);
-        testView.add(vidView);
+        testView.add(vidView.display());
     }
 
     private Video video;
