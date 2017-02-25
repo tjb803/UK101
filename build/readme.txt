@@ -56,6 +56,7 @@ v1.3.1
  - Add EraseROM utility to erase or create a ROM image
  - WEMON monitor included in package
  - Improved audio encoding and decoding
+ - Add play/record indicator light to cassette recorder
 
 v1.3.0
  - More improvements to host CPU usage
@@ -98,7 +99,7 @@ v1.0.0  February 2011  Add Ohio Superboard II support
 v1.1.0  October 2011   ACIA support for 8K Super Invaders
 v1.2.0  January 2014   Support additional plug-in ROMs and audio encoded tapes
 v1.3.0  November 2015  Index addressing mode bug fixes and more CPU speed options
-v1.3.1  October 2016   Additional configuration and EPROM support 
+v1.3.1  February 2017  Additional configuration and EPROM support 
 
 ===========
 Tim Baldwin

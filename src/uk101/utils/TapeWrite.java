@@ -26,23 +26,26 @@ import uk101.io.Tape;
  *    outputtape: the name for the output tape
  *
  * options:
- *    -baudRate: the baud rate if the file is an audio file, defaults to 300
+ *    -baud: the baud rate if the file is an audio file, defaults to 300
  *    -phase: the audio phase angle if the file is an audio file, defaults to 90
+ *    -adaptive: use adaptive audio decoding, defaults to false
   */
 public class TapeWrite {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
         Args.Map options = Args.optionMap();
-        options.put("baudRate", "baudrate (300, 600 or 1200)");
+        options.put("adaptive");
+        options.put("baud", "baudrate (300, 600 or 1200)");
         options.put("phase", "phaseangle (0, 90, 180 or 270)");
         Args parms = new Args(TapeWrite.class, "inputfile(s) outputtape", args, options);
         int count = parms.getParameterCount();
  
         List<File> inputFiles = parms.getInputFiles(1, count-1);
         File outputFile = parms.getOutputFile(count);
-        int baudRate = parms.getInteger("baudRate", KansasCityEncoder.BAUD300);
+        int baudRate = parms.getInteger("baud", KansasCityEncoder.BAUD300);
         int phase = parms.getInteger("phase", 90);
+        boolean adpative = parms.getFlag("adaptive");
 
         // Check parameters
         if ((inputFiles.isEmpty() || outputFile == null) ||
@@ -56,6 +59,7 @@ public class TapeWrite {
         OutputStream output = Tape.getOutputStream(outputFile, Tape.STREAM_BINARY, null);
         
         // Copy the inputs to the output
+        decoder.setAdaptive(adpative);
         for (File inputFile : inputFiles) {    
             InputStream input = Tape.getInputStream(inputFile, Tape.STREAM_SELECT, decoder);
             Tape.copy(input, output);

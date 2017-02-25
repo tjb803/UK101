@@ -152,6 +152,8 @@ src/uk101/view/component/ViewFrame.java -text
 test/UK101[!!-~]Main.launch -text
 test/src/uk101/data/TestUK101Streams.java -text
 test/src/uk101/hardware/TestALU.java -text
+test/src/uk101/io/CheckingDecoder.java -text
+test/src/uk101/utils/TapeCheck.java -text
 test/src/uk101/view/BaseViewTest.java -text
 test/src/uk101/view/TestCassetteView.java -text
 test/src/uk101/view/TestKeyboardView.java -text

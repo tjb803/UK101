@@ -27,8 +27,9 @@ import uk101.io.UK101OutputStream;
  *
  * options:
  *    -binary: input is binary, defaults to auto-selected
- *    -baudRate: the baud rate if the file is an audio file, defaults to 300
+ *    -baud: the baud rate if the file is an audio file, defaults to 300
  *    -phase: the audio phase angle if the file is an audio file, defaults to 90
+ *    -adaptive: use adaptive audio decoding, defaults to false
  */
 public class TapeRead {
 
@@ -36,15 +37,17 @@ public class TapeRead {
         // Handle parameters
         Args.Map options = Args.optionMap();
         options.put("binary");
-        options.put("baudRate", "baudrate (300, 600 or 1200)");
+        options.put("adaptive");
+        options.put("baud", "baudrate (300, 600 or 1200)");
         options.put("phase", "phaseangle (0, 90, 180 or 270)");
         Args parms = new Args(TapeRead.class, "inputtape [outputfile]", args, options);
         
         File inputFile = parms.getInputFile(1); 
         File outputFile = parms.getOutputFile(2);    
         int inputFormat = parms.getFlag("binary") ? Tape.STREAM_BINARY : Tape.STREAM_SELECT;
-        int baudRate = parms.getInteger("baudRate", 300);
+        int baudRate = parms.getInteger("baud", 300);
         int phaseAngle = parms.getInteger("phase", 90);
+        boolean adaptive = parms.getFlag("adaptive");
 
         // Check parameters
         if ((inputFile == null) ||
@@ -64,6 +67,7 @@ public class TapeRead {
         }
     
         // Copy the input to the output
+        decoder.setAdaptive(adaptive);
         Tape.copy(input, output);
         output.close();
         input.close();

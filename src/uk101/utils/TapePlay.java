@@ -29,12 +29,12 @@ import uk101.machine.Loudspeaker;
  *    -binary: input is binary, defaults to auto-selected
  *    -sampleRate: audio sample rate (default 48kHz)
  *    -sampleSize: audio sample size (default 16 bits)
- *    -baudRate: audio baud rate (default 300)
+ *    -baud: audio baud rate (default 300)
  *    -leadIn: time to play lead-in tone (default to 5s)
  *    -leadOut: time to play lead-out tone (defaults to leadIn) 
  *    -leadGap: time between tape segments (default to 2s)
  *    -sineWave: generate pure sine wave audio tones 
- *    -inputRate: audio baud rate of input, if audio encoded (defaults to baudRate)
+ *    -inputBaud: audio baud rate of input, if audio encoded (defaults to baudRate)
  *    -inputPhase: audio phase angle of input, if audio encoded (defaults to 90) 
  */
 public class TapePlay {
@@ -45,12 +45,12 @@ public class TapePlay {
         options.put("binary");
         options.put("sampleRate", "samplerate (8000 to 96000)");
         options.put("sampleSize", "samplesize (8 or 16)");
-        options.put("baudRate", "baudrate (300, 600 or 1200)");
+        options.put("baud", "baudrate (300, 600 or 1200)");
         options.put("leadIn", "+leadin");
         options.put("leadOut", "+leadout");
         options.put("leadGap", "segmentgap");
         options.put("sineWave");
-        options.put("inputRate", "inputbaudrate (300, 600 or 1200)");
+        options.put("inputBaud", "inputbaudrate (300, 600 or 1200)");
         options.put("inputPhase", "inputphaseangle (0, 90, 180 or 270)");
         Args parms = new Args(TapePlay.class, "inputfile(s)", args, options);
         int count = parms.getParameterCount();
@@ -59,11 +59,11 @@ public class TapePlay {
         int inputFormat = parms.getFlag("binary") ? Tape.STREAM_BINARY : Tape.STREAM_SELECT;
         int sampleRate = parms.getInteger("sampleRate", AudioEncoder.RATE48K);
         int sampleSize = parms.getInteger("sampleSize", AudioEncoder.BIT16);
-        int baudRate = parms.getInteger("baudRate", KansasCityEncoder.BAUD300);
+        int baudRate = parms.getInteger("baud", KansasCityEncoder.BAUD300);
         int leadIn = parms.getInteger("leadIn", 5);
         int leadOut = parms.getInteger("leadOut", leadIn);
         int leadGap = parms.getInteger("leadGap", 2);
-        int inputRate = parms.getInteger("inputRate", baudRate);
+        int inputBaud = parms.getInteger("inputBaud", baudRate);
         int inputPhase = parms.getInteger("inputPhase", 90);
         boolean sineWave = parms.getFlag("sineWave");
 
@@ -72,13 +72,13 @@ public class TapePlay {
                 (sampleRate < 8000 || sampleRate > 96000) ||
                 (sampleSize != 8 && sampleSize != 16) ||
                 (baudRate != 300 && baudRate != 600 && baudRate != 1200) ||
-                (inputRate != 300 && inputRate != 600 && inputRate != 1200) ||
+                (inputBaud != 300 && inputBaud != 600 && inputBaud != 1200) ||
                 (inputPhase%90 != 0)) {
             parms.usage();
         }
 
         // Create encoders/decoders and loudspeaker output device
-        KansasCityDecoder decoder = new KansasCityDecoder(inputRate, inputPhase);
+        KansasCityDecoder decoder = new KansasCityDecoder(inputBaud, inputPhase);
         KansasCityEncoder encoder = new KansasCityEncoder(sampleRate, sampleSize, baudRate, sineWave);
         encoder.setLeader(leadIn*1000, leadOut*1000);
         Loudspeaker speaker = new Loudspeaker(encoder);
