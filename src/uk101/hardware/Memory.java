@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2015
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.hardware;
 
@@ -42,6 +42,10 @@ public abstract class Memory {
         if (!readOnly) {
             store[offset] = b;
         }    
+    }
+    
+    public byte traceByte(int offset) {
+        return readByte(offset);
     }
     
     // Memory size in bytes

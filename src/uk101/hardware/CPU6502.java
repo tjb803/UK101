@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2015
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.hardware;
 
@@ -857,7 +857,7 @@ public class CPU6502 {
         }
         addr &= 0xFFFF;         // Ensure address is only ever 16 bits
         if (traceEntry != null) {
-            traceEntry.addAddr(addr);
+            traceEntry.addAddr(addr, bus.traceByte(addr));
         }
         return addr;
     }

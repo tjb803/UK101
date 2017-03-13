@@ -162,14 +162,14 @@ The instruction trace files usually have a name like
 <code>uk101&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.trace</code></p>
 <p>The output of the trace formatter will be something like this:</p>
 <pre>
-F9B3:  CA         DEX           ; A=00    X=2F Y=1C S=F5  P=nv-bdiZc
-F9B4:  D0 F8      BNE $F9AE     ; A=00    X=2E Y=1C S=F5  P=nv-bdizc
-F9AE:  20 E7 F9   JSR $F9E7     ; A=00    X=2E Y=1C S=F5  P=nv-bdizc  EA=F9E7
-F9E7:  A9 01      LDA #$01      ; A=00    X=2E Y=1C S=F3  P=nv-bdizc
-F9E9:  8D 00 DF   STA $DF00     ; A=01    X=2E Y=1C S=F3  P=nv-bdizc  EA=DF00
-F9EC:  AD 00 DF   LDA $DF00     ; A=01    X=2E Y=1C S=F3  P=nv-bdizc  EA=DF00
-F9EF:  49 FF      EOR #$FF      ; A=FF    X=2E Y=1C S=F3  P=Nv-bdizc
-F9F1:  60         RTS           ; A=00    X=2E Y=1C S=F3  P=nv-bdiZc
+F9B3:  CA         DEX           ; A=00    X=06 Y=1E S=F5  P=nv-bdiZc
+F9B4:  D0 F8      BNE $F9AE     ; A=00    X=05 Y=1E S=F5  P=nv-bdizc
+F9AE:  20 E7 F9   JSR $F9E7     ; A=00    X=05 Y=1E S=F5  P=nv-bdizc  EA=F9E7,A9
+F9E7:  A9 01      LDA #$01      ; A=00    X=05 Y=1E S=F3  P=nv-bdizc
+F9E9:  8D 00 DF   STA $DF00     ; A=01    X=05 Y=1E S=F3  P=nv-bdizc  EA=DF00,FF
+F9EC:  AD 00 DF   LDA $DF00     ; A=01    X=05 Y=1E S=F3  P=nv-bdizc  EA=DF00,FF
+F9EF:  49 FF      EOR #$FF      ; A=FF    X=05 Y=1E S=F3  P=Nv-bdizc
+F9F1:  60         RTS           ; A=00    X=05 Y=1E S=F3  P=nv-bdiZc
 </pre>
 <p>This shows the address of each traced instruction followed by the 
 bytes of that instruction and its disassembled form.</p>
@@ -177,7 +177,8 @@ bytes of that instruction and its disassembled form.</p>
 and flags as they were <i>before</i> execution of the instruction.
 If the instruction addresses memory the effective address of the 
 instruction operand is also given - this is the address after any
-indirection and indexing has been performed.</p>
+indirection and indexing has been performed - along with the data byte
+at that address.</p>
 <p>Trace files can be produced by using the special  
 <a href="extras.html#control">simulator control</a> instructions, or by selecting
 the <i>Trace</i> action on the CPU view window.</p>

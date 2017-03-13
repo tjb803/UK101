@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2013
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.hardware;
 
@@ -98,6 +98,11 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
             statusReg &= ~STATUS_TDRE;
             notify();
         }
+    }
+    
+    // Ensure reading for trace does not consume the character
+    public byte traceByte(int offset) {
+        return (offset & 1) == 0 ? statusReg : rxByte;
     }
     
     // Sets the time (in milliseconds) to send and receive a single character

@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2016
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.machine;
 
@@ -213,6 +213,12 @@ public class Computer extends Thread implements DataBus {
         if (m != null) {
             m.writeByte(addr-m.base, value);
         }
+    }
+    
+    // Used by the trace function to ensure non-destructive read
+    public byte traceByte(int addr) {
+        Memory m = memory[Memory.asBlock(addr)];
+        return (m != null) ? m.traceByte(addr-m.base) : Data.getHiByte((short)addr);
     }
 
     /*

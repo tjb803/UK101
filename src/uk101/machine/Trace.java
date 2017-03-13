@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.machine;
 
@@ -38,6 +38,7 @@ public class Trace implements Serializable {
         public byte[] instruction;
         public int length;
         public int addr;
+        public byte data;
 
         public Entry(short pc, byte a, byte x, byte y, byte s, byte p) {
             PC = pc;
@@ -58,8 +59,9 @@ public class Trace implements Serializable {
             instruction[length++] = Data.getHiByte(w);
         }
 
-        public void addAddr(int i) {
+        public void addAddr(int i, byte b) {
             addr = i;
+            data = b;
         }
     }
 

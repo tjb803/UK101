@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.hardware.bus;
 
@@ -14,4 +14,6 @@ public interface DataBus {
 
     public byte readByte(int addr);                 // Read 8-bit value
     public void writeByte(int addr, byte value);    // Write 8-bit value
+    
+    public byte traceByte(int addr);                // Read for trace
 }

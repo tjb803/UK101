@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.utils;
 
@@ -27,13 +27,13 @@ import uk101.machine.Trace;
  *
  * Trace output format is
  *
- * location  bb bb bb  <instruction> ; A=$xx[c] X=$xx Y=$xx S=$xx P=<flags>  EA=<addr>
+ * location  bb bb bb  <instruction> ; A=$xx[c] X=$xx Y=$xx S=$xx P=<flags>  EA=<addr>,<data>
  *
  * location: address location
  * bb bb bb: instruction bytes
  * <instruction>: disassembled instruction
  * A=xx etc: register values before execution
- * EA=addr: effective address of instruction (if it addresses memory)
+ * EA=addr,data: effective address of instruction (if it addresses memory) and data byte
  */
 public class PrintTrace {
 
@@ -83,8 +83,10 @@ public class PrintTrace {
             output.print(" Y=" + Data.toHexString(entry.Y));
             output.print(" S=" + Data.toHexString(entry.S));
             output.print("  P=" + CPU6502.toFlagString(entry.P));
-            if (disasm.instrMode > Disassembler.MODE_RELATIVE)
+            if (disasm.instrMode > Disassembler.MODE_RELATIVE) {
                 output.print("  EA=" + Data.toHexString(entry.addr));
+                output.print("," + Data.toHexString(entry.data));
+            }    
             output.println();
         }
         output.println();
