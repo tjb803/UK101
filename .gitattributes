@@ -51,6 +51,7 @@ docs/pdf/cegmon.pdf -text
 docs/pdf/exmon.pdf -text
 docs/pdf/manual.pdf -text
 docs/pdf/newmon.pdf -text
+docs/pdf/wemon.pdf -text
 docs/prognotes.html -text
 docs/quickstart.html -text
 docs/samples.html -text
