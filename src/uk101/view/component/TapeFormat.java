@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2014
+ * (C) Copyright Tim Baldwin 2010,2017
  */
 package uk101.view.component;
 
@@ -26,48 +26,55 @@ public class TapeFormat extends JPanel {
     public static final String MODE_AUDIO = "Audio";
     public static final String MODE_UNSET = " ";
 
+    private JRadioButton iAuto, oAscii;
     private ButtonGroup inputGroup, outputGroup;
 
     public TapeFormat() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Tape Format"));
 
-        JPanel ip = new JPanel();
+        MiniPanel ip = new MiniPanel();
         ip.setLayout(new BoxLayout(ip, BoxLayout.Y_AXIS));
         ip.setBorder(BorderFactory.createTitledBorder("Input"));
-        JRadioButton ix = new JRadioButton(MODE_AUTO, true);
+        iAuto = new JRadioButton(MODE_AUTO, true);
         JRadioButton ia = new JRadioButton(MODE_ASCII);
         JRadioButton ib = new JRadioButton(MODE_BINARY);
         JRadioButton iw = new JRadioButton(MODE_AUDIO);
-        ix.setActionCommand(Integer.toString(Tape.STREAM_SELECT));
+        iAuto.setActionCommand(Integer.toString(Tape.STREAM_SELECT));
         ia.setActionCommand(Integer.toString(Tape.STREAM_ASCII));
         ib.setActionCommand(Integer.toString(Tape.STREAM_BINARY));
         iw.setActionCommand(Integer.toString(Tape.STREAM_AUDIO));
         inputGroup = new ButtonGroup();
-        inputGroup.add(ix);  inputGroup.add(ia);  inputGroup.add(ib);  inputGroup.add(iw);
-        ip.add(ix);  ip.add(Box.createVerticalStrut(2));
-        ip.add(ia);  ip.add(Box.createVerticalStrut(2));
-        ip.add(ib);  ip.add(Box.createVerticalStrut(2));
+        inputGroup.add(iAuto);  inputGroup.add(ia);  inputGroup.add(ib);  inputGroup.add(iw);
+        ip.add(iAuto); 
+        ip.add(ia); 
+        ip.add(ib);
         ip.add(iw);
 
-        JPanel op = new JPanel();
+        MiniPanel op = new MiniPanel();
         op.setLayout(new BoxLayout(op, BoxLayout.Y_AXIS));
         op.setBorder(BorderFactory.createTitledBorder("Output"));
-        JRadioButton oa = new JRadioButton(MODE_ASCII, true);
+        oAscii = new JRadioButton(MODE_ASCII, true);
+        oAscii.setMaximumSize(iAuto.getMaximumSize());
         JRadioButton ob = new JRadioButton(MODE_BINARY);
         JRadioButton ow = new JRadioButton(MODE_AUDIO);
-        oa.setActionCommand(Integer.toString(Tape.STREAM_ASCII));
+        oAscii.setActionCommand(Integer.toString(Tape.STREAM_ASCII));
         ob.setActionCommand(Integer.toString(Tape.STREAM_BINARY));
         ow.setActionCommand(Integer.toString(Tape.STREAM_AUDIO));
         outputGroup = new ButtonGroup();
-        outputGroup.add(oa);  outputGroup.add(ob);  outputGroup.add(ow);
-        op.add(oa);  op.add(Box.createVerticalStrut(2));
-        op.add(ob);  op.add(Box.createVerticalStrut(2));
+        outputGroup.add(oAscii);  outputGroup.add(ob);  outputGroup.add(ow);
+        op.add(oAscii); 
+        op.add(ob); 
         op.add(ow);
 
         add(ip);
-        add(Box.createVerticalStrut(5));
+        Box.createVerticalStrut(3);
         add(op);
+    }
+    
+    public void reset() {
+      iAuto.setEnabled(true);
+      oAscii.setEnabled(true);
     }
 
     public int getInputFormat() {

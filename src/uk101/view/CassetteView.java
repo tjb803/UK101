@@ -100,7 +100,9 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
 
         // File selection dialog
         select = new JFileChooser(new File(".").getAbsolutePath());
+        select.setAccessory(new TapeFormat());
         select.setDialogTitle(getTitle() + " - Select Tape");
+        select.setAcceptAllFileFilterUsed(true);
         
         JPanel ip = new JPanel();
         ip.setLayout(new BoxLayout(ip, BoxLayout.Y_AXIS));
@@ -129,9 +131,9 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
         if (e.getSource() == autoStop) {
             stop.button.doClick();
         } else {    // Must be the Open... button
-            TapeFormat tf = new TapeFormat();
-            select.setAccessory(tf);
-            if (select.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            TapeFormat tf = (TapeFormat)select.getAccessory();
+            tf.reset();
+            if (select.showDialog(this, "Select") == JFileChooser.APPROVE_OPTION) {
                 tapeFile = select.getSelectedFile();
                 inFormat = tf.getInputFormat();
                 outFormat = tf.getOutputFormat();
