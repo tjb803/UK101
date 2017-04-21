@@ -147,7 +147,6 @@ src/uk101/view/component/DisplayText.java -text
 src/uk101/view/component/ImageFormat.java -text
 src/uk101/view/component/KeyboardKey.java -text
 src/uk101/view/component/KeyboardLock.java -text
-src/uk101/view/component/MiniPanel.java -text
 src/uk101/view/component/SpeedSelector.java -text
 src/uk101/view/component/TapeFormat.java -text
 src/uk101/view/component/VideoScreen.java -text
