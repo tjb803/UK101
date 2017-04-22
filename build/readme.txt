@@ -57,6 +57,7 @@ v1.3.1
  - WEMON monitor included in package
  - Improved audio encoding and decoding
  - Add play/record indicator light to cassette recorder
+ - Allow filename to be specified when saving tapes on a Mac
 
 v1.3.0
  - More improvements to host CPU usage

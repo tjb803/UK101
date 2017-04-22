@@ -56,46 +56,41 @@ public class TapeFormat extends JPanel {
         outputGroup = new ButtonGroup();
         outputGroup.add(oAscii);  outputGroup.add(ob);  outputGroup.add(ow);
 
-        JPanel bp = new JPanel();
-        bp.setLayout(new BoxLayout(bp, BoxLayout.Y_AXIS));
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
         TitledBorder hb = BorderFactory.createTitledBorder("Tape Format");
         hb.setTitleJustification(TitledBorder.CENTER);
         hb.setTitlePosition(TitledBorder.ABOVE_TOP);
-        bp.setBorder(hb);
+        buttons.setBorder(hb);
         
         JPanel heads = new JPanel();
         heads.setLayout(new BoxLayout(heads, BoxLayout.X_AXIS));
+        heads.setBorder(BorderFactory.createEmptyBorder(4, 1, 5, 1));
         heads.add(new JLabel("Read"));
         heads.add(Box.createHorizontalGlue());
         heads.add(new JLabel("Write"));
-        bp.add(heads);
-        bp.add(Box.createVerticalStrut(5));
-        bp.add(buttonPair(MODE_AUTO, iAuto, null));
-        bp.add(buttonPair(MODE_ASCII, ia, oAscii));
-        bp.add(buttonPair(MODE_BINARY, ib, ob));
-        bp.add(buttonPair(MODE_AUDIO, iw, ow));
+        buttons.add(heads);
+        buttons.add(buttonPair(MODE_AUTO, iAuto, null));
+        buttons.add(buttonPair(MODE_ASCII, ia, oAscii));
+        buttons.add(buttonPair(MODE_BINARY, ib, ob));
+        buttons.add(buttonPair(MODE_AUDIO, iw, ow));
         
-        add(bp);
+        add(buttons);
     }
     
     private JPanel buttonPair(String bt, JRadioButton bl, JRadioButton br) {
         JPanel bp = new JPanel();
         bp.setLayout(new BoxLayout(bp, BoxLayout.X_AXIS));
-        bl.setIconTextGap(0);
-        bl.setMargin(new Insets(2, 0, 2, 10));
+        bl.setMargin(new Insets(2, 0, 2, 5));
         bp.add(bl);
         bp.add(Box.createHorizontalGlue()); 
         bp.add(new JLabel(bt));
         bp.add(Box.createHorizontalGlue());
         if (br != null) {
-            br.setIconTextGap(0);
-            br.setMargin(new Insets(2, 10, 2, 0));
+            br.setMargin(new Insets(2, 5, 2, 0));
             bp.add(br);
         } else {
-            JLabel fill = new JLabel();   
-            fill.setMaximumSize(bl.getPreferredSize());
-            fill.setPreferredSize(bl.getPreferredSize());
-            bp.add(fill);
+            bp.add(Box.createRigidArea(bl.getPreferredSize()));
         }
         return bp;
     }

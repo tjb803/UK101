@@ -75,7 +75,7 @@ v1.3.1
    - Add WEMON monitor
    - Improve audio encoding and decoding
    - Add play/record indicator light to cassette recorder
-   
+
   Main bug fixes:
-   -  Fix minor appearance issues on Mac
- 
+   - Fix tape save dialog on Mac so filename can be specified 
+   - Fix minor appearance issues on Mac
