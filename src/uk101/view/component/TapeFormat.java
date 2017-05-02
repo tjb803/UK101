@@ -14,7 +14,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.border.TitledBorder;
 
 import uk101.io.Tape;
 
@@ -34,8 +33,11 @@ public class TapeFormat extends JPanel {
     private ButtonGroup inputGroup, outputGroup;
 
     public TapeFormat() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
+        buttons.setBorder(BorderFactory.createTitledBorder("Tape Format"));
+        add(buttons);
+        
         iAuto = new JRadioButton((String)null, true);
         JRadioButton ia = new JRadioButton();
         JRadioButton ib = new JRadioButton();
@@ -55,39 +57,31 @@ public class TapeFormat extends JPanel {
         ow.setActionCommand(Integer.toString(Tape.STREAM_AUDIO));
         outputGroup = new ButtonGroup();
         outputGroup.add(oAscii);  outputGroup.add(ob);  outputGroup.add(ow);
-
-        JPanel buttons = new JPanel();
-        buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
-        TitledBorder hb = BorderFactory.createTitledBorder("Tape Format");
-        hb.setTitleJustification(TitledBorder.CENTER);
-        hb.setTitlePosition(TitledBorder.ABOVE_TOP);
-        buttons.setBorder(hb);
         
         JPanel heads = new JPanel();
         heads.setLayout(new BoxLayout(heads, BoxLayout.X_AXIS));
-        heads.setBorder(BorderFactory.createEmptyBorder(4, 1, 5, 1));
+        heads.setBorder(BorderFactory.createEmptyBorder(2, 1, 5, 1));
         heads.add(new JLabel("Read"));
         heads.add(Box.createHorizontalGlue());
         heads.add(new JLabel("Write"));
+        
         buttons.add(heads);
         buttons.add(buttonPair(MODE_AUTO, iAuto, null));
         buttons.add(buttonPair(MODE_ASCII, ia, oAscii));
         buttons.add(buttonPair(MODE_BINARY, ib, ob));
         buttons.add(buttonPair(MODE_AUDIO, iw, ow));
-        
-        add(buttons);
     }
     
     private JPanel buttonPair(String bt, JRadioButton bl, JRadioButton br) {
         JPanel bp = new JPanel();
         bp.setLayout(new BoxLayout(bp, BoxLayout.X_AXIS));
-        bl.setMargin(new Insets(2, 0, 2, 5));
+        bl.setMargin(new Insets(2, 0, 0, 2));
         bp.add(bl);
         bp.add(Box.createHorizontalGlue()); 
         bp.add(new JLabel(bt));
         bp.add(Box.createHorizontalGlue());
         if (br != null) {
-            br.setMargin(new Insets(2, 5, 2, 0));
+            br.setMargin(new Insets(2, 2, 0, 0));
             bp.add(br);
         } else {
             bp.add(Box.createRigidArea(bl.getPreferredSize()));

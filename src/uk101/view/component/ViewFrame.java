@@ -15,7 +15,7 @@ import javax.swing.JInternalFrame;
 import uk101.view.ComputerView;
 
 /**
- * Base class for the internal window elements/
+ * Base class for the internal window elements
  */
 public class ViewFrame extends JInternalFrame {
     private static final long serialVersionUID = 1L;
