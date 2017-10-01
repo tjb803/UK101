@@ -65,7 +65,7 @@ v1.3.0
    - Ensure @ key is decoded correctly with CEGMON
    - Fix some Superboard keyboard mappings
    
-v1.3.1
+v1.4.0
 ------
   Improvements:
    - Allow configuration of memory address for keyboard, video and ACIA

@@ -49,7 +49,7 @@ Latest Improvements
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
 
-v1.3.1
+v1.4.0
  - Allow setting of memory address for video, keyboard and ACIA
  - "ram.xxxx" property to allow extra RAM blocks
  - "eprom.xxxx" property to allow programmable ROMs
@@ -94,13 +94,13 @@ v0.6.0:
 
 Release History
 ---------------
-v0.5.0  December 2010  First public release
-v0.6.0  January 2011   Bug fixes 
-v1.0.0  February 2011  Add Ohio Superboard II support
-v1.1.0  October 2011   ACIA support for 8K Super Invaders
-v1.2.0  January 2014   Support additional plug-in ROMs and audio encoded tapes
-v1.3.0  November 2015  Index addressing mode bug fixes and more CPU speed options
-v1.3.1  February 2017  Additional configuration and EPROM support 
+v0.5.0  December 2010   First public release
+v0.6.0  January 2011    Bug fixes 
+v1.0.0  February 2011   Add Ohio Superboard II support
+v1.1.0  October 2011    ACIA support for 8K Super Invaders
+v1.2.0  January 2014    Support additional plug-in ROMs and audio encoded tapes
+v1.3.0  November 2015   Index addressing mode bug fixes and more CPU speed options
+v1.4.0  September 2017  Additional configuration and EPROM support 
 
 ===========
 Tim Baldwin
