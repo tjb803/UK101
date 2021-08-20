@@ -156,7 +156,8 @@ public class Trace implements Serializable {
     /*
      * Read a trace file
      */
-    public static Trace readTrace(File file) {
+    @SuppressWarnings("resource")
+	public static Trace readTrace(File file) {
         Trace trace = null;
         try {
             InputStream stream = new InflaterInputStream(new FileInputStream(file));

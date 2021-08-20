@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2014
+ * (C) Copyright Tim Baldwin 2010,2021
  */
 package uk101.hardware;
 
@@ -82,6 +82,7 @@ public class Keyboard extends Memory {
     private Map<Integer,Key> keys;
     private byte[] matrix;
     private byte kbport;
+    private boolean paused;
 
     public Keyboard(String type) {
         super(K1);                  // Decodes to 1K of store
@@ -184,21 +185,39 @@ public class Keyboard extends Memory {
     }
 
     /*
-     * Handle key presses and releases
+     * Handle key presses and releases.
+     * Note we suspend processing key strokes when the CPU is paused for timing
+     * control, as those keys actions might get lost.
      */
     public synchronized void pressKey(int key) {
-        Key k = keys.get(key);
-        if (k != null) {
-            matrix[k.row] &= ~k.col;
-        }
+    	try {
+    	    if (paused) wait();
+	        Key k = keys.get(key);
+	        if (k != null) {
+	            matrix[k.row] &= ~k.col;
+	        }
+    	} catch (InterruptedException e) {
+    	}
     }
 
     public synchronized void releaseKey(int key) {
-        Key k = keys.get(key);
-        if (k != null) {
-            matrix[k.row] |= k.col;
-        }
+    	try {
+    		if (paused) wait();
+            Key k = keys.get(key);
+	        if (k != null) {
+	            matrix[k.row] |= k.col;
+	        }
+    	} catch (InterruptedException e) {
+    	}
     }
+    
+    public synchronized void pause(boolean state) {
+    	paused = state;
+    	if (!paused) {
+    		notifyAll();
+    	}
+    }
+    
 
     // Add details of a key
     private void addKey(int k1, int k2, int row, int col) {

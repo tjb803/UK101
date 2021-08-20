@@ -87,18 +87,19 @@ The simulation allows any speed from 1MHz to 4Mhz to be specified.
 <br><br>Setting a value of <code>0</code> will cause the simulation to
 run as fast as it can.</td></tr>
 <tr><td><code>cpu.control</code></td>
-<td><code>auto</code>, <code>sleep</code>, <code>yield</code> or <code>spin</code></td>
-<td align="center"><code>auto</code></td>
+<td><code>sleep</code>, <code>yield</code> or <code>spin</code></td>
+<td align="center"><code>sleep</code></td>
 <td>This determines the method used by the CPU emulation to manage 
 instruction timings.
-Generally this is best left set to <code>auto</code> to let the system decide
-the method based on measured system performance.  
-The other options are mainly for experimentation and debug.
+Generally this is best left set to <code>sleep</code> which provides the 
+best control on any modern (say last 10 years or so) machine.  
+But if the emulation does not seem to run smoothly 
+the other options are available for experimentation and debug.
 <table frame="void" rules="none">
 <tr valign="baseline"><td><code>sleep&nbsp;</code></td> 
 <td>causes the processor thread to <i>sleep</i> when possible.
 This uses least host system CPU but may give a less smooth emulation
-on some slow machines.</td></tr>
+on some very slow or old machines.</td></tr>
 <tr valign="baseline"><td><code>yield&nbsp;</code></td>
 <td>uses spin-loops to manage timings but causes the processor thread
 to <i>yield</i> when spinning.
@@ -106,8 +107,8 @@ This uses more host CPU but the rest of the system should remain fairly
 responsive.</td></tr>
 <tr valign="baseline"><td><code>spin&nbsp;</code></td>
 <td>uses spin-loops to manage timings.
-This uses a lot of host CPU but should give a smooth emulation although
-the rest of the system may be less responsive.</td></tr>
+This uses a lot of host CPU but should give a smooth emulation on all
+machines although the rest of the system may be less responsive.</td></tr>
 </table></td></tr>
 </table>
 <p><i>Note: </i>The <code>cpu.speed</code> setting represents a maximum 

@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2017
+ * (C) Copyright Tim Baldwin 2010,2021
  */
 package uk101.machine;
 
@@ -220,14 +220,23 @@ public class Computer extends Thread implements DataBus {
         Memory m = memory[Memory.asBlock(addr)];
         return (m != null) ? m.traceByte(addr-m.base) : Data.getHiByte((short)addr);
     }
-
+    
+    // Used by the CPU when pausing so we can suspend actions (mostly keyboard
+    // activity) that might otherwise be lost or missed.
+    public void pause(boolean state) {
+        keyboard.pause(state);
+    }
+    
     /*
      * Run the simulation thread
      */
     public void run() {
-        // Run the CPU
-        cpu.signalReset();
-        cpu.run();
+    	try {
+            // Run the CPU
+            cpu.signalReset();
+            cpu.run();
+    	} catch (InterruptedException e) {
+    	}    
     }
 
     public void shutdown() {

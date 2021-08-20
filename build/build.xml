@@ -1,7 +1,7 @@
 <!--                                     -->
 <!--      Compukit UK101 Simulator       -->
 <!--                                     -->
-<!-- (C) Copyright Tim Baldwin 2010,2017 -->
+<!-- (C) Copyright Tim Baldwin 2010,2021 -->
 <!--                                     -->
 
 <!-- Build the runtime and source JARs and ZIPs -->
@@ -9,8 +9,8 @@
 <project name="UK101" default="buildAll">
     <property name="project-name" value="UK101"/>
     <property name="system-name" value="Compukit UK101"/>
-    <property name="system-version" value="1.4.0"/>
-    <property name="system-author" value="(C) Copyright Tim Baldwin 2010,2017"/>
+    <property name="system-version" value="1.4.1"/>
+    <property name="system-author" value="(C) Copyright Tim Baldwin 2010,2021"/>
 
     <property name="jar-name" value="uk101-${system-version}.jar"/>
     <property name="zip-name" value="uk101-${system-version}.zip"/>
@@ -48,8 +48,11 @@
     <target name="buildZip" depends="buildJar">
         <mkdir dir="${pkg-build}"/> 
         <zip destfile="${pkg-build}/${zip-name}">
+        	<mappedresources>
+        		<fileset file="README.md"/>
+        		<globmapper from="README.md" to="readme.txt"/>
+            </mappedresources>
             <fileset file="build/license.txt"/>
-            <fileset file="build/readme.txt"/>
             <fileset file="build/bugs.txt"/>
             <fileset file="build/features.txt"/>
             <fileset file="${pkg-build}/${jar-name}"/>
@@ -63,8 +66,11 @@
     <target name="buildSrc">
         <mkdir dir="${pkg-build}"/> 
         <zip destfile="${pkg-build}/${src-name}">
+        	<mappedresources>
+        		<fileset file="README.md"/>
+        		<globmapper from="README.md" to="readme.txt"/>
+            </mappedresources>
             <fileset file="build/license.txt"/>
-            <fileset file="build/readme.txt"/>
             <fileset file="build/bugs.txt"/>
             <fileset file="build/features.txt"/>
             <zipfileset dir="src" prefix="src"/>

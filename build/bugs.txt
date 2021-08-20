@@ -79,3 +79,13 @@ v1.4.0
   Main bug fixes:
    - Fix tape save dialog on Mac so filename can be specified 
    - Fix minor appearance issues on Mac
+   
+ v1.4.1
+ ------
+   Improvements:
+    - Simplify CPU speed emulation
+    - Improve keyboard responsiveness; avoid losing keystrokes
+
+   Main bug fixes: 
+    - None
+    

@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2017
+ * (C) Copyright Tim Baldwin 2010,2021
  */
 package uk101.hardware;
 
@@ -73,9 +73,8 @@ public class CPU6502 {
     private boolean sigRESET, sigNMI, sigIRQ;
 
     // Timing control
-    private boolean useAuto, useYield, useSleep;
+    private boolean useYield, useSleep;
     private int speed;
-    private long spinPause, yieldPause, sleepPause;
     private long now, end;
 
     // Relative speed calculation
@@ -92,12 +91,11 @@ public class CPU6502 {
         sigRESET = true;
         setMHz(mhz);
         
-        // Set the timing control from configuration, if specified
-        useAuto = control.equals(Configuration.AUTO);
-        if (!useAuto) {
-            useSleep = control.equals(Configuration.SLEEP);
-            useYield = control.equals(Configuration.YIELD);
-        }
+        // Set the timing control from configuration, if specified.  
+        // AUTO now defaults to SLEEP as this is really what we want
+        // to do on any modern (ie last 10 years or so) machine!
+        useSleep = control.equals(Configuration.SLEEP) || control.equals(Configuration.AUTO);
+        useYield = control.equals(Configuration.YIELD);
     }
 
     /*
@@ -150,19 +148,13 @@ public class CPU6502 {
             yt += (t3-t2);
             st += (t4-t3);
         }
-        spinPause = nt/3;
-        yieldPause = yt/3;
-        sleepPause = st/3;
+        long spinPause = nt/3;
+        long yieldPause = yt/3;
+        long sleepPause = st/3;
 
-        // If the Thread.sleep interval is short enough (say less than 2000
-        // instructions assuming an average of 5 cycles per instruction) we can 
-        // do timing using sleeps, otherwise we'll have to do it using spin loops 
-        // (including Thread.yield if the yield interval is also short enough).
-        if (useAuto) {
-            useSleep = (sleepPause <= 2000*5*speed);
-            useYield = (yieldPause <= 2000*5*speed);
-        }
-        
+        // This is really just for debug now.  Earlier versions tried to figure
+        // out the best pause policy, but really SLEEP is best almost always.
+        // So we'll use that, unless specifically overridden in config.
         if (Computer.debug) {
             System.out.println("CPU:");
             System.out.println("  sleep time:   " + sleepPause);
@@ -175,7 +167,7 @@ public class CPU6502 {
     /*
      * Normal processor execution
      */
-    public void run() {
+    public void run() throws InterruptedException {
         getSpeed();
         now = end = System.nanoTime();
 
@@ -192,28 +184,23 @@ public class CPU6502 {
                 // It is difficult to get timings exactly right in Java.  This logic
                 // assumes we are running too fast (which should be true most of the
                 // time on anything except a very slow machine) and adds delays when
-                // we have accumulated enough excess time for a delay to be worthwhile.
+                // the emulated clock time exceeds the real clock time.
                 // This means individual instructions won't be at the exact correct
                 // speed but on average the CPU should be close.
                 if (speed > 0) {
                     end += cycles*speed;
-                    if (useSleep) {
-                        while (end-now > sleepPause) {
-                            try {
+                    if (end > now) {
+                    	bus.pause(true);
+                        while (end > now) {
+                        	if (useSleep) {
                                 long pause = end-now;
                                 Thread.sleep(pause/1000000, (int)pause%1000000);
-                            } catch (InterruptedException e) { }
-                            now = System.nanoTime();
+                        	} else if (useYield) {
+                        		Thread.yield();
+                        	} // else just spin
+                        	now = System.nanoTime();
                         }
-                    } else if (useYield) {
-                        while (end-now > yieldPause) {
-                            Thread.yield();
-                            now = System.nanoTime();
-                        }
-                    } else {
-                        while (end-now > spinPause) {
-                            now = System.nanoTime();
-                        }
+                        bus.pause(false);
                     }
                 }
             }
