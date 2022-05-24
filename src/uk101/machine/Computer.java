@@ -47,7 +47,7 @@ public class Computer extends Thread implements DataBus {
     public RAM ram;
     public ROM basic;
     public ROM monitor;
-    
+
     public Collection<ROM> roms;
     public Collection<RAM> rams;
     public Collection<EPROM> eproms;
@@ -57,7 +57,7 @@ public class Computer extends Thread implements DataBus {
     public ACIA6850 acia;
 
     public TapeRecorder recorder;
-    
+
     public Configuration config;
 
     /*
@@ -71,22 +71,22 @@ public class Computer extends Thread implements DataBus {
             name = "Compukit UK101";
             version = "0.0.0";
         }
-        
+
         // Lower the simulation thread priority a little to ensure the GUI
         // remains responsive.
         setName(name);
         setPriority(Math.max(Thread.MIN_PRIORITY, getPriority()/2));
-        
+
         // Save the configuration
         config = cfg;
-        
+
         // A 6502 CPU
         cpu = new CPU6502(cfg.getCpuSpeed(), cfg.getCpuControl(), this);
 
         // Address space is 64K.  Assumption here is that any ROM/RAM or any
         // memory-mapped devices are mapped in BLKSIZE sections.
         memory = new Memory[Memory.toBlocks(Memory.K64)];
-        
+
         // Install additional RAM blocks first so they do not overwrite ROMs
         rams = new ArrayList<RAM>();
         for (Configuration.Mem ram : cfg.getRAMs()) {
@@ -102,7 +102,7 @@ public class Computer extends Thread implements DataBus {
         addMemory(cfg.getRamAddr(), ram);
         addMemory(cfg.getBasicAddr(), basic);
         addMemory(cfg.getMonitorAddr(), monitor);
-        
+
         // Install any additional ROMs and EPROMS
         roms = new ArrayList<ROM>();
         for (Configuration.Mem rom : cfg.getROMs()) {
@@ -128,7 +128,7 @@ public class Computer extends Thread implements DataBus {
 
         // Create a tape recorder to load and save programs and plug it into the ACIA.
         recorder = new TapeRecorder(acia);
-        
+
         // Set special flags for some emulation hacks.
         String ms = new String(monitor.store, "US-ASCII");
         int mon = MONITOR_MONUK01;          // Assume original/OSI rom
@@ -140,7 +140,7 @@ public class Computer extends Thread implements DataBus {
             mon = MONITOR_WEMON;
         aciaFix1 = (mon == MONITOR_MONUK01 || mon == MONITOR_MONUK02);
         videoFix1 = (mon == MONITOR_MONUK02);
-    }    
+    }
 
     // Add some memory into the address space, applying any patches if 
     // we are installing a ROM.
@@ -152,19 +152,19 @@ public class Computer extends Thread implements DataBus {
                memory[bb+i] = m;
         }
     }
-    
+
     private void addMemory(int base, ROM r) {
         addMemory(base, (Memory)r);
         r.patch();
     }
-    
+
     /*
      * Reset the computer
      */
     public void reset() {
         cpu.signalReset();
     }
-    
+
     /*
      * Set the CPU clock speed and store back in config so it will be saved in 
      * any machine image.
@@ -173,7 +173,7 @@ public class Computer extends Thread implements DataBus {
         cpu.setMHz(mhz);
         config.setCpuSpeed(mhz);
     }
-    
+
     /*
      * Store the keyboard game mode back in config so it will be saved in any
      * machine image.
@@ -214,37 +214,38 @@ public class Computer extends Thread implements DataBus {
             m.writeByte(addr-m.base, value);
         }
     }
-    
+
     // Used by the trace function to ensure non-destructive read
     public byte traceByte(int addr) {
         Memory m = memory[Memory.asBlock(addr)];
         return (m != null) ? m.traceByte(addr-m.base) : Data.getHiByte((short)addr);
     }
-    
+
     // Used by the CPU when pausing so we can suspend actions (mostly keyboard
     // activity) that might otherwise be lost or missed.
     public void pause(boolean state) {
         keyboard.pause(state);
     }
-    
+
     /*
      * Run the simulation thread
      */
     public void run() {
-    	try {
+        try {
             // Run the CPU
             cpu.signalReset();
             cpu.run();
-    	} catch (InterruptedException e) {
-    	}    
+        } catch (InterruptedException e) {
+        }
     }
 
     public void shutdown() {
         trace(false);
+        cpu.stop();
         recorder.shutdown();
         for (EPROM e : eproms) {
             e.close();
-        }    
+        }
     }
 
     /*
@@ -258,13 +259,13 @@ public class Computer extends Thread implements DataBus {
             if (trace == null) {
                 trace = new Trace(this);
                 cpu.trace(trace);
-            }    
+            }
         } else {
             if (trace != null) {
                 cpu.trace(null);
                 trace.write();
                 trace = null;
-            }    
+            }
         }
     }
 

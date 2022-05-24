@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2021
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.hardware;
 
@@ -76,6 +76,7 @@ public class CPU6502 {
     private boolean useYield, useSleep;
     private int speed;
     private long now, end;
+    private boolean blockEnd;
 
     // Relative speed calculation
     private long cpuStart, cpuCycles;
@@ -90,7 +91,7 @@ public class CPU6502 {
         running = new AtomicBoolean();
         sigRESET = true;
         setMHz(mhz);
-        
+
         // Set the timing control from configuration, if specified.  
         // AUTO now defaults to SLEEP as this is really what we want
         // to do on any modern (ie last 10 years or so) machine!
@@ -176,7 +177,7 @@ public class CPU6502 {
             synchronized (this) {
                 // Check for external signals 
                 checkSignals();
-                
+
                 // Execute the next instruction
                 int cycles = execute();
                 cpuCycles += cycles;
@@ -184,21 +185,23 @@ public class CPU6502 {
                 // It is difficult to get timings exactly right in Java.  This logic
                 // assumes we are running too fast (which should be true most of the
                 // time on anything except a very slow machine) and adds delays when
-                // the emulated clock time exceeds the real clock time.
+                // the emulated clock time exceeds the real clock time.  We only 
+                // insert these pauses at the end of a "block", i.e. after a branch
+                // of some kind.
                 // This means individual instructions won't be at the exact correct
                 // speed but on average the CPU should be close.
                 if (speed > 0) {
                     end += cycles*speed;
-                    if (end > now) {
-                    	bus.pause(true);
+                    if (blockEnd && end > now) {
+                        bus.pause(true);
                         while (end > now) {
-                        	if (useSleep) {
+                            if (useSleep) {
                                 long pause = end-now;
                                 Thread.sleep(pause/1000000, (int)pause%1000000);
-                        	} else if (useYield) {
-                        		Thread.yield();
-                        	} // else just spin
-                        	now = System.nanoTime();
+                            } else if (useYield) {
+                                Thread.yield();
+                            } // else just spin
+                            now = System.nanoTime();
                         }
                         bus.pause(false);
                     }
@@ -409,17 +412,19 @@ public class CPU6502 {
         case 0x08: php();                      cycles = 3;  break;
         case 0x68: pla();                      cycles = 4;  break;
         case 0x28: plp();                      cycles = 4;  break;
-        case 0x00: brk();                      cycles = 7;  break;
-        case 0x4C: jmp(MODE_ABSOLUTE);         cycles = 3;  break;
-        case 0x6C: jmp(MODE_INDIRECT);         cycles = 5;  break;
-        case 0x20: jsr(MODE_ABSOLUTE);         cycles = 6;  break;
-        case 0x40: rti();                      cycles = 6;  break;
-        case 0x60: rts();                      cycles = 6;  break;
+        case 0x00: brk();              bc = 1; cycles = 6;  break;
+        case 0x4C: jmp(MODE_ABSOLUTE); bc = 1; cycles = 2;  break;
+        case 0x6C: jmp(MODE_INDIRECT); bc = 1; cycles = 4;  break;
+        case 0x20: jsr(MODE_ABSOLUTE); bc = 1; cycles = 5;  break;
+        case 0x40: rti();              bc = 1; cycles = 5;  break;
+        case 0x60: rts();              bc = 1; cycles = 5;  break;
 
         // Some extra simulator opcodes.
-        case 0x02: halt();   break;
-        case 0x22: debug();  break;
+        case 0x02: halt();                                  break;
+        case 0x22: debug();            bc = 1;              break;
         }
+        // bc will be non-zero if a branch or jump was taken
+        blockEnd = bc > 0;
 
         // Ensure tracing disabled until next instruction
         traceEntry = null;
@@ -696,12 +701,12 @@ public class CPU6502 {
         int extraCycles = 0;
         int addr = getAddress(MODE_RELATIVE);
         if (testFlag(flag) == value) {
+            extraCycles = samePage(addr, PC) ? 1 : 2; 
             PC = (short)addr;
-            extraCycles = 1;
         }
         return extraCycles;
     }
-    
+
     private void pushByte(byte b) {
         bus.writeByte(STACK_BASE + Data.asAddr(S), b);
         S -= 1;
@@ -865,6 +870,11 @@ public class CPU6502 {
 
     private void setResult(int addr, byte b) {
         bus.writeByte(addr, b);
+    }
+
+    // Are two addresses on the same page?
+    private boolean samePage(int addr1, int addr2) {
+        return Data.getHiByte((short)addr1) == Data.getHiByte((short)addr2);
     }
 
     // Enable/disable tracing

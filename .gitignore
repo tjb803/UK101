@@ -1,6 +1,5 @@
-/backup
-/package
-/temp
-test/bin
-/web
-/bin/
+bin/
+/backup/
+/package/
+/temp/
+/web/
