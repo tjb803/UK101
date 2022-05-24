@@ -116,8 +116,8 @@ simulation speed.
 It is possible that an older or slower PC will not be able reach 
 the maximum requested.</p>
 <hr>
-<h2 id="memory">RAM, ROM and EPROM</h2>
-<p>These settings control details of the installed RAM, ROMs and EPROMs.</p>
+<h2 id="memory">RAM, ROM and NVRAM</h2>
+<p>These settings control details of the installed RAM, ROMs and non-volatile RAMs.</p>
 <table frame="box" rules="all" width="100%" cellspacing="0" cellpadding="3" bgcolor="#F7F7F7">
 <tr><th width="15%">Name</th><th width="15%">Values</th>
 <th width="8%">Default</th><th width="62%">Notes</th></tr>
@@ -130,7 +130,7 @@ This should normally be left set to the default value.</td></tr>
 <td>from <code>4</code> to <code>40</code></td>
 <td align="center"><code>8</code></td>
 <td>This defines amount of RAM installed in KBytes.
-the standard machine came with 4KB and there were sockets on the 
+the standard machine came with 4KB and there were sockets on the
 board to allow up to 8KB to be installed.
 In theory, with an expansion board, up to another 32KB could be
 installed giving an absolute maximum contiguous RAM of 40KB.</td></tr>
@@ -141,6 +141,16 @@ installed giving an absolute maximum contiguous RAM of 40KB.</td></tr>
 The RAM is installed at address <code>XXXX</code> which must be a valid
 four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
 and the value should be the required RAM size in KBytes.</td></tr>
+<tr><td><code>nvram.XXXX</code></td>
+<td><code>filename</code></td><td/>
+<td>This allows additional non-volatile RAMs to be installed; unlike 
+normal RAM changes made to NVRAMs will be persisted in a disk image file.
+The NVRAM is installed at address <code>XXXX</code> which must be a valid
+four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
+and the value should be the name of a file containing the initial 
+NVRAM image.
+Empty NVRAM images can be created with the
+<a href="utilities.html#nvram">EraseRAM</a> utility program.</td></tr>
 <tr><td><code>monitor.address</code></td>
 <td>from <code>0000</code> to <code>FFFF</code></td>
 <td align="center"><code>F800</code></td>
@@ -197,18 +207,8 @@ be the name of a file containing a replacement ROM.</td></tr>
 The ROM is installed at address <code>XXXX</code> which must be a valid
 four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
 and the value should be the name of a file containing the ROM image.</td></tr>
-<tr><td><code>eprom.XXXX</code></td>
-<td><code>filename</code></td><td/>
-<td>This allows additional EPROMs to be installed; unlike ROMs, EPROMs can
-be written to and the updates will be persisted in the disk image file.
-The EPROM is installed at address <code>XXXX</code> which must be a valid
-four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
-and the value should be the name of a file containing the initial EPROM image.
-Empty EPROM images can be created with the 
-<a href="utilities.html#eprom">EraseROM</a> utility program.
-</td></tr>
 </table>
-<p><i>Note:</i> The additional ROMs and EPROMs are processed and installed after 
+<p><i>Note:</i> The additional ROMs and NVRAMs are processed and installed after 
 the system monitor and BASIC ROMs, so they can be used to replace some or all of 
 the system ROM address spaces.<p/>
 <h3 id="patch">Patching ROM Images</h3>

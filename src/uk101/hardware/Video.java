@@ -25,11 +25,11 @@ public class Video extends RAM {
     public Video(int height, int width, ROM chargen) throws IOException {
         // Allocate the video RAM as seen by the CPU. 
         super(toK(height*width));
-        
+
         // Fill the video buffer with spaces as this helps avoid some random
         // character flashes when the MONUK02 monitor scrolls the screen.
         Arrays.fill(store, (byte)0x20);
-        
+
         // Save video configuration
         rows = height;
         cols = width;
@@ -66,6 +66,6 @@ public class Video extends RAM {
      * Mainly for debugging
      */
     public String toString() {
-        return "Video" + super.toString() + " (" + kBytes() + "K) " + rows + "x" + cols;
+        return "Video" + memBase() + ": " + kBytes() + "K (" + rows + "x" + cols + ")";
     }
 }

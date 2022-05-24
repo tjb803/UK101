@@ -18,7 +18,7 @@ import uk101.Main;
  * This is a system ROM loaded from a resource.
  */
 public class ROM extends Memory {
-    
+
     protected String name;
     private String romid;
     private String patches;
@@ -29,16 +29,16 @@ public class ROM extends Memory {
     public ROM(String id) throws IOException {
         this(id, true);
     }
-    
+
     protected ROM(String id, boolean ro) throws IOException {
         super(load(findName(id)), ro);
         name = id;
-        
+
         // Save the name of the ROM
         romid = new File(findName(id)).getName().toUpperCase();
         if (romid.lastIndexOf('.') != -1)
             romid = romid.substring(0, romid.lastIndexOf('.'));
-        
+
         // Save any patch details for later
         patches = findPatch(id);
     }
@@ -47,7 +47,7 @@ public class ROM extends Memory {
     public String id() {
         return romid;
     }
-    
+
     // Apply any patches to the ROM image
     public void patch() {
         if (patches != null) {
@@ -86,10 +86,10 @@ public class ROM extends Memory {
         for (int b = in.read(); b != -1; b = in.read())
             out.write(b);
         in.close();
-        
+
         return out.toByteArray();
     }
-    
+
     // Extract name part of ROM id (excluding any patch information
     private static String findName(String id) {
         String name = id;
@@ -97,7 +97,7 @@ public class ROM extends Memory {
             name = id.substring(0, id.indexOf('[')).trim();
         return name;
     }
-    
+
     // Extract patch information or null
     private static String findPatch(String id) {
         String patch = null;
@@ -105,11 +105,11 @@ public class ROM extends Memory {
             patch = id.substring(id.indexOf('[')).trim();
         return patch;
     }
-    
+
     /*
      * Mainly for debugging
      */
     public String toString() {
-        return "ROM" + super.toString() + ": " + name;
+        return "ROM" + memBase() + ": " + name;
     }
 }

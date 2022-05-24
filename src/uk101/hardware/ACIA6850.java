@@ -45,7 +45,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
         super(256);                 // Decodes to 256 bytes of store
 
         statusReg = STATUS_TDRE;    // Initial state - ready to transmit
-        
+
         // By default the UK101 uses a frequency division of 16, so the clock 
         // rate is set to 16x the required baud rate.
         txClock = baud*16;
@@ -57,12 +57,12 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
         worker.setPriority(Math.max(Thread.MIN_PRIORITY, priority-1));
         worker.start();
     }
-    
+
     /*
      * The address decodes to a 256 byte block, but really there are only 
      * two registers that are accessed.
      */
-    
+
     public synchronized byte readByte(int offset) {
         byte b = 0;
         if ((offset & 1) == 0) {
@@ -80,7 +80,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
             if (!Computer.aciaFix1 || offset == 1) {
                 statusReg &= ~STATUS_RDRF;
                 notify();
-            }    
+            }
         }
         return b;
     }
@@ -99,12 +99,12 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
             notify();
         }
     }
-    
+
     // Ensure reading for trace does not consume the character
     public byte traceByte(int offset) {
         return (offset & 1) == 0 ? statusReg : rxByte;
     }
-    
+
     // Sets the time (in milliseconds) to send and receive a single character
     // based on the clock frequency and the control register settings.
     private void setSpeed(byte controlReg) {
@@ -112,12 +112,12 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
         int wb = (controlReg>>2) & 0x07;
         int divide = (sb == 1) ? 16 : (sb == 2) ? 64 : 1;
         int length = (wb == 2 || wb == 3 || wb == 5) ? 10 : 11;
-        
+
         baudRate = txClock / divide;
         txTime = (1000 * length * divide) / txClock;
         txTime = (txTime*2)/3;  // Reduce a little for inaccuracies! 
     }
-    
+
    /*
     * IODevice interface allows external devices (such as the cassette recorder)
     * to set an IOBus when they have the ability to send or receive data.
@@ -132,11 +132,11 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
             notify();
         }
     }
-   
+
     public int getBaudRate() {
         return baudRate;
     }
-    
+
     /*
      * Worker thread that handles transmitting and receiving characters.
      */
@@ -153,14 +153,14 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
                     if (sb != 0) statusReg |= sb;
                     if (rb != -1) rxByte = (byte)rb;
                     wait();
-                    
+
                     tx = ((statusReg & STATUS_TDRE) == 0);
                     rx = ((statusReg & STATUS_RDRF) == 0);
                     tb = txByte;
                     rb = -1;
                     sb = 0;
                 }
-                   
+
                 // Anything waiting to be transmitted? 
                 if (tx) {
                     // If a device is attached we assume it handles the timing of the
@@ -194,7 +194,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
      * Mainly for debugging
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("ACIA").append(super.toString());
+        StringBuilder sb = new StringBuilder("ACIA").append(memBase());
         sb.append(" Status=").append(Data.toBinaryString(statusReg));
         sb.append(" Tx=").append(Data.toHexString(txByte));
         sb.append(" Rx=").append(Data.toHexString(rxByte));

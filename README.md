@@ -52,6 +52,7 @@ addition the following are notable improvements:
 v1.4.2
  - Add "uk101" start up alias
  - Add support for separate BASIC ROMs
+ - Rename EPROM as NVRAM
 
 v1.4.1
  - Source code moved to GitHub

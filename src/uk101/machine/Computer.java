@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2021
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.machine;
 
@@ -11,7 +11,7 @@ import java.util.Collection;
 
 import uk101.hardware.ACIA6850;
 import uk101.hardware.CPU6502;
-import uk101.hardware.EPROM;
+import uk101.hardware.NVRAM;
 import uk101.hardware.Keyboard;
 import uk101.hardware.Memory;
 import uk101.hardware.RAM;
@@ -51,7 +51,7 @@ public class Computer extends Thread implements DataBus {
 
     public Collection<ROM> roms;
     public Collection<RAM> rams;
-    public Collection<EPROM> eproms;
+    public Collection<NVRAM> nvrams;
 
     public Keyboard keyboard;
     public Video video;
@@ -94,7 +94,7 @@ public class Computer extends Thread implements DataBus {
             RAM r = new RAM(ram.size);
             addMemory(ram.address, r);
             rams.add(r);
-        } 
+        }
 
         // Install the system ROMs and RAM
         ram = new RAM(cfg.getRamSize());
@@ -118,19 +118,19 @@ public class Computer extends Thread implements DataBus {
             basicAddr += 2*Memory.K1;
         }
 
-        // Install any additional ROMs and EPROMS
+        // Install any additional ROMs and NVRAMs
         roms = new ArrayList<ROM>();
         for (Configuration.Mem rom : cfg.getROMs()) {
             ROM r = new ROM(rom.name);
             addMemory(rom.address, r);
             roms.add(r);
         }
-        eproms = new ArrayList<EPROM>();
-        for (Configuration.Mem eeprom : cfg.getEPROMs()) {
-            EPROM e = new EPROM(eeprom.name);
-            addMemory(eeprom.address, e);
-            eproms.add(e);
-        } 
+        nvrams = new ArrayList<NVRAM>();
+        for (Configuration.Mem nvram : cfg.getNVRAMs()) {
+            NVRAM r = new NVRAM(nvram.name);
+            addMemory(nvram.address, r);
+            nvrams.add(r);
+        }
 
         // Keyboard, screen and ACIA are memory mapped.
         ROM charset = new ROM(cfg.getRomCharset());
@@ -148,7 +148,7 @@ public class Computer extends Thread implements DataBus {
         String ms = new String(monitor.store, "US-ASCII");
         int mon = MONITOR_MONUK01;          // Assume original/OSI rom
         if (ms.contains("(C)old Start"))    // Looks like New Monitor rom
-            mon = MONITOR_MONUK02;    
+            mon = MONITOR_MONUK02;
         else if (ms.contains("CEGMON"))     // Looks like CEGMON rom
             mon = MONITOR_CEGMON;
         else if (ms.contains("WEMON"))      // Looks like WEMON rom
@@ -258,8 +258,8 @@ public class Computer extends Thread implements DataBus {
         trace(false);
         cpu.stop();
         recorder.shutdown();
-        for (EPROM e : eproms) {
-            e.close();
+        for (NVRAM r : nvrams) {
+            r.close();
         }
     }
 

@@ -16,7 +16,7 @@ public class RAM extends Memory {
     public RAM(int k) {
         super(new byte[k*K1], false);
     }
-    
+
     // Allow RAM to restored from a saved image
     public void restore(byte[] image) {
         System.arraycopy(image, 0, store, 0, Math.min(image.length, store.length));
@@ -26,6 +26,6 @@ public class RAM extends Memory {
      * Mainly for debugging
      */
     public String toString() {
-        return "RAM" + super.toString() + ": " + kBytes() + "K";
+        return "RAM" + memBase() + ": " + kBytes() + "K";
     }
 }

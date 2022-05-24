@@ -19,7 +19,7 @@ various off-line tasks.</p>
 <li><a href="#pdata">Data Display</a></li>
 <li><a href="#pdump">Dump File Formatter</a></li>
 <li><a href="#ptrace">Trace File Formatter</a></li>
-<li><a href="#eprom">ROM Image Eraser</a></li>
+<li><a href="nvram">Non-volatile RAM Image Eraser</a></li>
 <li><a href="#tread">Binary and Audio Tape Reader</a></li>
 <li><a href="#twrite">Binary Tape Writer</a></li>
 <li><a href="#trecord">Audio Recorder</a>
@@ -182,35 +182,36 @@ at that address.</p>
 <p>Trace files can be produced by using the special  
 <a href="extras.html#control">simulator control</a> instructions, or by selecting
 the <i>Trace</i> action on the CPU view window.</p>
-<hr><h2 id="eprom">ROM Image Eraser</h2>
+<hr><h2 id="nvram">Non-volatile RAM Image Eraser</h2>
 <h3>Command</h3>
 <blockquote><pre>
-<code>java <b>uk101.utils.EraseROM</b> [options] romfile</code>
+<code>java <b>uk101.utils.EraseRAM</b> [options] ramfile</code>
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>romfile</code></dt>
-<dd>The name of a ROM image file that is to be erased or created.</dd>
+<dt><code>ramfile</code></dt>
+<dd>The name of an NVRAM image file that is to be erased or created.</dd>
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
 <dt><code>-fill <i>byte</i></code></dt>
-<dd>The byte value to use when filling the ROM image. 
+<dd>The byte value to use when filling the RAM image. 
 Defaults to 0.
 This can be provided in hexadecimal by preceding the digits with 
 a <code>$</code> or <code>0x</code> characters.</dd>
 <dt><code>-new <i>size</i></code></dt>
-<dd>Force the creation of a new ROM image of the specified size.
+<dd>Force the creation of a new RAM image of the specified size.
 This can be provided in hexadecimal by preceding the digits with 
 a <code>$</code> or <code>0x</code> characters.</dd>
 </dl></blockquote>
-<p>This will erase an existing ROM image or create a new ROM image
+<p>This will erase an existing RAM image or create a new RAM image
 of a given size.</p>
-<p>In either case the final size of the ROM will be rounded up to the
+<p>In either case the final size of the RAM will be rounded up to the
 next multiple of 256 bytes and the image will be filled with the 
 specified fill value (or 0).
-Typically an empty ROM image would be created to be installed as an
-<a href="config.html#memory">EPROM</a> in order to generate a new ROM.</p>
+Typically an empty RAM image would be created to be installed as an
+<a href="config.html#memory">NVRAM</a> in order to generate a new ROM
+or persist some working data.</p>
 <hr><h2 id="tread">Binary and Audio Tape Reader</h2>
 <h3>Command</h3>
 <blockquote><pre>
@@ -400,10 +401,10 @@ it for output.
 Different output audio baud rate or quality settings can be used for playback 
 if required.</p> 
 <br><table border="1" frame="above" rules="none" width="100%" bgcolor="#F0F8FF">
-<tr><td align="left">Tim Baldwin<br>February 2017
+<tr><td align="left">Tim Baldwin<br>May 2022
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2010,2017</td></tr>
+<br><br>&copy; Tim Baldwin 2010,2022</td></tr>
 </table>
 </body>
 </html>

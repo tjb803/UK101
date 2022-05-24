@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2015
+ * (C) Copyright Tim Baldwin 2015,2022
  */
 package uk101.hardware;
 
@@ -11,23 +11,23 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
- * EPROM is read/write memory backed by a persistent disk file.
+ * Non-volatile RAM is read/write memory backed by a persistent disk file.
  * Read operations are fast as the content is cached, but write is 
  * slow as we write-through to the backing file.
  */
-public class EPROM extends ROM {
-    
+public class NVRAM extends ROM {
+
     private RandomAccessFile file;
 
     /*
-     * EPROM should only be installed if the file is available for writing
+     * NVRAM should only be installed if the file is available for writing
      */
-    public EPROM(String id) throws IOException {
+    public NVRAM(String id) throws IOException {
         super(validate(id), false);
         file = new RandomAccessFile(name, "rwd");
         file.setLength(bytes());
     }
-    
+
     // Write should update file as well as store image
     public void writeByte(int offset, byte b) {
         super.writeByte(offset, b);
@@ -38,7 +38,7 @@ public class EPROM extends ROM {
             System.err.println(e);
         }
     }
-    
+
     // Write out updated content on close
     public void close() {
         try {
@@ -47,7 +47,7 @@ public class EPROM extends ROM {
             System.err.println(e);
         }
     }
-    
+
     // Validate file exists and can be written
     private static String validate(String id) throws IOException {
         File f = new File(id);
@@ -61,6 +61,6 @@ public class EPROM extends ROM {
      * Mainly for debugging
      */
     public String toString() {
-        return "EPROM" + super.toString() + ": " + bytes() + " " + name;
+        return "NVRAM" + memBase() + ": " + bytes() + " " + name;
     }
 }

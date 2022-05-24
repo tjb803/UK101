@@ -83,11 +83,11 @@ public class Configuration extends Properties {
     private static final String AUDIO_PHASE = "audio.phase";
     private static final String ROM = "rom.";
     private static final String RAM = "ram.";
-    private static final String EPROM = "eprom.";
+    private static final String NVRAM = "nvram.";
 
     private static final String WEMON = "WEMON";
 
-    // Additional ROM/RAM/EPROM have an address and a filename or size
+    // Additional ROM/RAM/NVRAM have an address and a filename or size
     public static class Mem {
         public int address, size;
         public String name;
@@ -189,7 +189,7 @@ public class Configuration extends Properties {
         applyStr(props, AUDIO_PHASE, "0", "90", "180", "270");
         applyMem(props, ROM, 0, 0);
         applyMem(props, RAM, 1, 64);
-        applyMem(props, EPROM, 0, 0);
+        applyMem(props, NVRAM, 0, 0);
     }
 
     private void applyInt(Properties props, String key, int min, int max) {
@@ -384,7 +384,7 @@ public class Configuration extends Properties {
     }
 
     /*
-     * Return any additional ROMs, RAM or EEPROMs listed
+     * Return any additional ROMs, RAM or NVRAMs listed
      */
     public Collection<Mem> getROMs() {
         return getMem(ROM, false);
@@ -394,8 +394,8 @@ public class Configuration extends Properties {
         return getMem(RAM, true);
     }
 
-    public Collection<Mem> getEPROMs() {
-        return getMem(EPROM, false);
+    public Collection<Mem> getNVRAMs() {
+        return getMem(NVRAM, false);
     }
 
     private Collection<Mem> getMem(String prefix, boolean ram) {
