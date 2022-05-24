@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2017
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.machine;
 
@@ -49,7 +49,7 @@ public class Configuration extends Properties {
     public static final String GAME = "game";
     public static final String SINE = "sine";
     public static final String SYSTEM = "system";
-    
+
     private static final String CPU_SPEED = "cpu.speed";
     private static final String CPU_CONTROL = "cpu.control";
     private static final String ACIA_ADDR = "acia.address";
@@ -60,6 +60,10 @@ public class Configuration extends Properties {
     private static final String BASIC_ADDR = "basic.address";
     private static final String ROM_MONITOR = "rom.monitor";
     private static final String ROM_BASIC = "rom.basic";
+    private static final String ROM_BASIC1 = "rom.basic1";
+    private static final String ROM_BASIC2 = "rom.basic2";
+    private static final String ROM_BASIC3 = "rom.basic3";
+    private static final String ROM_BASIC4 = "rom.basic4";
     private static final String ROM_CHARSET = "rom.charset";
     private static final String KBD_ADDR = "keyboard.address";
     private static final String KBD_LAYOUT = "keyboard.layout";
@@ -80,7 +84,7 @@ public class Configuration extends Properties {
     private static final String ROM = "rom.";
     private static final String RAM = "ram.";
     private static final String EPROM = "eprom.";
-    
+
     private static final String WEMON = "WEMON";
 
     // Additional ROM/RAM/EPROM have an address and a filename or size
@@ -95,7 +99,7 @@ public class Configuration extends Properties {
             }
         }
     }
-    
+
     public Configuration(Args parms, Configuration initial) throws IOException {
         // Load a properties file, if specified, and apply any command line
         // overrides.  Then update the default configuration from the property
@@ -131,7 +135,7 @@ public class Configuration extends Properties {
         if (initial != null)
             applyProperties(initial);
         applyProperties(props);
-        
+
         if (Computer.debug) {
             List<String> keys = Arrays.asList(keySet().toArray(new String[0]));
             Collections.sort(keys);
@@ -140,7 +144,7 @@ public class Configuration extends Properties {
                 System.out.println("  " + key + "=" + get(key));
         }
     }
-    
+
     private void applyProperties(Properties props) {
         applyStr(props, ROM_MONITOR);
         // For WEMON only reset the default monitor and ACIA address before
@@ -152,8 +156,12 @@ public class Configuration extends Properties {
             setProperty(ACIA_ADDR, "E000");
             setProperty(SCREEN_OFFSET, Integer.toString(getScreenOffset()-1));
         }
-        
+
         applyStr(props, ROM_BASIC);
+        applyStr(props, ROM_BASIC1);
+        applyStr(props, ROM_BASIC2);
+        applyStr(props, ROM_BASIC3);
+        applyStr(props, ROM_BASIC4);
         applyStr(props, ROM_CHARSET);
         applyInt(props, CPU_SPEED, 0, 4);
         applyStr(props, CPU_CONTROL, AUTO, SLEEP, YIELD, SPIN);
@@ -183,25 +191,25 @@ public class Configuration extends Properties {
         applyMem(props, RAM, 1, 64);
         applyMem(props, EPROM, 0, 0);
     }
-    
+
     private void applyInt(Properties props, String key, int min, int max) {
         try {
             apply(props, key, key, 10, min, max);
         } catch (NumberFormatException e) { // Ignore bad numeric values
         }
     }
-    
+
     private void applyHex(Properties props, String key, int min, int max) {
         try {
             apply(props, key, key, 16, min, max);
         } catch (NumberFormatException e) { // Ignore bad numeric values
         }
     }
-    
+
     private void applyStr(Properties props, String key, String... range) {
         apply(props, key, key, 0, 0, 0, range);
     }
-    
+
     private void apply(Properties props, String key, String ukey, int radix, int min, int max, String... range) {
         String value = props.getProperty(ukey);
         if (value != null) {
@@ -215,13 +223,13 @@ public class Configuration extends Properties {
                 for (int i = 0; i < range.length; i++) {
                     if (s.equals(range[i]))
                         setProperty(key, s);
-                }    
+                }
             } else {
                 setProperty(key, value);
             }
         }
     }
-    
+
     private void applyMem(Properties props, String prefix, int min, int max) {
         for (Enumeration<?> k = props.propertyNames(); k.hasMoreElements(); ) {
             String key = (String)k.nextElement();
@@ -231,7 +239,7 @@ public class Configuration extends Properties {
             }
         }
     }
-    
+
     private String hasAddr(String key, String prefix) {
         String addr = null;
         if (key.startsWith(prefix)) {
@@ -242,110 +250,120 @@ public class Configuration extends Properties {
         }
         return addr;
     }
-  
+
     /*
      * Return config values either as integers or strings
      */
     public int getCpuSpeed() {
         return getInt(CPU_SPEED);
     }
-    
+
     public String getCpuControl() {
         return getString(CPU_CONTROL);
     }
-    
+
     public int getRamAddr() {
         return getHex(RAM_ADDR);
     }
-    
+
     public int getRamSize() {
         return getInt(RAM_SIZE);
     }
-  
+
     public int getMonitorAddr() {
         return getHex(MONITOR_ADDR);
     }
-    
+
     public int getBasicAddr() {
         return getHex(BASIC_ADDR);
     }
-    
+
     public String getRomMonitor() {
         return getString(ROM_MONITOR);
     }
-    
+
     public String getRomBasic() {
         return getString(ROM_BASIC);
     }
-    
+
+    public String getRomBasic(int n) {
+        switch (n) {
+        case 1: return getString(ROM_BASIC1);
+        case 2: return getString(ROM_BASIC2);
+        case 3: return getString(ROM_BASIC3);
+        case 4: return getString(ROM_BASIC4);
+        }
+        return null;
+    }
+
     public String getRomCharset() {
         return getString(ROM_CHARSET);
     }
-    
+
     public int getKbdAddr() {
         return getHex(KBD_ADDR);
     }
-    
+
     public String getKbdLayout() {
         return getString(KBD_LAYOUT);
     }
-    
+
     public String getKbdMode() {
         return getString(KBD_MODE);
     }
-    
+
     public int getVideoAddr() {
         return getHex(VIDEO_ADDR);
     }
-    
+
     public int getVideoRows() {
         return getInt(VIDEO_ROWS);
     }
-    
+
     public int getVideoCols() {
         return getInt(VIDEO_COLS);
     }
-    
+
     public int getScreenWidth() {
         return getInt(SCREEN_WIDTH);
     }
-    
+
     public int getScreenOffset() {
         return getInt(SCREEN_OFFSET);
     }
-    
+
     public int getScreenSize() {
         return getInt(SCREEN_SIZE);
     }
-    
+
     public String getScreenColour() {
         return getString(SCREEN_COLOUR);
     }
-    
+
     public String getScreenUpdate() {
         return getString(SCREEN_UPDATE);
     }
-    
+
     public int getAciaAddr() {
         return getHex(ACIA_ADDR);
     }
-    
+
     public int getAciaRate() {
         return getInt(ACIA_RATE);
     }
-    
+
     private int getInt(String key) {
         return Integer.parseInt(getProperty(key));
     }
-    
+
     private int getHex(String key) {
         return Integer.parseInt(getProperty(key), 16);
     }
-    
+
     private String getString(String key) {
         return getProperty(key);
     }
-    
+
     /*
      * Return the KCS audio encoder/decoder based on configuration settings.
      * Note: baud rate is limited to 300, 600 or 1200. 
@@ -355,31 +373,31 @@ public class Configuration extends Properties {
         boolean sine = getString(AUDIO_WAVE).equals(SINE);
         KansasCityEncoder kcs = new KansasCityEncoder(getInt(AUDIO_RATE), getInt(AUDIO_BITS), baud, sine);
         kcs.setLeader(getInt(AUDIO_LEAD)*1000, getInt(AUDIO_LEAD)*1000); 
-        return kcs;        
+        return kcs;
     }
-    
+
     public AudioDecoder getAudioDecoder() {
         int baud = Math.min(Math.max(getInt(ACIA_RATE), 300), 1200);
         int phase = getInt(AUDIO_PHASE);
         KansasCityDecoder kcs = new KansasCityDecoder(baud, phase);
-        return kcs;        
+        return kcs;
     }
-    
+
     /*
      * Return any additional ROMs, RAM or EEPROMs listed
      */
     public Collection<Mem> getROMs() {
         return getMem(ROM, false);
     }
-    
+
     public Collection<Mem> getRAMs() {
         return getMem(RAM, true);
     }
-    
+
     public Collection<Mem> getEPROMs() {
         return getMem(EPROM, false);
     }
-    
+
     private Collection<Mem> getMem(String prefix, boolean ram) {
         Collection<Mem> roms = new ArrayList<Mem>();
         for (Enumeration<?> k = propertyNames(); k.hasMoreElements(); ) {
@@ -391,26 +409,26 @@ public class Configuration extends Properties {
         }
         return roms;
     }
-    
+
     /*
      * Set config values that can be changed while running
      */
     public void setKbdMode(String mode) {
         setString(KBD_MODE, mode);
     }
-    
+
     public void setCpuSpeed(int speed) {
         setInt(CPU_SPEED, speed);
     }
-    
+
     private void setInt(String key, int value) {
         setProperty(key, Integer.toString(value));
     }
-    
+
     private void setString(String key, String value) {
         setProperty(key, value);
     }
-    
+
     /*
      * Write configuration.
      */
@@ -419,7 +437,7 @@ public class Configuration extends Properties {
         out.writeObject(this);
         out.flush();
     }
-    
+
     /*
      * Read a configuration. 
      */

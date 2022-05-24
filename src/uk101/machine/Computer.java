@@ -23,14 +23,14 @@ import uk101.hardware.bus.DataBus;
  * The complete UK101 computer.
  */
 public class Computer extends Thread implements DataBus {
-    
+
     // General debug flag
     public static boolean debug = false;
-    
+
     // Some flags to control a few special hacks 
     public static boolean videoFix1 = false;
     public static boolean aciaFix1 = false;
-    
+
     // Monitor versions
     private static int MONITOR_MONUK01 = 0;
     private static int MONITOR_MONUK02 = 1;
@@ -47,6 +47,7 @@ public class Computer extends Thread implements DataBus {
     public RAM ram;
     public ROM basic;
     public ROM monitor;
+    public ROM[] basicRoms;
 
     public Collection<ROM> roms;
     public Collection<RAM> rams;
@@ -102,6 +103,20 @@ public class Computer extends Thread implements DataBus {
         addMemory(cfg.getRamAddr(), ram);
         addMemory(cfg.getBasicAddr(), basic);
         addMemory(cfg.getMonitorAddr(), monitor);
+
+        // The BASIC ROM can potentially be replaced by up to 4 
+        // individual 2K ROMs.
+        basicRoms = new ROM[4];
+        int basicAddr = cfg.getBasicAddr();
+        for (int i = 1; i < 5; i++) {
+            String nr = cfg.getRomBasic(i);
+            if (nr != null) {
+                ROM br = new ROM(nr);
+                addMemory(basicAddr, br);
+                basicRoms[i-1] = br;
+            }
+            basicAddr += 2*Memory.K1;
+        }
 
         // Install any additional ROMs and EPROMS
         roms = new ArrayList<ROM>();

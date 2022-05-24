@@ -50,7 +50,8 @@ The latest release will always include various minor bug fixes.  In
 addition the following are notable improvements:
 
 v1.4.2
- - 
+ - Add "uk101" start up alias
+ - Add support for separate BASIC ROMs
 
 v1.4.1
  - Source code moved to GitHub

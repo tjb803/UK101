@@ -11,8 +11,8 @@
 <table frame="void" rules="none" cellpadding="0" cellspacing="0" width="100%">
 <tr><td align="right">Return to <a href="index.html">index</a></td></tr>
 </table>
-<h1>Sample Programs and Tapes</h1>
-<p>The following sample programs and tapes are provided:</p>
+<h1>Sample Programs, Tapes and ROMs</h1>
+<p>The following sample programs, tapes and ROMs are provided:</p>
 <ul compact>
 <li><a href="#hello1">Hello World</a></li>
 <li><a href="#charset">Character Set</a></li>
@@ -26,6 +26,10 @@
 <li><a href="#invade">Space Invaders</a></li>
 <li><a href="#superinv">8k Super Invaders</a></li>
 <li><a href="#astero">Asteroids</a></li>
+<li><a href="#mon32">MONUK02 ROM</a> patched for a 32-line screen</li>
+<li><a href="#cegmon32">CEGMON ROM</a> patched for a 32-line screen</li>
+<li><a href="#pbasic4">BASIC 4</a> Premier Publications BASIC 4 replacement</li>
+<li><a href="#pbasic5">BASIC 5</a> Premier Publications BASIC 5 addition</li>
 </ul>
 <p>Note: <i>Where indicated (using a cassette image) some of these sample 
 programs and tapes are recovered from original software.
@@ -386,6 +390,59 @@ this or if it is related to the simulation!
 You should set the keyboard to <a href="operation.html#kbmode">game mode</a>
 to play the game.</p>
 <hr>
+<h2 id="monuk32">Monitor - Patched for 32 lines</h2>
+<table frame="void"><tr valign="top">
+<td><img src="image/rom.gif" alt="ROM" align="left"/></td>
+<td>
+<table frame="box" rules="all" cellspacing="0" cellpadding="4">
+<tr><td><b>ROM</b></td>
+<td><a href="../samples/roms/NEWMON32.ROM"><samp>samples/roms/NEWMON32.ROM</samp></a></td></tr>
+<tr><td><b>Install with</b></td><td><code>rom.monitor=&lt;path&gt;/NEWMON32.ROM</code></td></tr>
+</table>
+</td></tr></table>
+<p>This is the standard monitor ROM patched to correctly support a 32-line screen.</p>
+<hr>
+<h2 id="cegmon32">CEGMON - Patched for 32 lines</h2>
+<table frame="void"><tr valign="top">
+<td><img src="image/rom.gif" alt="ROM" align="left"/></td>
+<td>
+<table frame="box" rules="all" cellspacing="0" cellpadding="4">
+<tr><td><b>ROM</b></td>
+<td><a href="../samples/roms/CEGMON32.ROM"><samp>samples/roms/CEGMON32.ROM</samp></a></td></tr>
+<tr><td><b>Install with</b></td><td><code>rom.monitor=&lt;path&gt;/CEGMON32.ROM</code></td></tr>
+</table>
+</td></tr></table>
+<p>This is the CEGMON monitor ROM patched to correctly support a 32-line screen.</p>
+<hr>
+<h2 id="pbasic4">Premier Publications BASIC 4</h2>
+<table frame="void"><tr valign="top">
+<td><img src="image/rom.gif" alt="ROM" align="left"/></td>
+<td>
+<table frame="box" rules="all" cellspacing="0" cellpadding="4">
+<tr><td><b>ROM</b></td>
+<td><a href="../samples/roms/PREMBAS4.ROM"><samp>samples/roms/PREMBAS4.ROM</samp></a></td></tr>
+<tr><td><b>Install with</b></td><td><code>rom.basic4=&lt;path&gt;/PREMBAS4.ROM</code></td></tr>
+</table>
+</td></tr></table>
+<p>This is Premier Publications improved version of the BASIC 4 ROM,
+which provides some faster and improved cassette LOAD and SAVE commands.
+<br>See <a href="http://www.flaxcottage.com/UK101/BASIC%204.pdf">here</a> for more details.</p>
+<hr>
+<h2 id="pbasic5">Premier Publications BASIC 5</h2>
+<table frame="void"><tr valign="top">
+<td><img src="image/rom.gif" alt="ROM" align="left"/></td>
+<td>
+<table frame="box" rules="all" cellspacing="0" cellpadding="4">
+<tr><td><b>ROM</b></td>
+<td><a href="../samples/roms/PREMBAS5.ROM"><samp>samples/roms/PREMBAS5.ROM</samp></a></td></tr>
+<tr><td><b>Install with</b></td><td><code>rom.9000=&lt;path&gt;/PREMBAS5.ROM</code></td></tr>
+</table>
+</td></tr></table>
+<p>This is Premier Publications BASIC 5 ROM, which
+provides various additional BASIC keywords and extensions.
+It is best used in conjunction with <a href="#pbasic4">Premier's BASIC4</a>.
+<br>See <a href="http://www.flaxcottage.com/UK101/BASIC%205.pdf">here</a> for more details.</p>
+<hr>
 <h2 id="format">Binary, ASCII and Audio Tape Formats</h2>
 <p>When the UK101 wrote data to a cassette tape it was written as a 
 series of bytes.
@@ -509,10 +566,10 @@ use the <a href="utilities.html#tread">Tape Reader</a> utility to
 convert the binary form to ASCII for easy viewing or editing on the PC.</li>
 </ol>
 <br><table border="1" frame="above" rules="none" width="100%" bgcolor="#F0F8FF">
-<tr><td align="left">Tim Baldwin<br>February 2017
+<tr><td align="left">Tim Baldwin<br>May 2022
 <br><a href="mailto:tjb101@tinymail.co.uk">tjb101@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2010,2017</td></tr>
+<br><br>&copy; Tim Baldwin 2010,2022</td></tr>
 </table>
 </body>
 </html>
