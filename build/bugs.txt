@@ -4,7 +4,7 @@ Compukit UK101 Simulation - Bug fixes and known bugs
 v0.5.0
 ------
   First release
-   
+
 v0.6.0
 ------
   Improvements:
@@ -13,23 +13,23 @@ v0.6.0
    - Better simulation of CPU correct speed
    - Include indication of actual processor speed
    - Better special debug processor opcodes
-   
+
   Main bug fixes:
    - Page-0 indexed addresses not wrapping around 0xFF, which caused 
      division in BASIC to give incorrect results 
    - Bug with utility programs parsing command line parameters  
-   
+
 v1.0.0
 ------ 
   Improvements:
    - Add support for Ohio Scientific Superboard II emulation  
-   
+
 v1.1.0
 ------ 
   Improvements:
    - Add correct timing to ACIA to allow 8K Super Invaders to run! 
    - Keyboard window no longer needs to be selected to type 
-   
+
   Main bug fixes:
    - Reduce Java CPU usage  
  
@@ -41,7 +41,7 @@ v1.2.0
    - Slightly smaller keyboard window
    - Support reading and writing Kansas City Standard audio files
    - Include CEGMON monitor option
-   
+
   Main bug fixes:
    - Problem pushing and popping 2-byte values when the stack wraps 
      around.
@@ -64,7 +64,7 @@ v1.3.0
    - Some 64K address wrapping issues in indexed address modes
    - Ensure @ key is decoded correctly with CEGMON
    - Fix some Superboard keyboard mappings
-   
+
 v1.4.0
 ------
   Improvements:
@@ -79,7 +79,7 @@ v1.4.0
   Main bug fixes:
    - Fix tape save dialog on Mac so filename can be specified 
    - Fix minor appearance issues on Mac
-   
+
  v1.4.1
  ------
    Improvements:
@@ -87,5 +87,9 @@ v1.4.0
     - Improve keyboard responsiveness; avoid losing keystrokes
 
    Main bug fixes: 
-    - None
-    
+    - Avoid IOExceptions when closing with EPROMs installed
+
+v1.4.2
+------
+   Improvements:
+    - Add "uk101" start-up alias

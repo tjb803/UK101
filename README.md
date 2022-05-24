@@ -49,8 +49,12 @@ Latest Improvements
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
 
+v1.4.2
+ - 
+
 v1.4.1
  - Source code moved to GitHub
+ - Simplify CPU timing control
  - Improve keyboard responsiveness
 
 v1.4.0
@@ -106,6 +110,7 @@ v1.2.0  January 2014    Support additional plug-in ROMs and audio encoded tapes
 v1.3.0  November 2015   Index addressing mode bug fixes and more CPU speed options
 v1.4.0  September 2017  Additional configuration and EPROM support 
 v1.4.1  August 2021     Source code moved to GitHub
+v1.4.2  May 2022        Support BASIC1 to BASIC4 and rename ePROM as NVRAM
 
 ---
 Tim Baldwin

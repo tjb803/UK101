@@ -701,7 +701,7 @@ public class CPU6502 {
         int extraCycles = 0;
         int addr = getAddress(MODE_RELATIVE);
         if (testFlag(flag) == value) {
-            extraCycles = samePage(addr, PC) ? 1 : 2; 
+            extraCycles = samePage(addr, PC) ? 1 : 2;
             PC = (short)addr;
         }
         return extraCycles;
