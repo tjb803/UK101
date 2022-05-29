@@ -96,16 +96,25 @@ public class Computer extends Thread implements DataBus {
             rams.add(r);
         }
 
+        // When the real hardware powered up the memory contained random garbage.
+        // Here we set the first 1K to the values it would have following a full
+        // Cold-Start of BASIC - this ought to be perfectly fine "random garbage"
+        // but has the nice side effect that anything trying to call BASIC before
+        // a cold-start should work correctly.  Some games can do this if loaded
+        // directly from the monitor.
+        ROM coldRAM = new ROM("COLD.RAM");
+
         // Install the system ROMs and RAM
         ram = new RAM(cfg.getRamSize());
+        ram.restore(coldRAM.store);
+        addMemory(cfg.getRamAddr(), ram);
+
         basic = new ROM(cfg.getRomBasic());
         monitor = new ROM(cfg.getRomMonitor());
-        addMemory(cfg.getRamAddr(), ram);
         addMemory(cfg.getBasicAddr(), basic);
         addMemory(cfg.getMonitorAddr(), monitor);
 
-        // The BASIC ROM can potentially be replaced by up to 4 
-        // individual 2K ROMs.
+        // BASIC can potentially be replaced by up to 4 individual 2K ROMs
         basicRoms = new ROM[4];
         int basicAddr = cfg.getBasicAddr();
         for (int i = 1; i < 5; i++) {

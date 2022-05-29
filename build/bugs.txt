@@ -95,3 +95,4 @@ v1.4.2
     - Add "uk101" start-up alias
     - Support 4 separate BASIC ROMs in config
     - Rename EPROMs as NVRAM
+    - Improve function for games that se BASIC

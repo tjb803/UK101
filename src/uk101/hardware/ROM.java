@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2015
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.hardware;
 
@@ -68,7 +68,7 @@ public class ROM extends Memory {
     // found.
     private static byte[] load(String id) throws IOException {
         String rid = id.toUpperCase();
-        if (!rid.endsWith(".ROM")) 
+        if (!rid.endsWith(".ROM") && !rid.endsWith(".RAM")) 
             rid += ".ROM";
 
         InputStream in = Main.class.getResourceAsStream("rom/" + rid); 
@@ -79,7 +79,7 @@ public class ROM extends Memory {
                 if (in == null) {
                     in = new FileInputStream(id);
                 }
-            }    
+            }
         }
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

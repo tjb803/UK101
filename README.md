@@ -53,6 +53,7 @@ v1.4.2
  - Add "uk101" start up alias
  - Add support for separate BASIC ROMs
  - Rename EPROM as NVRAM
+ - Improve function of games that use but don't initialize BASIC
 
 v1.4.1
  - Source code moved to GitHub
