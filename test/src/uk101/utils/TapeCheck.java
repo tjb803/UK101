@@ -45,7 +45,7 @@ public class TapeCheck {
         options.put("adaptive");
         options.put("factor", "error_factor");
         Args parms = new Args(TapeCheck.class, "inputwav [outputwav]", args, options);
-       
+
         File inputFile = parms.getInputFile(1); 
         File outputFile = parms.getOutputFile(2);    
         int factor = parms.getInteger("factor", 250);
@@ -56,7 +56,7 @@ public class TapeCheck {
         if (inputFile == null) {
             parms.usage();
         }
-        
+
         if (outputFile == null) {
             String name = inputFile.getName().replace(".wav", "").concat(".check.wav");
             outputFile = new File(inputFile.getParentFile(), name);
@@ -66,13 +66,13 @@ public class TapeCheck {
         CheckingDecoder decoder = new CheckingDecoder(factor, adaptive);
         InputStream input = Tape.getInputStream(inputFile, Tape.STREAM_AUDIO, decoder);
         OutputStream output = new FileOutputStream(outputFile);
-        
+
         // Read through the input which will perform the checking
         int b = input.read();
         while (b != -1) 
             b = input.read();
         input.close();
-        
+
         // Write the check data as a WAV file
         InputStream checkIn = decoder.getCheckStream();
         AudioFormat checkFmt = decoder.getCheckFormat();

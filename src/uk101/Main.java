@@ -55,8 +55,8 @@ public class Main implements Runnable {
         options.put("p", "=properties");  
         options.put("properties", "systemProps");
         options.put("debug");
-        Args parms = new Args(Main.class, "[machine]", args, options);
-        
+        Args parms = new Args("uk101", "[machine]", args, options);
+
         Computer.debug = parms.getFlag("debug");
 
         // Set the Swing look and feel.
@@ -70,7 +70,7 @@ public class Main implements Runnable {
         if (imageFile != null) {
             image = MachineImage.readImage(imageFile);
             imageCfg = image.imageCfg;
-        }    
+        }
 
         // Create a new UK101 simulation and view
         Configuration config = new Configuration(parms, imageCfg);
@@ -86,7 +86,7 @@ public class Main implements Runnable {
     private static void setLookAndFeel(String look) throws Exception {
         String lafClass = null;
         String metalTheme = null;
-        
+
         if (Computer.debug) {
             System.out.println("Look:");
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -94,9 +94,9 @@ public class Main implements Runnable {
                 if (name.equals("Metal"))
                     name += "/Steel/Ocean";
                 System.out.println("  " + name);
-            }    
+            }
         }
-        
+
         if (look == null) {
             // No parameter so use the platform look, unless some other
             // override has been set (eg via swing.properties).
@@ -110,7 +110,7 @@ public class Main implements Runnable {
                 metalTheme = look;
                 look = "Metal";
             }
-            
+
             // Look for an exact match first, then a likely match
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if (info.getName().equalsIgnoreCase(look)) {
@@ -161,7 +161,7 @@ public class Main implements Runnable {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setIconImage(icon);
         frame.setContentPane(view);
-        
+
         // Try to set the dock icon on a Mac
         try {
             Class<?> ac = Class.forName("com.apple.eawt.Application");

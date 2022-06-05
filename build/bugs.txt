@@ -80,19 +80,24 @@ v1.4.0
    - Fix tape save dialog on Mac so filename can be specified 
    - Fix minor appearance issues on Mac
 
- v1.4.1
- ------
-   Improvements:
-    - Simplify CPU speed emulation
-    - Improve keyboard responsiveness; avoid losing keystrokes
+v1.4.1
+------
+  Improvements:
+   - Simplify CPU speed emulation
+   - Improve keyboard responsiveness; avoid losing keystrokes
 
-   Main bug fixes: 
-    - Avoid IOExceptions when closing with EPROMs installed
+  Main bug fixes: 
+   - Avoid IOExceptions when closing with EPROMs installed
 
 v1.4.2
 ------
-   Improvements:
-    - Add "uk101" start-up alias
-    - Support 4 separate BASIC ROMs in config
-    - Rename EPROMs as NVRAM
-    - Improve function for games that se BASIC
+  Improvements:
+   - Add "uk101" start-up alias
+   - Support 4 separate BASIC ROMs in config
+   - Rename EPROMs as NVRAM
+   - Improve function for games that use BASIC
+
+v1.4.3
+------
+  Improvements:
+   - Add "snapshot" option to machine image save/load

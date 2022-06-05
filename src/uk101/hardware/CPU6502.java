@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import uk101.hardware.bus.DataBus;
 import uk101.machine.Computer;
 import uk101.machine.Configuration;
+import uk101.machine.Cpu;
 import uk101.machine.Data;
 import uk101.machine.Trace;
 
@@ -52,7 +53,7 @@ public class CPU6502 {
 
     // Address vectors
     static final int NMI_VECTOR = 0xFFFA;
-    static final int RESET_VECTOR = 0xFFFC;
+    static final int RST_VECTOR = 0xFFFC;
     static final int IRQ_VECTOR = 0xFFFE;
 
     // Processor registers
@@ -70,7 +71,7 @@ public class CPU6502 {
 
     // Execution control
     private AtomicBoolean running;
-    private boolean sigRESET, sigNMI, sigIRQ;
+    private boolean sigRST, sigNMI, sigIRQ;
 
     // Timing control
     private boolean useYield, useSleep;
@@ -89,7 +90,7 @@ public class CPU6502 {
         this.alu = new ALU6502();
         this.bus = bus;
         running = new AtomicBoolean();
-        sigRESET = true;
+        sigRST = true;
         setMHz(mhz);
 
         // Set the timing control from configuration, if specified.  
@@ -166,6 +167,24 @@ public class CPU6502 {
     }
 
     /*
+     * Save and restore the CPU state
+     */
+    public synchronized void getState(Cpu cpu) {
+        cpu.A = A;  cpu.X = X;  cpu.Y = Y;
+        cpu.S = S;  cpu.P = P;
+        cpu.PC = PC;
+        cpu.RST = sigRST; cpu.NMI = sigNMI; cpu.IRQ = sigIRQ;
+    }
+
+    public synchronized void applyState(Cpu cpu) {
+        A = cpu.A;  X = cpu.X;  Y = cpu.Y;
+        S = cpu.S;  P = cpu.P;
+        PC = cpu.PC;
+        sigRST = cpu.RST; sigNMI = cpu.NMI; sigIRQ = cpu.IRQ;
+        alu.setDecimal(testFlag(FLAG_D));
+    }
+
+    /*
      * Normal processor execution
      */
     public void run() throws InterruptedException {
@@ -218,7 +237,7 @@ public class CPU6502 {
      * External signals
      */
     public synchronized void signalReset() {
-        sigRESET = true;
+        sigRST = true;
         notify();
     }
 
@@ -250,7 +269,7 @@ public class CPU6502 {
     private int execute() {
         // Add trace record if tracing
         if (trace != null) {
-            traceEntry = trace.trace(PC, A, X, Y, S, P);
+            traceEntry = trace.trace(new Cpu(this));
         }
 
         // Read the next opcode
@@ -436,10 +455,10 @@ public class CPU6502 {
      * Signal processing
      */
     private void checkSignals() {
-        if (sigRESET) {
-            sigRESET = sigNMI = sigIRQ = false;
+        if (sigRST) {
+            sigRST = sigNMI = sigIRQ = false;
             reset();
-            PC = readWord(RESET_VECTOR);
+            PC = readWord(RST_VECTOR);
         } else if (sigNMI) {
             sigNMI = false;
             pushWord(PC);
@@ -888,7 +907,7 @@ public class CPU6502 {
     public int getPC() {
         return Data.asAddr(PC);
     }
-    
+
     public String toString() {
         StringBuilder s = new StringBuilder("CPU: ");
         s.append("PC=").append(Data.toHexString(PC));
@@ -897,6 +916,7 @@ public class CPU6502 {
         s.append(" Y=").append(Data.toHexString(Y));
         s.append(" S=").append(Data.toHexString(S));
         s.append(" P=").append(toFlagString(P));
+        s.append(" ").append(toSigString(sigRST, sigNMI, sigIRQ));
         return s.toString();
     }
 
@@ -910,6 +930,14 @@ public class CPU6502 {
         s.append((b & FLAG_I) != 0 ? "I" : "i");
         s.append((b & FLAG_Z) != 0 ? "Z" : "z");
         s.append((b & FLAG_C) != 0 ? "C" : "c");
+        return s.toString();
+    }
+
+    public static String toSigString(boolean rst, boolean nmi, boolean irq) {
+        StringBuilder s = new StringBuilder();
+        s.append(rst ? "R" : "-");
+        s.append(nmi ? "N" : "-");
+        s.append(irq ? "I" : "-");
         return s.toString();
     }
 }

@@ -91,6 +91,8 @@ a <code>$</code> or <code>0x</code> characters.</dd>
 <dt><code>-output <i>outputfile</i></code></dt>
 <dd>A file to save the output. 
 Defaults to standard out.</dd>
+<dt><code>-compact</code></dt>
+<dd>Hide repeated lines that contain the same values.</dd>
 </dl></blockquote>
 <p>This command will print a formatted hexadecimal dump of a block of 
 data such as ROM image.
@@ -132,13 +134,15 @@ Defaults to standard out.</dd>
 This is the default format.</dd>
 <dt><code>-code</code></dt>
 <dd>Format the dump as disassembled code.</dd>
+<dt><code>-compact</code></dt>
+<dd>Hide repeated lines that contain the same values.</dd>
 </dl></blockquote>
 <p>This will format and print the output of a simulator memory dump file.
 The memory dump files usually have a name like 
 <code>uk101&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.ram</code>.
 The memory dump can be formatted either as disassembled instructions or 
 as hexadecimal data display.
-<p>Memory dump files can be produced by using the special  
+<p>Memory dump files can be produced by using the special
 <a href="extras.html#control">simulator control</a> instruction, or by pressing
 the <i>Dump</i> button on the Machine view window.</p>
 <hr><h2 id="ptrace">Trace File Formatter</h2>

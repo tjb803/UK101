@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2014
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.view;
 
@@ -18,7 +18,6 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
 import uk101.machine.Computer;
-import uk101.machine.Configuration;
 import uk101.view.component.ImageFormat;
 
 /**
@@ -27,9 +26,9 @@ import uk101.view.component.ImageFormat;
  */
 public class ComputerView extends JDesktopPane implements ActionListener {
     private static final long serialVersionUID = 1L;
-    
+
     public static boolean isMac;
-    
+
     // Improve appearance on GTK look-and-feel and detect native Mac as
     // some things need special handling on the Mac.
     static { 
@@ -59,7 +58,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         keyboard = new KeyboardView(computer, computer.keyboard, computer.config);
         cassette = new CassetteView(computer.recorder, computer.config);
         machine = new MachineView(computer, this);
-        
+
         // Attach the keyboard handler to each top level frame
         video.attachKeyboard(keyboard);
         keyboard.attachKeyboard(keyboard);
@@ -92,7 +91,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         int maxY1 = keyboard.getHeight() + video.getHeight();
         int maxY2 = keyboard.getHeight() + machine.getHeight();
         int maxY = Math.max(maxY1,  maxY2);
-        
+
         int macX = maxX - machine.getWidth(), macY = 0;
         machine.setLocation(macX, macY);
 
@@ -145,12 +144,11 @@ public class ComputerView extends JDesktopPane implements ActionListener {
             ImageFormat format = new ImageFormat(true);
             imageSelect.setAccessory(format);
             if (imageSelect.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                MachineImage image = new MachineImage(computer, this,
+                        format.saveSnapshot(), format.saveProperties(), format.savePostions());
                 File file = imageSelect.getSelectedFile();
                 if (!file.getName().contains("."))
                     file = new File(file.getPath() + ".uk101");
-                ComputerView saveView = format.savePostions() ? this : null;
-                Configuration saveCfg = format.saveProperties() ? computer.config : null;
-                MachineImage image = new MachineImage(computer, saveView, saveCfg);
                 image.write(file);
             }
         }

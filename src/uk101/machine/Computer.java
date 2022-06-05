@@ -11,9 +11,9 @@ import java.util.Collection;
 
 import uk101.hardware.ACIA6850;
 import uk101.hardware.CPU6502;
-import uk101.hardware.NVRAM;
 import uk101.hardware.Keyboard;
 import uk101.hardware.Memory;
+import uk101.hardware.NVRAM;
 import uk101.hardware.RAM;
 import uk101.hardware.ROM;
 import uk101.hardware.Video;
@@ -298,8 +298,14 @@ public class Computer extends Thread implements DataBus {
         dump.write();
     }
 
-    public void restore(Dump dump) {
-        ram.restore(dump.store);
+    public void restore(Dump ramState, Cpu cpuState, Dump vidState) {
+        ram.restore(ramState.store);
+        if (cpuState != null && vidState != null) {
+            cpu.applyState(cpuState);
+            video.restore(vidState.store);
+        } else {
+            reset();
+        }
     }
 
     /*

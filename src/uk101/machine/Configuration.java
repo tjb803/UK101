@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import uk101.Main;
@@ -33,7 +34,7 @@ import uk101.utils.Args;
  */
 public class Configuration extends Properties {
     private static final long serialVersionUID = 2L;
-    
+
     public static final String AUTO = "auto";
     public static final String SLEEP = "sleep";
     public static final String YIELD = "yield";
@@ -445,5 +446,16 @@ public class Configuration extends Properties {
          ObjectInputStream in = new ObjectInputStream(stream);
          Configuration cfg = (Configuration)in.readObject();
          return cfg;
+    }
+
+    /*
+     * Print a configuration
+     */
+    public String toString() {
+        String s = "";
+        for (Map.Entry<Object,Object> entry : entrySet()) {
+            s += "  " + entry.getKey() + "=" + entry.getValue() + "\n";
+        }
+        return s;
     }
 }

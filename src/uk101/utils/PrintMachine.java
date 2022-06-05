@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.utils;
 
@@ -12,7 +12,9 @@ import java.io.PrintStream;
 import java.text.DateFormat;
 
 import uk101.machine.Configuration;
+import uk101.machine.Cpu;
 import uk101.machine.Dump;
+import uk101.machine.Trace;
 import uk101.view.MachineImage;
 import uk101.view.ViewImage;
 
@@ -31,14 +33,14 @@ import uk101.view.ViewImage;
  *    -code: Include memory dump as disassembled code
  */
 public class PrintMachine {
-    
+
     public static void main(String[] args) throws Exception {
         // Handle parameters
         Args.Map options = Args.optionMap();
         options.put("hex");
         options.put("code");
         Args parms = new Args(PrintMachine.class, "machine [outputfile]", args, options);
-        
+
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile(2);
         boolean asHex = parms.getFlag("hex");
@@ -60,28 +62,53 @@ public class PrintMachine {
         // configuration.
         MachineImage image = MachineImage.readImage(inputFile);
         Dump dump = image.imageDump;
+        Cpu cpu = image.imageCpu;
+        Dump video = image.imageVid;
         Configuration config = image.imageCfg;
         ViewImage view = image.imageView;
-        
+
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
         output.println("Compukit UK101 Machine Image");
         output.println("created: " + df.format(dump.timestamp));
         output.println();
-        
-        // Start with the memory dump
+
+        // Start with CPU state, if we have it
+        if (cpu != null) {
+            output.println("CPU:");
+            output.print("  ");
+            new PrintTrace(output).print(new Trace.Entry(cpu));
+        } else {
+            output.println("No CPU state.");
+        }
+        output.println();
+
+        // Then the memory dump
         if (asHex || asCode) {
             output.println("RAM:");
             InputStream ram = new ByteArrayInputStream(dump.store);
             if (asHex) {
-                new PrintBytes(output).print(0, ram);
+                new PrintBytes(output, true).print(0, ram);
             } else {
                 new PrintCode(output).print(0, ram);
             }
-        } else {   
-            output.println("RAM omitted.");     
+        } else {
+            output.println("RAM omitted.");
         }
         output.println();
-        
+
+        // Then the video RAM, if we have it and want it
+        if (video != null) {
+            if (asHex || asCode) {
+                output.println("Video:");
+                InputStream vid = new ByteArrayInputStream(video.store);
+                int vaddr = config != null ? config.getVideoAddr() : 0xD000;
+                new PrintBytes(output, true).print(vaddr, vid);
+            } else {
+                output.println("Video RAM omitted.");
+            }
+            output.println();
+        }
+
         // Then any saved configuration
         if (config != null) {
             output.println("Configuration:");
@@ -90,14 +117,14 @@ public class PrintMachine {
             output.println("No configuration.");
         }
         output.println();
-        
+
         // Finally the saved window positions
         if (view != null) {
             output.println("View details:");
             output.print(view);
         } else {
             output.println("No view details.");
-        } 
-        output.println();  
-    } 
+        }
+        output.println();
+    }
 }

@@ -57,14 +57,14 @@ public class TapeWrite {
         // Create decoder for audio input and create output stream
         KansasCityDecoder decoder = new KansasCityDecoder(baudRate, phase);
         OutputStream output = Tape.getOutputStream(outputFile, Tape.STREAM_BINARY, null);
-        
+
         // Copy the inputs to the output
         decoder.setAdaptive(adpative);
         for (File inputFile : inputFiles) {    
             InputStream input = Tape.getInputStream(inputFile, Tape.STREAM_SELECT, decoder);
             Tape.copy(input, output);
             input.close();
-        }    
+        }
         output.close();
     }
 }

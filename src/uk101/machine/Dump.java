@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
+import uk101.hardware.Memory;
+
 /**
  * Capture and record a system memory dump.
  */
@@ -37,11 +39,14 @@ public class Dump implements Serializable {
      * Create a dump
      */
     public Dump(Computer computer) {
+        this(computer.ram);
         name = computer.name;
         version = computer.version;
         timestamp = new Date();
+    }
 
-        store = computer.ram.store.clone();
+    public Dump(Memory mem) {
+        store = mem.store.clone();
     }
 
     /*

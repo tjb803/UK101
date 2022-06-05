@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.utils;
 
@@ -73,31 +73,34 @@ public class Disassembler {
      * Return next disassembled instruction.
      */
     public String nextInstruction() {
-        String result = "";
+        origin = sourceOrigin + position;
 
-        // Should not really be called unless hasNext() returns true
+        // Build the result ...
+        // ... address
+        String result = Data.toHexString(origin) + ":  ";
+
+        // Decode the instruction and operand, if there is one.
         if (hasNext()) {
-           origin = sourceOrigin + position;
-           decodeInstruction();
-           decodeOperand();
+            decodeInstruction();
+            decodeOperand();
 
-           // Build the result ...
-           // ... address
-           result = Data.toHexString(origin) + ":  ";
+            // ... instruction bytes
+            for (int i = 0; i < instrSize; i++)
+                result += Data.toHexString((byte)sourceBytes[position+i]) + " ";
+            for (int i = instrSize; i < 3; i++)
+                result += "   ";
 
-           // ... instruction bytes
-           for (int i = 0; i < instrSize; i++)
-               result += Data.toHexString((byte)sourceBytes[position+i]) + " ";
-           for (int i = instrSize; i < 3; i++)
-               result += "   ";
-
-           // .. mnemonic and operand
-           result += formatInstruction();
-
-           // Step to the next instruction
-           position += instrSize;
+        } else {
+            instrText = "???";
+            instrMode = MODE_IMPLICIT;
+            instrSize = 0;
         }
 
+        // Step to the next instruction
+        position += instrSize;
+
+        // .. mnemonic and operand
+        result += formatInstruction();
         return result;
     }
 
@@ -256,6 +259,9 @@ public class Disassembler {
         case 0x20: instrText = "JSR";  instrMode = MODE_ABSOLUTE;     break;
         case 0x40: instrText = "RTI";  instrMode = MODE_IMPLICIT;     break;
         case 0x60: instrText = "RTS";  instrMode = MODE_IMPLICIT;     break;
+        // Simulator control instructions
+        case 0x02: instrText = "@@H";  instrMode = MODE_IMPLICIT;     break;
+        case 0x22: instrText = "@@D";  instrMode = MODE_IMMEDIATE;    break;
         }
     }
 

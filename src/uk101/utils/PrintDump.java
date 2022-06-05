@@ -26,6 +26,7 @@ import uk101.machine.Dump;
  *    -output outputfile: output file name, defaults to standard out
  *    -hex: print output as a hex dump, default is hex format
  *    -code: print output as disassembled code
+ *    -compact: compact repeated data
  */
 public class PrintDump {
 
@@ -35,11 +36,13 @@ public class PrintDump {
         options.put("output", "outputfile");
         options.put("hex");
         options.put("code");
+        options.put("compact");
         Args parms = new Args(PrintDump.class, "dumpfile", args, options);
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile("output");
         boolean asHex = parms.getFlag("hex");
         boolean asCode = parms.getFlag("code");
+        boolean compact = parms.getFlag("compact");
 
         // Check parameters
         if (inputFile == null || (asHex && asCode)) {
@@ -65,7 +68,7 @@ public class PrintDump {
             if (asCode) {
                 new PrintCode(output).print(0, bytes);
             } else {
-                new PrintBytes(output).print(0, bytes);
+                new PrintBytes(output, compact).print(0, bytes);
             }
             output.println();
         }

@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.utils;
 
@@ -26,6 +26,7 @@ import uk101.machine.Data;
  *
  * options:
  *    -output outputfile: output file name, defaults to standard out
+ *    -compact: compact repeated data
  *
  * Output displays a hex byte dump and the equivalent ASCII characters
  */
@@ -35,10 +36,13 @@ public class PrintBytes {
         // Handle parameters
         Args.Map options = Args.optionMap();
         options.put("output", "outputfile");
+        options.put("compact");
         Args parms = new Args(PrintBytes.class, "bytesfile [address]", args, options);
+
         File inputFile = parms.getInputFile(1);
         int address = parms.getHexInteger(2, 0);
         File outputFile = parms.getOutputFile("output");
+        boolean compact = parms.getFlag("compact");
 
         // Check parameters
         if (inputFile == null) {
@@ -53,7 +57,7 @@ public class PrintBytes {
         }
 
         // Format the output
-        new PrintBytes(output).print(address, input);
+        new PrintBytes(output, compact).print(address, input);
         output.println();
     }
 
@@ -62,28 +66,78 @@ public class PrintBytes {
      */
 
     private PrintStream output;
+    private boolean compact;
 
     public PrintBytes(PrintStream output) {
+        this(output, false);
+    }
+
+    public PrintBytes(PrintStream output, boolean compact) {
         this.output = output;
+        this.compact = compact;
     }
 
     public void print(int address, InputStream input) throws IOException {
+
+        String addr = "", data = "", chars = "";
+        String lastAddr= "", lastData = "", lastChars= "";
+        int skip = 0;
+
         byte[] bb = new byte[16];
         int size = input.read(bb);
         while (size != -1) {
-            output.print(Data.toHexString(address) + ": ");
-            for (int i = 0; i < size; i++)
-                output.print(" "+Data.toHexString(bb[i]));
-            for (int i = size; i < 16; i++)
-                output.print("   ");
-            output.print("  [");
-            for (int i = 0; i < size; i++)
-                output.print((bb[i] > 31 && bb[i] < 127) ? Character.toString((char)bb[i]) : ".");
-            for (int i = size; i < 16; i++)
-                output.print(" ");
-            output.println("]");
+            lastAddr = addr;
+            lastData = data;
+            lastChars = chars;
+
+            addr = Data.toHexString(address);
+            data = toData(bb, size);
+            chars = toChars(bb, size);
+
+            if (!compact || !data.equals(lastData)) {
+                if (skip > 0) {
+                    printRepeat(skip, lastAddr, lastData, lastChars);
+                    skip = 0;
+                }
+                printLine(addr, data, chars);
+            } else {
+                skip += 1;
+            }
+
             address += size;
             size = input.read(bb);
         }
+        if (skip > 0) {
+           printRepeat(skip-1, lastAddr, lastData, lastChars);
+           printLine(addr, data, chars);
+        }
+    }
+
+    private String toData(byte[] bb, int size) {
+        String data = "";
+        for (int i = 0; i < size; i++)
+            data += " " + Data.toHexString(bb[i]);
+        for (int i = size; i < 16; i++)
+            data += "   ";
+        return data;
+    }
+
+    private String toChars(byte[] bb, int size) {
+        String chars = "[";
+        for (int i = 0; i < size; i++)
+            chars += (bb[i] > 31 && bb[i] < 127) ? Character.toString((char)bb[i]) : ".";
+        chars += "]";
+        return chars;
+    }
+
+    private void printRepeat(int skip, String addr, String data, String chars) {
+        if (skip > 1)
+            output.println("...");
+        else if (skip > 0)
+            printLine(addr, data, chars);
+    }
+
+    private void printLine(String addr, String data, String chars) {
+        output.println(addr + ": " + data + "  " + chars);
     }
 }

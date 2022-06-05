@@ -28,7 +28,7 @@ import java.util.List;
  *   starts with '=' - option is a synonym for another option  
  */
 public class Args {
-    
+
     public static class Map extends LinkedHashMap<String,String> {
         private static final long serialVersionUID = 1L;
         public void put(String key) {
@@ -51,7 +51,7 @@ public class Args {
     public Args(Class<?> cl, String parms, String[] args, Args.Map opts) {
         this(cl.getName(), parms, args, opts);
     }
-    
+
     public Args(String name, String parms, String[] args, Args.Map opts) {
         this.name = name;
         this.parms = parms;
@@ -78,7 +78,7 @@ public class Args {
                 }
             } else if (arg.equals("?")) {
                 usage();
-            } else {    
+            } else {
                 parameters.add(arg);
             }
         }
@@ -90,10 +90,10 @@ public class Args {
     public int getParameterCount() {
         return parameters.size();
     }
-    
+
     public String getParameter(int position) {
         String result = null;
-        if (position <= parameters.size()) {
+        if (position > 0 && position <= parameters.size()) {
             result = parameters.get(position-1);
         }
         return result;
@@ -253,7 +253,7 @@ public class Args {
                     if (hdr.length() > 0) {
                         System.out.println();
                     }
-                }    
+                }
             }
         }
         System.exit(1);

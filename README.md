@@ -2,7 +2,7 @@ Compukit UK101 Simulation
 =========================
 This project is a simulation of a Compukit UK101 hobby computer from the 
 late 1970s/early 1980s.  The program is written entirely in Java and should 
-therefore run easily on most systems. 
+therefore run easily on most systems.
 
 Full details can be found at:
    The project homepage:  http://uk101.sourceforge.net
@@ -17,9 +17,9 @@ hardware elements:
  - Keyboard input
  - VDU output
  - Cassette tape storage
-  
+
 A Java Swing GUI interface allows the simulation to be operated in a 
-manner very similar to a real UK101. 
+manner very similar to a real UK101.
 
 Licence Information
 -------------------
@@ -30,7 +30,7 @@ own the copyright for these.  I do not know who the current copyright
 owners are and I sincerely hope no one will mind this 40-year old 
 software being made available in my packages.  If any of the copyright
 owners have an issue with this, please contact me and I will remove 
-anything that should not be here.  
+anything that should not be here.
 
 Installation and Operation 
 --------------------------
@@ -48,6 +48,9 @@ Latest Improvements
 -------------------
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
+
+v1.4.3
+ - Allow Machine "image" save to snapshot execution
 
 v1.4.2
  - Add "uk101" start up alias
@@ -105,15 +108,14 @@ v0.6.0:
 
 Release History
 ---------------
-v0.5.0  December 2010   First public release
-v0.6.0  January 2011    Bug fixes 
-v1.0.0  February 2011   Add Ohio Superboard II support
-v1.1.0  October 2011    ACIA support for 8K Super Invaders
-v1.2.0  January 2014    Support additional plug-in ROMs and audio encoded tapes
-v1.3.0  November 2015   Index addressing mode bug fixes and more CPU speed options
-v1.4.0  September 2017  Additional configuration and EPROM support 
-v1.4.1  August 2021     Source code moved to GitHub
-v1.4.2  May 2022        Support BASIC1 to BASIC4 and rename ePROM as NVRAM
+    v0.5.0  December 2010   First public release	v0.6.0  January 2011    Bug fixes 
+    v1.0.0  February 2011   Add Ohio Superboard II support
+    v1.1.0  October 2011    ACIA support for 8K Super Invaders
+    v1.2.0  January 2014    Support additional plug-in ROMs and audio encoded tapes
+    v1.3.0  November 2015   Index addressing mode bug fixes and more CPU speed options
+    v1.4.0  September 2017  Additional configuration and EPROM support 
+    v1.4.1  August 2021     Source code moved to GitHub
+    v1.4.2  May 2022        Support BASIC1 to BASIC4 and rename ePROM as NVRAM
 
 ---
 Tim Baldwin

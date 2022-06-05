@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2017
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.machine;
 
@@ -35,16 +35,18 @@ public class Trace implements Serializable {
 
         public short PC;
         public byte A, X, Y, S, P;
+        public boolean RST, NMI, IRQ;
         public byte[] instruction;
         public int length;
         public int addr;
         public byte data;
 
-        public Entry(short pc, byte a, byte x, byte y, byte s, byte p) {
-            PC = pc;
-            A = a;  X = x;  Y = y;
-            S = s;
-            P = p;
+        public Entry(Cpu cpu) {
+            PC = cpu.PC;
+            A = cpu.A;  X = cpu.X;  Y = cpu.Y;
+            S = cpu.S;
+            P =cpu.P;
+            RST = cpu.RST;  NMI = cpu.NMI;  IRQ = cpu.IRQ;
             instruction = new byte[3];
             length = 0;
         }
@@ -88,12 +90,12 @@ public class Trace implements Serializable {
     }
 
     // Log a new trace entry
-    public Entry trace(short pc, byte a, byte x, byte y, byte s, byte p) {
+    public Entry trace(Cpu cpu) {
         if (position == maximum) {
             flush(false);
             position = 0;
         }
-        Entry entry = new Entry(pc, a, x, y, s, p);
+        Entry entry = new Entry(cpu);
         traceLog[position++] = entry;
         return entry;
     }
@@ -157,7 +159,7 @@ public class Trace implements Serializable {
      * Read a trace file
      */
     @SuppressWarnings("resource")
-	public static Trace readTrace(File file) {
+    public static Trace readTrace(File file) {
         Trace trace = null;
         try {
             InputStream stream = new InflaterInputStream(new FileInputStream(file));

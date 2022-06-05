@@ -18,13 +18,14 @@ import javax.swing.event.ChangeListener;
  */
 public class SpeedSelector extends JSlider {
     private static final long serialVersionUID = 1L;
-    
+
     static {    // Improve appearance on GTK look-and-feel
         UIManager.put("Slider.paintValue", Boolean.FALSE);
     }
 
     int max;
 
+    @SuppressWarnings("unchecked")
     public SpeedSelector(int max, int value, ChangeListener listener) {
         super(1, max+1, value);
         this.max = max;

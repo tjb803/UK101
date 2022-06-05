@@ -19,7 +19,8 @@ public class RAM extends Memory {
 
     // Allow RAM to restored from a saved image
     public void restore(byte[] image) {
-        System.arraycopy(image, 0, store, 0, Math.min(image.length, store.length));
+        for (int i = 0; i < Math.min(image.length, store.length); i++)
+            writeByte(i, image[i]);
     }
 
     /*

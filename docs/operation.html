@@ -50,8 +50,8 @@ player used for saving and loading programs to and from storage tapes.</p>
 <hr>
 <h2 id="start">Start Up and Shut Down</h2>
 <p>When the simulator starts up it can load a pre-saved machine image containing
-the complete RAM memory contents, the system configuration and the size, 
-position any layout of all the application windows.</p>
+a snapshot of the complete RAM memory contents, the execution state, the system 
+configuration and the size, position any layout of all the application windows.</p>
 <p>The image can be provided as a parameter when starting the application
 or it may be loaded later using the <a href=#opctl>machine control panel</a>
 window.
@@ -67,13 +67,15 @@ complete machine images, a slider for setting the CPU clock speed and
 some simple debugging functions.</p>
 <p>The <i>Load...</i> and <i>Save...</i> buttons are used to save the 
 current machine image or restore a previously saved machine image.
-A machine image consists of the complete RAM memory and may also include the 
-system configuration and the the size, position and layout of all the windows 
-on the screen.
+A machine image consists of the complete RAM memory and may also include an
+execution snapshot, the system configuration and the size, position and 
+layout of all the windows on the screen.
 They are typically saved as files with an extension of 
-&quot;<code>.uk101</code>&quot;.
+<code>.uk101</code>.
 Loading and saving a machine image is much faster and a lot simpler
-than saving programs to cassette tapes.</p>
+than saving programs to cassette tapes.
+If the saved machine image contains a <q>snapshot</q> the machine will
+resume execution at exactly the point the snapshot was saved.</p>
 <p>Some sample machine images for some of the games are provided
 in the <code>samples/machines</code> directory.</p>
 <p>The CPU Clock Speed slider allows the CPU speed to be adjusted while
@@ -136,7 +138,7 @@ For example on the UK101 the <i>shift-8</i> key gives an open parenthesis,
 not an asterisk, and <i>shift-9</i> gives the close parenthesis. 
 This can make keyboard input in the simulator a little difficult.
 To try to overcome this problem the keyboard can work in two different
-&quot;modes:&quot;, selected by the checkbox in the bottom right-hand
+<q>modes</q>, selected by the checkbox in the bottom right-hand
 corner: <img src="image/kbmode.jpg" align="top"/>.
 <ul>
 <li>In the default <b>normal</b> mode (checkbox unticked) the simulator will 
@@ -168,7 +170,7 @@ either one of the <tt>RESET</tt> keys.</p>
 <img src="image/opcas.jpg" alt="Cassette Recorder" align="left" hspace="10"/>
 <p>The cassette recorder allows programs to be loaded 
 from and saved to cassette tapes.
-In this simulation &quot;cassette tapes&quot; are simply files on the
+In this simulation <q>cassette tapes</q> are simply files on the
 PC containing the bytes that would have been stored on a cassette.</p>
 <p>To use the cassette recorder first press the <i>Open...</i> button and
 select a tape to load or enter a new file name if you going to be 

@@ -135,7 +135,7 @@ public class ViewImage implements Serializable {
          ViewImage view = (ViewImage)in.readObject();
          return view;
     }
-    
+
     /*
      * Print a view image
      */
@@ -150,7 +150,7 @@ public class ViewImage implements Serializable {
         }
         return s;
     }
-    
+
     private String printRect(Rectangle rect) {
         return "[x=" + rect.x + " y=" + rect.y + " w=" + rect.width + " h=" + rect.height + "]";
     }
