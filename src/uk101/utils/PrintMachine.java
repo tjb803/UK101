@@ -26,7 +26,7 @@ import uk101.view.ViewImage;
  *
  * where:
  *    machine: is the name of a saved machine image
- *    outputfile: is the name of the formatted output file, default is standard out.
+ *    outputfile: is the name of the formatted output file, default is standard-out.
  *
  * options:
  *    -hex: Include memory dump as hex, default is no memory dump

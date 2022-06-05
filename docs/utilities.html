@@ -46,7 +46,7 @@ a <code>$</code> or <code>0x</code> characters.</dd>
 <blockquote><dl>
 <dt><code>-output <i>outputfile</i></code></dt>
 <dd>A file to save the output. 
-Defaults to standard out.</dd>
+Defaults to standard-out.</dd>
 </dl></blockquote>
 <p>This command will disassemble a block of 6502 instruction code such as 
 a ROM image.
@@ -90,7 +90,7 @@ a <code>$</code> or <code>0x</code> characters.</dd>
 <blockquote><dl>
 <dt><code>-output <i>outputfile</i></code></dt>
 <dd>A file to save the output. 
-Defaults to standard out.</dd>
+Defaults to standard-out.</dd>
 <dt><code>-compact</code></dt>
 <dd>Hide repeated lines that contain the same values.</dd>
 </dl></blockquote>
@@ -128,7 +128,7 @@ FFF0:  02 6C 1C 02 6C 1E 02 6C 20 02 22 02 00 FF 25 02  [.l..l..l ."...%.]
 <blockquote><dl>
 <dt><code>-output <i>outputfile</i></code></dt>
 <dd>A file to save the output. 
-Defaults to standard out.</dd>
+Defaults to standard-out.</dd>
 <dt><code>-hex</code></dt>
 <dd>Format the dump as hex bytes.
 This is the default format.</dd>
@@ -159,7 +159,7 @@ the <i>Dump</i> button on the Machine view window.</p>
 <blockquote><dl>
 <dt><code>-output <i>outputfile</i></code></dt>
 <dd>A file to save the output. 
-Defaults to standard out.</dd>
+Defaults to standard-out.</dd>
 </dl></blockquote>
 <p>This will format and print the output of a simulator instruction trace file.
 The instruction trace files usually have a name like 
@@ -227,8 +227,8 @@ or persist some working data.</p>
 <dd>The name of a binary or ASCII tape file or a Kansas City Standard 
 encoded audio WAV file.</dd>
 <dt><code>outputfile</code></dt>
-<dd>The name of an ASCII format output file.  
-Defaults to standard out.</dd> 
+<dd>The name of an ASCII format output file.
+Defaults to standard-out.</dd> 
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
@@ -236,6 +236,9 @@ Defaults to standard out.</dd>
 <dd>Input should be processed as a binary file.
 This is not normally required as the system will automatically detect
 the type of input.</dd>
+<dt><code>-maxlen</code></dt>
+<dd>The maximum line length used in the ASCII output.
+This will default to 80 for standard-out or 132 for file output.</dd>
 <dt><code>-baud <i>baud_rate</i></code></dt>
 <dd>The baud rate of an audio encoding.
 Supported baud rates are 300, 600 or 1200; this defaults to the standard 
@@ -244,14 +247,16 @@ Supported baud rates are 300, 600 or 1200; this defaults to the standard
 <dd>The phase angle of an audio encoding.
 Supported values are 0, 90, 180 or 270; this defaults to 90&deg;.</dd>
 </dl></blockquote>
-<p>This program will write an <i>ASCII</i> format version of input file.
-The <i>ASCII</i> format is useful for viewing and editing on the PC.</p>
+<p>This program will write an <a href="samples.htlm#format"><i>ASCII</i></a>
+format version of input file.
+The <i>ASCII</i> format is useful for viewing and editing on the PC.
+</p>
 <p>It may be necessary to experiment with the <code>-phase</code> parameter
 to get accurate decoding of audio files, although the default value is correct 
 for any tapes written using the <a href="#trecord">Tape Recorder</a> utility.</p>
 <p>See <a href="samples.html#format">tape formats</a> for 
 details on the differences between the <i>binary</i>, <i>audio</i> and 
-<i>ASCII</i> forms of program tapes.</p> 
+<i>ASCII</i> forms of program tapes.</p>
 <hr><h2 id="twrite">Binary Tape Writer</h2>
 <h3>Command</h3>
 <blockquote><pre>
@@ -275,8 +280,8 @@ Supported baud rates are 300, 600 or 1200; this defaults to the standard
 <dd>The phase angle of an audio encoding.
 Supported values are 0, 90, 180 or 270; this defaults to 90&deg;.</dd>
 </dl></blockquote>
-<p>This program will write a single <i>binary</i> format version of all the 
-provided input files.
+<p>This program will write a single <a href="samples.html#format"><i>binary</i></a>
+format version of all the provided input files.
 The <i>binary</i> format is the best format to use when archiving UK101 
 programs and data on the PC.
 The input files may be in <i>binary</i>, <i>ASCII</i> or <i>audio</i> encoded 
@@ -335,9 +340,10 @@ it differs from the output baud rate.</dd>
 <dd>The phase angle of the <code>inputfile</code> if it is audio encoded.
 Supported values are 0, 90, 180 or 270; this defaults to 90&deg;.</dd>
 </dl></blockquote>
-<p>This program will write a single Kansas City Standard <i>audio</i> format
-WAV file of all the provided input files. 
-A small segment gap of blank carrier tone will be left between eaxh file
+<p>This program will write a single Kansas City Standard 
+<a href="samples.html#format"><i>audio</i></a> format WAV file of all the 
+provided input files.
+A small segment gap of blank carrier tone will be left between each file
 written.
 The input files may be in <i>binary</i>, <i>ASCII</i> or <i>audio</i> encoded 
 formats or a mix of the three.</p>
@@ -395,8 +401,10 @@ it differs from the output baud rate.</dd>
 <dd>The phase angle of the <code>inputfile</code> if it is audio encoded.
 Supported values are 0, 90, 180 or 270; this defaults to 90&deg;.</dd>
 </dl></blockquote>
-<p>This program will take one or more ASCII, binary or audio tape file and 
-play them in Kansas City Standard audio format to the system sound device.
+<p>This program will take one or more <a href="samples.html#format">ASCII</a>, 
+<a href="samples.html#format">binary</a> or <a href="samples.html#format">audio</a>
+tape files and play them in Kansas City Standard audio format to the 
+system sound device.
 This might be useful if you wanted to connect the PC's audio output to
 a real cassette player or real UK101 machine.</p>
 <p>Note: this program can be used to play audio format files but it is not a 

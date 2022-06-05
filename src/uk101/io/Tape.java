@@ -29,11 +29,11 @@ public class Tape {
     /*
      * Create an OutputStream in either ASCII, Binary or Audio format
      */
-    public static OutputStream getOutputStream(File file, int format, AudioEncoder enc) {
+    public static OutputStream getOutputStream(File file, int format, int maxlen, AudioEncoder enc) {
         OutputStream out = null;
         try {
             if (format == STREAM_ASCII) {
-                out = new UK101OutputStream(new FileWriter(file));
+                out = new UK101OutputStream(new FileWriter(file), maxlen);
             } else if (format == STREAM_BINARY) {
                 out = new FileOutputStream(file);
             } else if (format == STREAM_AUDIO) {
@@ -88,12 +88,12 @@ public class Tape {
                     format = STREAM_BINARY;
                 else if ((b[i] == '\r' && i+1 < size && b[i+1] != '\n'))
                     format = STREAM_BINARY;
-            }    
+            }
         }
         in.close();
         return format;
     }
-    
+
     /*
      * Return the format of an input/output stream 
      */
@@ -101,12 +101,12 @@ public class Tape {
         return (stream instanceof WaveInputStream) ? STREAM_AUDIO :
                 (stream instanceof UK101InputStream) ? STREAM_ASCII : STREAM_BINARY;
     }
-    
+
     public static int getFormat(OutputStream stream) {
         return (stream instanceof WaveOutputStream) ? STREAM_AUDIO : 
                 (stream instanceof UK101OutputStream) ? STREAM_ASCII : STREAM_BINARY;
     }
-    
+
     /*
      * Copy one stream to another
      */

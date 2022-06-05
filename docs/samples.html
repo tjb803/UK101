@@ -473,7 +473,10 @@ on Windows) without any data loss or data corruption.
 it detects line ends and stores them as standard PC style
 line ends and any other unrecognised byte is converted to an
 escaped form <code>&#92;nn</code> where <code>nn</code> 
-is a pair of hexadecimal digits.</p>
+is a pair of hexadecimal digits.
+In addition long lines may be split to make them more readable by
+using an ending <code>&#92;</code> character to indicate the line
+continues on the next text line.</p>
 <p>All the sample BASIC programs are in <i>ASCII</i> format and
 have a file extension of <code>.basic</code>.</p></dd>
 <dt><i>Audio</i></dt>
@@ -534,8 +537,8 @@ good condtion it should be possible to load the resulting WAV file
 directly into the simulator by playing it with the
 <a href="operation.html#opcas">cassette player</a>, or it can be converted
 to <i>binary</i> or <i>ASCII</i> format using the 
-<a href="utilities.html#twrite">Tape Writer</a> or <a href="utilities#tread">Tape
-Reader</a> programs.  
+<a href="utilities.html#twrite">Tape Writer</a> or <a href="utilities.html#tread">Tape
+Reader</a> programs.
 It may be necessary to experiment with the <code>-phase</code>
 parameter of these programs to get them to decode correctly.
 <p>If the recording is poor quality or the original tape was in poor

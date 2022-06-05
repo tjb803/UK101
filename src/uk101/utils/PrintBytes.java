@@ -25,7 +25,7 @@ import uk101.machine.Data;
  *             or hex (possibly starting with a '$' or a '0x').
  *
  * options:
- *    -output outputfile: output file name, defaults to standard out
+ *    -output outputfile: output file name, defaults to standard-out
  *    -compact: compact repeated data
  *
  * Output displays a hex byte dump and the equivalent ASCII characters

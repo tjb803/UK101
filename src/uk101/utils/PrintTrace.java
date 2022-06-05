@@ -24,7 +24,7 @@ import uk101.machine.Trace;
  *    tracefile: is the name of an instruction trace file
  *
  * options:
- *    -output outputfile: output file name, defaults to standard out
+ *    -output outputfile: output file name, defaults to standard-out
  *
  * Trace output format is
  *

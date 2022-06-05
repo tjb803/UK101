@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.data;
 
@@ -18,19 +18,24 @@ import uk101.io.UK101OutputStream;
 import uk101.utils.PrintBytes;
 
 /**
- * JUnit tests for the UK101 input stream
+ * JUnit tests for the UK101 input and output streams
  */
 public class TestUK101Streams extends TestCase {
 
     String end = System.getProperty("line.separator");
+    byte[] lineEnd = new byte[] { 0x0D, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x0A };
 
     String[] lines1 = { "10 PRINT \"HELLO\u0001:\u0080\u00fe\"", "20 GOTO 10" };
+
     String text1 = end + "10 PRINT \"HELLO\\01:\\80\\FE\"" + end + "20 GOTO 10" + end;
+    String text2 = end + "10 PRINT \\" + end + "\"HELLO\\01\\" + end + ":\\80\\FE\"" + end + "20 GOTO 1\\" + end + "0" + end;
+    String text3 = "10 PRINT \"HELLO\\01:\\80\\FE\"" + end + "20 GOTO 10\\";
 
 
+    // Basic ASCII output
     public void testOutputStream1() throws Exception {
         StringWriter sw = new StringWriter();
-        UK101OutputStream out = new UK101OutputStream(sw);
+        UK101OutputStream out = new UK101OutputStream(sw, 80);
 
         out.write(makeBytes(lines1));
         out.close();
@@ -39,6 +44,31 @@ public class TestUK101Streams extends TestCase {
         assertTrue(sw.toString().equals(text1));
     }
 
+    // Split lines at 10 characters maximum
+    public void testOutputStream2() throws Exception {
+        StringWriter sw = new StringWriter();
+        UK101OutputStream out = new UK101OutputStream(sw, 10);
+
+        out.write(makeBytes(lines1));
+        out.close();
+        System.out.println(sw);
+
+        assertTrue(sw.toString().equals(text2));
+    }
+
+    // No line-end after last line
+    public void testOutputStream3() throws Exception {
+        StringWriter sw = new StringWriter();
+        UK101OutputStream out = new UK101OutputStream(sw, 80);
+
+        out.write(makeBytes2(lines1));
+        out.close();
+        System.out.println(sw);
+
+        assertTrue(sw.toString().equals(text3));
+    }
+
+    // Convert back to to UK101 form
     public void testInputStream1() throws Exception {
         StringReader sr = new StringReader(text1);
         UK101InputStream in = new UK101InputStream(sr);
@@ -55,7 +85,6 @@ public class TestUK101Streams extends TestCase {
 
     // Make a sequence of output bytes
     byte[] makeBytes(String[] text) throws IOException {
-        byte[] lineEnd = new byte[] { 0x0D, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x0A };
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         bout.write(lineEnd);
         for (String s : text) {
@@ -63,6 +92,20 @@ public class TestUK101Streams extends TestCase {
                 bout.write(s.charAt(i) & 0xFF);
             }
             bout.write(lineEnd);
+        }
+        return bout.toByteArray();
+    }
+
+    byte[] makeBytes2(String[] text) throws IOException {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        for (int j = 0; j < text.length; j++) {
+            String s = text[j];
+            for (int i = 0; i < s.length(); i++) {
+                bout.write(s.charAt(i) & 0xFF);
+            }
+            if (j < text.length-1) {
+                bout.write(lineEnd);
+            }
         }
         return bout.toByteArray();
     }

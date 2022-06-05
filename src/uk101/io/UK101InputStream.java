@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2014
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.io;
 
@@ -26,6 +26,8 @@ import java.util.regex.Pattern;
  * - Any hex escapes of the form '\nn' are converted to the byte value.
  *
  * - Line ends are written as CR 10xNUL LF.
+ * 
+ * - Lines ending with a '\' are joined with the following line.
  */
 public class UK101InputStream extends InputStream {
 
@@ -63,7 +65,7 @@ public class UK101InputStream extends InputStream {
                     Matcher m = ESCAPE.matcher(line);
                     while (m.find()) {
                         char codepoint = (char)Integer.parseInt(m.group(1), 16);
-                        m.appendReplacement(sb, Character.toString(codepoint));
+                        m.appendReplacement(sb, Matcher.quoteReplacement(Character.toString(codepoint)));
                     }
                     m.appendTail(sb);
                     line = sb.toString();
@@ -80,7 +82,8 @@ public class UK101InputStream extends InputStream {
                 linePos = 0;
             }
             ch = line.charAt(linePos++);
-            if (line == NEWLINE && linePos == lineLen) {
+            if (linePos == lineLen && line == NEWLINE || // And check for '\' line joins
+                    linePos == lineLen-1 && line.charAt(linePos) == '\\') {
                 line = null;
             }
         }

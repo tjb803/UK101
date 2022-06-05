@@ -51,6 +51,7 @@ addition the following are notable improvements:
 
 v1.4.3
  - Allow Machine "image" save to snapshot execution
+ - Support a maximum line length for ASCII file representation
 
 v1.4.2
  - Add "uk101" start up alias

@@ -8,30 +8,30 @@ v0.5.0
 v0.6.0
 ------
   Improvements:
-   - Add 'video.update=async/sync' option to improve performance on slower 
+   - Add 'video.update=async/sync' option to improve performance on slower
      machines
    - Better simulation of CPU correct speed
    - Include indication of actual processor speed
    - Better special debug processor opcodes
 
   Main bug fixes:
-   - Page-0 indexed addresses not wrapping around 0xFF, which caused 
-     division in BASIC to give incorrect results 
-   - Bug with utility programs parsing command line parameters  
+   - Page-0 indexed addresses not wrapping around 0xFF, which caused
+     division in BASIC to give incorrect results
+   - Bug with utility programs parsing command line parameters
 
 v1.0.0
 ------ 
   Improvements:
-   - Add support for Ohio Scientific Superboard II emulation  
+   - Add support for Ohio Scientific Superboard II emulation
 
 v1.1.0
 ------ 
   Improvements:
-   - Add correct timing to ACIA to allow 8K Super Invaders to run! 
-   - Keyboard window no longer needs to be selected to type 
+   - Add correct timing to ACIA to allow 8K Super Invaders to run!
+   - Keyboard window no longer needs to be selected to type
 
   Main bug fixes:
-   - Reduce Java CPU usage  
+   - Reduce Java CPU usage
  
 v1.2.0
 ------ 
@@ -43,7 +43,7 @@ v1.2.0
    - Include CEGMON monitor option
 
   Main bug fixes:
-   - Problem pushing and popping 2-byte values when the stack wraps 
+   - Problem pushing and popping 2-byte values when the stack wraps
      around.
    - Add additional mappings for Right-Shift key to workaround issues
      on Windows.
@@ -77,7 +77,7 @@ v1.4.0
    - Add play/record indicator light to cassette recorder
 
   Main bug fixes:
-   - Fix tape save dialog on Mac so filename can be specified 
+   - Fix tape save dialog on Mac so filename can be specified
    - Fix minor appearance issues on Mac
 
 v1.4.1
@@ -101,3 +101,8 @@ v1.4.3
 ------
   Improvements:
    - Add "snapshot" option to machine image save/load
+   - Support maximum line length for ASCII file format
+
+  Main bug fixes:
+   - Ensure ASCII-to-binary and binary-to-ASCII conversions never
+     lose or add information (line ends particularly).

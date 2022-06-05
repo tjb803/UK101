@@ -24,7 +24,7 @@ import java.io.PrintStream;
  *             or hex (possibly starting with a '$' or a '0x').
  *
  * options:
- *    -output outputfile: output file name, defaults to standard out
+ *    -output outputfile: output file name, defaults to standard-out
  */
 public class PrintCode {
 

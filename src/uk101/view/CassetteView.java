@@ -103,7 +103,7 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
         select.setAccessory(new TapeFormat());
         select.setDialogTitle(getTitle() + " - Select Tape");
         select.setAcceptAllFileFilterUsed(true);
-        
+
         JPanel ip = new JPanel();
         ip.setLayout(new BoxLayout(ip, BoxLayout.Y_AXIS));
         indicator = new CassetteLight();
@@ -178,7 +178,7 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
     private void recordTape() {
         OutputStream out = null;
         if (!tapeFile.exists()) {
-            out = Tape.getOutputStream(tapeFile, outFormat, audioEncoder);
+            out = Tape.getOutputStream(tapeFile, outFormat, 132, audioEncoder);
         } else { 
             String[] msg = {
                 "File " + tapeFile.getPath() + " already exists.",
@@ -191,7 +191,7 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
             if (JOptionPane.showInternalOptionDialog(this, 
                     msg, getTitle(), JOptionPane.YES_NO_OPTION, 
                     JOptionPane.WARNING_MESSAGE, null, opts, opts[0]) == JOptionPane.NO_OPTION) {
-                out = Tape.getOutputStream(tapeFile, outFormat, audioEncoder);  
+                out = Tape.getOutputStream(tapeFile, outFormat, 132, audioEncoder);
             } else {
                 stop.button.doClick();
             }
@@ -215,12 +215,12 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
         recorder.setInputTape(null);
         recorder.setOutputTape(null);
     }
-    
+
     private String tapeFormat(int format) {
         return ((format == Tape.STREAM_ASCII) ? TapeFormat.MODE_ASCII : 
                 (format == Tape.STREAM_AUDIO) ? TapeFormat.MODE_AUDIO : TapeFormat.MODE_BINARY);
     }
-    
+
     /*
      * Called when tapes are being actively read or written
      */
@@ -228,7 +228,7 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
         indicator.setOn(Color.GREEN);
         autoStop.restart();
     }
-    
+
     public void setWrite() {
         indicator.setOn(Color.RED);
         autoStop.restart();  

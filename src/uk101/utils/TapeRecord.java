@@ -57,7 +57,7 @@ public class TapeRecord {
         options.put("inputPhase", "inputphaseangle (0, 90, 180 or 270)");
         Args parms = new Args(TapeRecord.class, "inputfile(s) outputfile", args, options);
         int count = parms.getParameterCount();
-        
+
         List<File> inputFiles = parms.getInputFiles(1, count-1);
         File outputFile = parms.getOutputFile(count);
         int inputFormat = parms.getFlag("binary") ? Tape.STREAM_BINARY : Tape.STREAM_SELECT;
@@ -80,13 +80,13 @@ public class TapeRecord {
                 (inputPhase%90 != 0)) {
             parms.usage();
         }
-        
+
         // Create encoder/decoder and audio output stream.
         KansasCityDecoder decoder = new KansasCityDecoder(inputBaud, inputPhase);
         KansasCityEncoder encoder = new KansasCityEncoder(sampleRate, sampleSize, baudRate, sineWave);
         encoder.setLeader(leadIn*1000, leadOut*1000);
-        OutputStream output = Tape.getOutputStream(outputFile, Tape.STREAM_AUDIO, encoder);
-        
+        OutputStream output = Tape.getOutputStream(outputFile, Tape.STREAM_AUDIO, 0, encoder);
+
         // Copy the inputs to the output
         count = 0;
         for (File inputFile : inputFiles) {    
@@ -97,7 +97,7 @@ public class TapeRecord {
             }
             Tape.copy(input, output);
             input.close();
-        }    
+        }
         output.close();
     }
 }

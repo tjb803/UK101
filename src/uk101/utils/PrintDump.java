@@ -23,7 +23,7 @@ import uk101.machine.Dump;
  *    dumpfile: is the name of a system dump
  *
  * options:
- *    -output outputfile: output file name, defaults to standard out
+ *    -output outputfile: output file name, defaults to standard-out
  *    -hex: print output as a hex dump, default is hex format
  *    -code: print output as disassembled code
  *    -compact: compact repeated data

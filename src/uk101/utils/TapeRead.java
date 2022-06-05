@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2017
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.utils;
 
@@ -23,10 +23,11 @@ import uk101.io.UK101OutputStream;
  *
  * where:
  *    inputtape: the name of the binary or audio tape to be read
- *    outputfile: the name for the output file, defaults to standard output
+ *    outputfile: the name for the output file, defaults to standard-out
  *
  * options:
  *    -binary: input is binary, defaults to auto-selected
+ *    -maxlen: the maximum line length used for output, defaults to 132 or 80
  *    -baud: the baud rate if the file is an audio file, defaults to 300
  *    -phase: the audio phase angle if the file is an audio file, defaults to 90
  *    -adaptive: use adaptive audio decoding, defaults to false
@@ -37,14 +38,16 @@ public class TapeRead {
         // Handle parameters
         Args.Map options = Args.optionMap();
         options.put("binary");
+        options.put("maxlen", "maximum line length");
         options.put("adaptive");
         options.put("baud", "baudrate (300, 600 or 1200)");
         options.put("phase", "phaseangle (0, 90, 180 or 270)");
         Args parms = new Args(TapeRead.class, "inputtape [outputfile]", args, options);
-        
-        File inputFile = parms.getInputFile(1); 
-        File outputFile = parms.getOutputFile(2);    
+
+        File inputFile = parms.getInputFile(1);
+        File outputFile = parms.getOutputFile(2);
         int inputFormat = parms.getFlag("binary") ? Tape.STREAM_BINARY : Tape.STREAM_SELECT;
+        int maxLength = parms.getInteger("maxlen", -1);
         int baudRate = parms.getInteger("baud", 300);
         int phaseAngle = parms.getInteger("phase", 90);
         boolean adaptive = parms.getFlag("adaptive");
@@ -56,16 +59,21 @@ public class TapeRead {
             parms.usage();
         }
 
+        // Choose maximum line length - 80 for screen output otherwise 132.
+        if (maxLength < 0) {
+            maxLength = (outputFile == null) ? 80 : 132;
+        }
+
         // Create input/output streams and decoder
         KansasCityDecoder decoder = new KansasCityDecoder(baudRate, phaseAngle);
         InputStream input = Tape.getInputStream(inputFile, inputFormat, decoder);
         OutputStream output = null;
         if (outputFile != null) {
-            output = Tape.getOutputStream(outputFile, Tape.STREAM_ASCII, null);
+            output = Tape.getOutputStream(outputFile, Tape.STREAM_ASCII, maxLength, null);
         } else {
-            output = new UK101OutputStream(System.out);
+            output = new UK101OutputStream(System.out, maxLength);
         }
-    
+
         // Copy the input to the output
         decoder.setAdaptive(adaptive);
         Tape.copy(input, output);
