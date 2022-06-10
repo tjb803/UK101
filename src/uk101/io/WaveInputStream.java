@@ -25,13 +25,13 @@ public class WaveInputStream extends InputStream {
 
     public WaveInputStream(InputStream in, AudioDecoder decoder) throws UnsupportedAudioFileException, IOException {
         audioDecoder = decoder;
-        
+
         // Some Java versions will fail to process Audio streams if the underlying
-        // input stream does not support mark()/reset().  So we wrap in a 
+        // input stream does not support mark()/reset().  So we wrap in a
         // BufferedInputStream just to be sure.
         AudioInputStream audio = AudioSystem.getAudioInputStream(new BufferedInputStream(in));
         AudioFormat af1 = audio.getFormat();
-        
+
         // The AudioDecoder requires PCM data in signed big-endian format.  The AudioSystem
         // should be able to convert the input to a suitable format, provided we keep all
         // the other parameters (such as sample rate, frame size, etc) the same.
@@ -48,7 +48,7 @@ public class WaveInputStream extends InputStream {
     public int read() throws IOException {
         return audioDecoder.decodeByte();
     }
-    
+
     public void close() throws IOException {
         audioDecoder.decodeEnd();
         inputStream.close();

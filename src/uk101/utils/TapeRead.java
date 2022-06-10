@@ -30,7 +30,11 @@ import uk101.io.UK101OutputStream;
  *    -maxlen: the maximum line length used for output, defaults to 132 or 80
  *    -baud: the baud rate if the file is an audio file, defaults to 300
  *    -phase: the audio phase angle if the file is an audio file, defaults to 90
+ *
+ * experimental options:
  *    -adaptive: use adaptive audio decoding, defaults to false
+ *    -freq: the audio frequency used to encode "mark" bits
+ *    -cycles: the number of cycles used to encode "mark" bits
  */
 public class TapeRead {
 
@@ -38,10 +42,12 @@ public class TapeRead {
         // Handle parameters
         Args.Map options = Args.optionMap();
         options.put("binary");
-        options.put("maxlen", "maximum line length");
-        options.put("adaptive");
+        options.put("maxlen", "length (maximum line length)");
         options.put("baud", "baudrate (300, 600 or 1200)");
-        options.put("phase", "phaseangle (0, 90, 180 or 270)");
+        options.put("phase", "-phaseangle (0, 90, 180 or 270)");
+        options.put("adaptive", "?(audio adaptive decoding - experimental)");
+        options.put("freq", "frequency (audio mark frequency - experimental)");
+        options.put("cycles", "count (audio mark cycles - experimental)");
         Args parms = new Args(TapeRead.class, "inputtape [outputfile]", args, options);
 
         File inputFile = parms.getInputFile(1);
@@ -50,7 +56,11 @@ public class TapeRead {
         int maxLength = parms.getInteger("maxlen", -1);
         int baudRate = parms.getInteger("baud", 300);
         int phaseAngle = parms.getInteger("phase", 90);
+
+        // Audio freq and cycles are experimental options
         boolean adaptive = parms.getFlag("adaptive");
+        int freq = parms.getInteger("freq", 0);
+        int cycles = parms.getInteger("cycles", 0);
 
         // Check parameters
         if ((inputFile == null) ||
@@ -66,6 +76,11 @@ public class TapeRead {
 
         // Create input/output streams and decoder
         KansasCityDecoder decoder = new KansasCityDecoder(baudRate, phaseAngle);
+        if (freq > 0 && cycles > 0) {
+            decoder = new KansasCityDecoder(freq, cycles, phaseAngle);
+        }
+        decoder.setAdaptive(adaptive);
+
         InputStream input = Tape.getInputStream(inputFile, inputFormat, decoder);
         OutputStream output = null;
         if (outputFile != null) {
@@ -75,7 +90,6 @@ public class TapeRead {
         }
 
         // Copy the input to the output
-        decoder.setAdaptive(adaptive);
         Tape.copy(input, output);
         output.close();
         input.close();

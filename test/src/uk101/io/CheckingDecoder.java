@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2017
+ * (C) Copyright Tim Baldwin 2017,2022
  */
 package uk101.io;
 
@@ -21,43 +21,50 @@ public class CheckingDecoder extends KansasCityDecoder {
 
     private AudioFormat checkFormat;
     private ByteArrayOutputStream checkOutput;
-    
+
     private int errorFactor = 0;
     private int lastSample = 0;
     private boolean rising = false;
     private boolean falling = false;
     private boolean zeroed = true;
-    
+
     private byte[] goodSample, errorSample;
 
-    public CheckingDecoder(int factor, boolean adaptive) throws NoSuchFieldException, SecurityException {
-        super(KansasCityEncoder.BAUD300);
+    public CheckingDecoder(int baud, int phase, boolean adaptive, int factor) {
+        super(baud, phase);
+        setAdaptive(adaptive);
+        checkOutput = new ByteArrayOutputStream();
+        errorFactor = factor;
+    }
+
+    public CheckingDecoder(int freq, int cycles, int phase, boolean adaptive, int factor) {
+        super(freq, cycles, phase);
         setAdaptive(adaptive);
         checkOutput = new ByteArrayOutputStream();
         errorFactor = factor;
     }
 
     public void decodeStart() throws IOException {
-        super.decodeStart();  
+        super.decodeStart();
         checkFormat = new AudioFormat(audioFormat.getSampleRate(), 8, 1, false, true);
         goodSample = new byte[checkFormat.getFrameSize()];
         errorSample = new byte[checkFormat.getFrameSize()];
         Arrays.fill(goodSample, (byte)0x7F);
         Arrays.fill(errorSample, (byte)0x00); 
     }
-    
+
     public InputStream getCheckStream() {
-        return new ByteArrayInputStream(checkOutput.toByteArray());    
+        return new ByteArrayInputStream(checkOutput.toByteArray());
     }
-    
+
     public AudioFormat getCheckFormat() {
         return checkFormat;
     }
-    
+
     // Override readSample() method so we can look for anomalies.
     protected int readSample(boolean invert) throws IOException {
         int sample = super.readSample(invert);
-        
+
         boolean error = false;
         if (Math.abs(sample - lastSample) > errorFactor) {
             // Signal should be a steady rise and steady fall, only switching
@@ -80,15 +87,15 @@ public class CheckingDecoder extends KansasCityDecoder {
                 rising = false;
                 falling = true;
             }
-    
-            if (sample == 0 || 
+
+            if (sample == 0 ||
                     (rising && lastSample < 0 && sample > 0) ||
                     (falling && lastSample > 0 && sample < 0)) {
                 zeroed = true;
             }
-        }    
+        }
         checkOutput.write(error ? errorSample : goodSample);
-        
+
         lastSample = sample;
         return sample;
     }

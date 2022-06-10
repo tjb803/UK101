@@ -231,6 +231,6 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
 
     public void setWrite() {
         indicator.setOn(Color.RED);
-        autoStop.restart();  
+        autoStop.restart();
     }
 }

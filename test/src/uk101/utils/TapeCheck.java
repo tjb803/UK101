@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2017
+ * (C) Copyright Tim Baldwin 2017,2022
  */
 package uk101.utils;
 
@@ -32,7 +32,7 @@ import uk101.io.Tape;
  *    outputwav: the name for the output WAV, defaults to input.check.wav
  *
  * options:
- *    -scale: the scaling factor for signal processing, defaults to 250
+ *    -factor: the scaling factor for signal processing, defaults to 250
  *    -adaptive: use adaptive audio decoding
  */
 public class TapeCheck {
@@ -40,17 +40,22 @@ public class TapeCheck {
     public static void main(String[] args) throws Exception {
         // Handle parameters
         Args.Map options = Args.optionMap();
+        options.put("factor", "error_factor");
         options.put("baud", "baud_rate");
         options.put("phase", "phase_angle");
+        options.put("freq", "mark_frequency");
+        options.put("cycles", "mark_cycles");
         options.put("adaptive");
-        options.put("factor", "error_factor");
         Args parms = new Args(TapeCheck.class, "inputwav [outputwav]", args, options);
 
         File inputFile = parms.getInputFile(1); 
-        File outputFile = parms.getOutputFile(2);    
+        File outputFile = parms.getOutputFile(2);
         int factor = parms.getInteger("factor", 250);
+        int baud = parms.getInteger("baud", 300);
+        int phase = parms.getInteger("phase", 90);
         boolean adaptive = parms.getFlag("adaptive");
-        // Baud rate and phase angle not needed but allowed as parameters.
+        int freq = parms.getInteger("freq", 0);
+        int cycles = parms.getInteger("cycles", 0);
 
         // Check parameters
         if (inputFile == null) {
@@ -63,7 +68,12 @@ public class TapeCheck {
         }
 
         // Create input/output stream and special checking decoder
-        CheckingDecoder decoder = new CheckingDecoder(factor, adaptive);
+        CheckingDecoder decoder;
+        if (freq == 0 || cycles == 0) {
+            decoder = new CheckingDecoder(baud, phase, adaptive, factor);
+        } else {
+            decoder = new CheckingDecoder(freq, cycles, phase, adaptive, factor);
+        }
         InputStream input = Tape.getInputStream(inputFile, Tape.STREAM_AUDIO, decoder);
         OutputStream output = new FileOutputStream(outputFile);
 

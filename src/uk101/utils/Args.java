@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.utils;
 
@@ -24,8 +24,10 @@ import java.util.List;
  *
  * Some special cases for the option value are:
  *   null - option is a flag, either present or absent
+ *   starts with '?' - option is a flag (but has additional usage text)
  *   starts with '+' - usage summary shows next option on the same line
- *   starts with '=' - option is a synonym for another option  
+ *   starts with '-' - usage summary shows next option after blank line
+ *   starts with '=' - option is a synonym for another option
  */
 public class Args {
 
@@ -60,7 +62,7 @@ public class Args {
             String arg = args[i];
             if (arg.startsWith("-")) {
                 arg = arg.substring(1);
-                if (arg.equals("?")) {
+                if (arg.equals("?") || arg.equals("help")) {
                     usage();
                 }
                 if (opts != null && opts.containsKey(arg)) {
@@ -69,10 +71,12 @@ public class Args {
                         arg = remap.substring(1);
                 }
                 if (opts != null && opts.containsKey(arg)) {
-                    if (opts.get(arg) != null && i < args.length-1)
-                        options.put(arg, args[++i]);
-                    else
+                    String val = opts.get(arg);
+                    if (val == null || val.startsWith("?")) {
                         options.put(arg, null);
+                    } else if (i < args.length-1) {
+                        options.put(arg, args[++i]);
+                    }
                 } else {
                     error("Incorrect option", arg, true);
                 }
@@ -230,9 +234,9 @@ public class Args {
             String hdr = "options:";
             for (String opt : opts.keySet()) {
                 if (!opts.values().contains("="+opt)) {
+                    String value = opts.get(opt);
                     System.out.print(hdr + " -" + opt);
                     hdr = "        ";
-                    String value = opts.get(opt);
                     if (value != null) {
                         if (value.startsWith("=")) {
                             String remap = value.substring(1);
@@ -242,9 +246,14 @@ public class Args {
                                 value += " " + reval;
                             }
                         } else {
+                            if (value.startsWith("?")) {
+                                value = value.substring(1);
+                            }
                             if (value.startsWith("+")) {
                                 value = value.substring(1);
                                 hdr = "";
+                            } else if (value.startsWith("-")) {
+                                value = value.substring(1) + "\n";
                             }
                             value = " " + value;
                         }

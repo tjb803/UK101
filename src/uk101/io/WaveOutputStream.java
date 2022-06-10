@@ -18,8 +18,8 @@ import javax.sound.sampled.AudioSystem;
  * Utility class to create an output stream that can write an audio WAV
  * file in format defined by the AudioEncoder.
  *
- * To write a WAV file we need to know its total length, so we have to 
- * build the RAW audio data in a temporary byte buffer before writing the 
+ * To write a WAV file we need to know its total length, so we have to
+ * build the RAW audio data in a temporary byte buffer before writing the
  * WAV as part of the close operation.  Is there a better way to do this?
  */
 public class WaveOutputStream extends OutputStream {
@@ -36,11 +36,11 @@ public class WaveOutputStream extends OutputStream {
         audioEncoder.setOutputStream(audioStream);
         reset();
     }
-    
+
     public void reset() {
         startStream = true;
     }
-    
+
     /*
      * Override the required OutputStream methods
      */
@@ -49,10 +49,10 @@ public class WaveOutputStream extends OutputStream {
         if (startStream) {
             audioEncoder.encodeStart();
             startStream = false;
-        }    
+        }
         audioEncoder.encodeByte(b);
     }
-    
+
     public void close() throws IOException {
         if (audioStream.size() != 0) {
             audioEncoder.encodeEnd();

@@ -50,9 +50,9 @@ public class Main implements Runnable {
         // Handle parameters
         Args.Map options = Args.optionMap();
         options.put("look", "lookAndFeel");
-        options.put("c", "=configuration");  
+        options.put("c", "=configuration");
         options.put("configuration", "configFile");
-        options.put("p", "=properties");  
+        options.put("p", "=properties");
         options.put("properties", "systemProps");
         options.put("debug");
         Args parms = new Args("uk101", "[machine]", args, options);
