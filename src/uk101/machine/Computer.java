@@ -256,8 +256,6 @@ public class Computer extends Thread implements DataBus {
      */
     public void run() {
         try {
-            // Run the CPU
-            cpu.signalReset();
             cpu.run();
         } catch (InterruptedException e) {
         }

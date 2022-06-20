@@ -58,8 +58,8 @@ public class Configuration extends Properties {
     private static final String RAM_ADDR = "ram.address";
     private static final String RAM_SIZE = "ram.size";
     private static final String MONITOR_ADDR = "monitor.address";
-    private static final String BASIC_ADDR = "basic.address";
     private static final String ROM_MONITOR = "rom.monitor";
+    private static final String BASIC_ADDR = "basic.address";
     private static final String ROM_BASIC = "rom.basic";
     private static final String ROM_BASIC1 = "rom.basic1";
     private static final String ROM_BASIC2 = "rom.basic2";
@@ -158,18 +158,22 @@ public class Configuration extends Properties {
             setProperty(SCREEN_OFFSET, Integer.toString(getScreenOffset()-1));
         }
 
+        applyInt(props, CPU_SPEED, 0, 4);
+        applyStr(props, CPU_CONTROL, AUTO, SLEEP, YIELD, SPIN);
+        applyHex(props, ACIA_ADDR, 0, 0xFFFF);
+        applyStr(props, ACIA_RATE, "110", "300", "600", "1200", "2400", "4800", "9600");
+        apply(props, ACIA_RATE, "baud.rate", 0, 0, 0, "110", "300", "600", "1200", "2400", "4800", "9600");
+        applyHex(props, RAM_ADDR, 0, 0xFFFF);
+        applyInt(props, RAM_SIZE, 4, 40);
+        applyHex(props, MONITOR_ADDR, 0, 0xFFFF);
+        applyStr(props, ROM_MONITOR);
+        applyHex(props, BASIC_ADDR, 0, 0xFFFF);
         applyStr(props, ROM_BASIC);
         applyStr(props, ROM_BASIC1);
         applyStr(props, ROM_BASIC2);
         applyStr(props, ROM_BASIC3);
         applyStr(props, ROM_BASIC4);
         applyStr(props, ROM_CHARSET);
-        applyInt(props, CPU_SPEED, 0, 4);
-        applyStr(props, CPU_CONTROL, AUTO, SLEEP, YIELD, SPIN);
-        applyInt(props, RAM_SIZE, 4, 40);
-        applyHex(props, ACIA_ADDR, 0, 0xFFFF);
-        applyStr(props, ACIA_RATE, "110", "300", "600", "1200", "2400", "4800", "9600");
-        apply(props, ACIA_RATE, "baud.rate", 0, 0, 0, "110", "300", "600", "1200", "2400", "4800", "9600");
         applyHex(props, KBD_ADDR, 0, 0xFFFF);
         applyStr(props, KBD_LAYOUT, UK, US);
         apply(props, KBD_LAYOUT, "keyboard", 0, 0, 0, UK, US);
@@ -218,7 +222,7 @@ public class Configuration extends Properties {
             if (radix > 0) {
                 int i = Integer.parseInt(value, radix);
                 if (i >= min && i <= max) 
-                    setProperty(key, Integer.toString(i, radix));
+                    setProperty(key, Integer.toString(i, radix).toUpperCase());
             } else if (range.length > 0) {
                 String s = value.toLowerCase();
                 for (int i = 0; i < range.length; i++) {
@@ -452,10 +456,10 @@ public class Configuration extends Properties {
      * Print a configuration
      */
     public String toString() {
-        String s = "";
+        StringBuilder s = new StringBuilder();
         for (Map.Entry<Object,Object> entry : entrySet()) {
-            s += "  " + entry.getKey() + "=" + entry.getValue() + "\n";
+            s.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
         }
-        return s;
+        return s.toString();
     }
 }

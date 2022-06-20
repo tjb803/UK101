@@ -112,7 +112,8 @@ public class PrintMachine {
         // Then any saved configuration
         if (config != null) {
             output.println("Configuration:");
-            output.print(config);
+            output.print("  ");
+            output.print(config.toString().replace("\n", "\n  "));
         } else {
             output.println("No configuration.");
         }
