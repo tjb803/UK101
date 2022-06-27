@@ -35,7 +35,7 @@ public class CassetteButton extends JPanel {
         button.setAlignmentX(CENTER_ALIGNMENT);
         button.setForeground(color);
         add(button);
-        
+
         button.addItemListener(action);
     }
 }

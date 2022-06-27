@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2017
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.hardware;
 
@@ -34,19 +34,19 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
 
     private byte statusReg;             // Status register
     private byte txByte, rxByte;        // Transmit/receive buffers
-    
+
     private int txClock;                // Transmit clock rate
     private int txTime;                 // Millisecond time to transmit one character
     private int baudRate;               // Real baud rate
-    
-    IOBus txBus, rxBus;
+
+    private IOBus txBus, rxBus;
 
     public ACIA6850(int baud, int priority) {
         super(256);                 // Decodes to 256 bytes of store
 
         statusReg = STATUS_TDRE;    // Initial state - ready to transmit
 
-        // By default the UK101 uses a frequency division of 16, so the clock 
+        // By default the UK101 uses a frequency division of 16, so the clock
         // rate is set to 16x the required baud rate.
         txClock = baud*16;
         baudRate = baud;
@@ -59,7 +59,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
     }
 
     /*
-     * The address decodes to a 256 byte block, but really there are only 
+     * The address decodes to a 256 byte block, but really there are only
      * two registers that are accessed.
      */
 
@@ -69,12 +69,12 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
             b = statusReg;
         } else {
             b = rxByte;
-            // TODO: There's an issue here when loading the EXMON tape (and maybe  
+            // TODO: There's an issue here when loading the EXMON tape (and maybe
             // others?) when using the standard monitor.  It briefly ends up setting
-            // an address of F007 which causes this code to read (and so lose) a 
+            // an address of F007 which causes this code to read (and so lose) a
             // character.  This wouldn't happen on a real machine as characters were
-            // delivered much slower, not on demand as happens here.  So, if we have 
-            // that monitor we'll only flag the character as read if we read from 
+            // delivered much slower, not on demand as happens here.  So, if we have
+            // that monitor we'll only flag the character as read if we read from
             // address F001.  This is fine, F001 is the address that should be used,
             // rather than some other random value in the 256 byte block.
             if (!Computer.aciaFix1 || offset == 1) {
@@ -115,7 +115,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
 
         baudRate = txClock / divide;
         txTime = (1000 * length * divide) / txClock;
-        txTime = (txTime*2)/3;  // Reduce a little for inaccuracies! 
+        txTime = (txTime*2)/3;  // Reduce a little for inaccuracies!
     }
 
    /*
@@ -165,7 +165,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
                 if (tx) {
                     // If a device is attached we assume it handles the timing of the
                     // character; if there is no device we pause for the correct time
-                    // to write a single character.  (This allows the ACIA to be used 
+                    // to write a single character.  (This allows the ACIA to be used
                     // to generate a timing signal, but still allows saving to simulated
                     // tape files to happen as quickly as possible.)
                     if (txBus != null) {
@@ -194,10 +194,10 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
      * Mainly for debugging
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("ACIA").append(memBase());
-        sb.append(" Status=").append(Data.toBinaryString(statusReg));
-        sb.append(" Tx=").append(Data.toHexString(txByte));
-        sb.append(" Rx=").append(Data.toHexString(rxByte));
-        return sb.toString();
+        StringBuilder s = new StringBuilder("ACIA").append(memBase());
+        s.append(" Status=").append(Data.toBinaryString(statusReg));
+        s.append(" Tx=").append(Data.toHexString(txByte));
+        s.append(" Rx=").append(Data.toHexString(rxByte));
+        return s.toString();
     }
 }

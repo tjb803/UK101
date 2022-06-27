@@ -34,7 +34,7 @@ public class ImageFormat extends JPanel {
         imgCfg.setSelected(true);
         imgCfg.setEnabled(save);
         imgPos = new JCheckBox(action + "positions");
-        imgPos.setSelected(true);
+        imgPos.setSelected(false);
         imgPos.setEnabled(save);
 
         add(imgMem);

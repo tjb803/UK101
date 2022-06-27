@@ -21,11 +21,11 @@ public class TestCassetteView extends BaseViewTest {
 
     private CassetteView cView;
 
-    public void testPlayRec() throws Exception { 
+    public void testPlayRec() throws Exception {
         while (true) {
-            cView.setRead();
+            cView.setActive(false);
             Thread.sleep(2000);
-            cView.setWrite();
+            cView.setActive(true);
             Thread.sleep(2000);
         }
     }

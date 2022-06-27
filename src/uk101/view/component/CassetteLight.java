@@ -20,9 +20,9 @@ import javax.swing.Timer;
  */
 public class CassetteLight extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1L;
-    
+
     static final Dimension SIZE = new Dimension(20, 9);
-    
+
     Timer busyTimer;
 
     public CassetteLight() {
@@ -32,14 +32,14 @@ public class CassetteLight extends JPanel implements ActionListener {
         busyTimer = new Timer(1000, this);
         busyTimer.setRepeats(false);
     }
-    
+
     public void setOn(Color colour) {
         busyTimer.restart();
         setBackground(colour);
         setOpaque(true);
         repaint();
     }
-    
+
     public void actionPerformed(ActionEvent e) {
         setOpaque(false);
         repaint();

@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2017
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.view;
 
@@ -35,7 +35,7 @@ import uk101.machine.TapeRecorder;
 import uk101.view.component.CassetteButton;
 import uk101.view.component.CassetteLight;
 import uk101.view.component.DisplayText;
-import uk101.view.component.TapeFormat;
+import uk101.view.component.TapeMode;
 import uk101.view.component.ViewFrame;
 
 /**
@@ -48,13 +48,14 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
 
     private JLabel name;
     private DisplayText format;
-    private CassetteButton record, play, stop;
+    private CassetteButton record, play, stop, eject;
     private CassetteLight indicator;
     private JFileChooser select;
     private Timer autoStop;
-
     private File tapeFile;
-    private int inFormat, outFormat;
+    private InputStream tapeIn;
+    private OutputStream tapeOut;
+    private int formatIn, formatOut;
     private AudioEncoder audioEncoder;
     private AudioDecoder audioDecoder;
 
@@ -65,14 +66,14 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
         recorder.setView(this);
         audioEncoder = cfg.getAudioEncoder();
         audioDecoder = cfg.getAudioDecoder();
- 
+
         // Create an auto-stop timer.  Stops the cassette player if it has
         // not been used for 15 seconds.
         autoStop = new Timer(15000, this);
         autoStop.setRepeats(false);
 
         name = new JLabel(" ");
-        format = new DisplayText(null, TapeFormat.MODE_UNSET, true);
+        format = new DisplayText(null, TapeMode.asMode(Tape.STREAM_UNKNOWN), true);
         JPanel tp = new JPanel();
         tp.setLayout(new BoxLayout(tp, BoxLayout.X_AXIS));
         tp.setBorder(BorderFactory.createTitledBorder("Tape file"));
@@ -86,21 +87,25 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
         record = new CassetteButton("\u25CF", "Rec", Color.RED, this);
         play = new CassetteButton("\u25BA", "Play", Color.BLACK, this);
         stop = new CassetteButton("\u25A0", "Stop", Color.BLACK, this);
+        eject = new CassetteButton("\u25B2", "Eject", Color.BLUE, this);
         bp.add(record);
         bp.add(Box.createHorizontalStrut(5));
         bp.add(play);
         bp.add(Box.createHorizontalStrut(5));
         bp.add(stop);
+        bp.add(Box.createHorizontalStrut(10));
+        bp.add(eject);
 
         ButtonGroup group = new ButtonGroup();
         group.add(record.button);
         group.add(play.button);
         group.add(stop.button);
+        group.add(eject.button);
         stop.button.setSelected(true);
 
         // File selection dialog
         select = new JFileChooser(new File(".").getAbsolutePath());
-        select.setAccessory(new TapeFormat());
+        select.setAccessory(new TapeMode());
         select.setDialogTitle(getTitle() + " - Select Tape");
         select.setAcceptAllFileFilterUsed(true);
 
@@ -130,14 +135,15 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == autoStop) {
             stop.button.doClick();
-        } else {    // Must be the Open... button
-            TapeFormat tf = (TapeFormat)select.getAccessory();
-            tf.reset();
+        } else {    // Must be the "Open" button
+            TapeMode tm = (TapeMode)select.getAccessory();
+            tm.reset();
             if (select.showDialog(this, "Select") == JFileChooser.APPROVE_OPTION) {
+                eject();
                 tapeFile = select.getSelectedFile();
-                inFormat = tf.getInputFormat();
-                outFormat = tf.getOutputFormat();
-                loadTape();
+                formatIn = tm.getInputFormat();
+                formatOut = tm.getOutputFormat();
+                load();
             }
         }
     }
@@ -151,86 +157,89 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
             if (e.getItem() == record.button) {
                 play.button.setEnabled(false);
                 autoStop.start();
-                if (tapeFile != null)
-                    recordTape();
+                record();
             } else if (e.getItem() == play.button) {
                 record.button.setEnabled(false);
                 autoStop.start();
-                if (tapeFile != null)
-                    playTape();
-            } else if (e.getItem() == stop.button) {
+                play();
+            } else if (e.getItem() == stop.button || e.getItem() == eject.button) {
                 play.button.setEnabled(true);
                 record.button.setEnabled(true);
                 autoStop.stop();
-                if (tapeFile != null)
-                    stopTape();
+                stop();
+                if (e.getItem() == eject.button)
+                    eject();
             }
         }
     }
 
     // Implementation methods for cassette player function
 
-    private void loadTape() {
+    private void load() {
         name.setText(tapeFile.getName());
-        format.setValue(TapeFormat.MODE_UNSET);
+        format.setValue(TapeMode.asMode(Tape.STREAM_UNKNOWN));
     }
 
-    private void recordTape() {
-        OutputStream out = null;
-        if (!tapeFile.exists()) {
-            out = Tape.getOutputStream(tapeFile, outFormat, 132, audioEncoder);
-        } else { 
-            String[] msg = {
-                "File " + tapeFile.getPath() + " already exists.",
-                "Are you sure you want to overwrite it?"
-            };
-            String[] opts = { "No", "Yes" };
-            // I don't think showInternalOptionDialog works properly (at least in some look 
-            // and feels) when the initialValue is something other than the first option.
-            // So I have reversed YES and NO here - a return value of NO_OPTION means YES!
-            if (JOptionPane.showInternalOptionDialog(this, 
-                    msg, getTitle(), JOptionPane.YES_NO_OPTION, 
-                    JOptionPane.WARNING_MESSAGE, null, opts, opts[0]) == JOptionPane.NO_OPTION) {
-                out = Tape.getOutputStream(tapeFile, outFormat, 132, audioEncoder);
+    private void record() {
+        if (tapeOut == null && tapeFile != null) {
+            if (!tapeFile.exists()) {
+                tapeOut = Tape.getOutputStream(tapeFile, formatOut, 132, audioEncoder);
             } else {
-                stop.button.doClick();
+                String[] msg = {
+                    "File " + tapeFile.getPath() + " already exists.",
+                    "Are you sure you want to overwrite it?"
+                };
+                String[] opts = { "No", "Yes" };
+                // I don't think showInternalOptionDialog works properly (at least in some look
+                // and feels) when the initialValue is something other than the first option.
+                // So I have reversed YES and NO here - a return value of NO_OPTION means YES!
+                if (JOptionPane.showInternalOptionDialog(this,
+                        msg, getTitle(), JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE, null, opts, opts[0]) == JOptionPane.NO_OPTION) {
+                    tapeOut = Tape.getOutputStream(tapeFile, formatOut, 132, audioEncoder);
+                } else {
+                    stop.button.doClick();
+                }
+            }
+            if (tapeOut != null) {
+                format.setValue(TapeMode.asMode(Tape.getFormat(tapeOut)));
+                recorder.setOutputTape(tapeOut);
             }
         }
-        if (out != null) {
-            format.setValue(tapeFormat(Tape.getFormat(out)));
-            recorder.setOutputTape(out);
+        if (tapeOut != null)
+            recorder.startTape();
+    }
+
+    private void play() {
+        if (tapeIn == null && tapeFile != null) {
+            tapeIn = Tape.getInputStream(tapeFile, formatIn, audioDecoder);
+            if (tapeIn != null) {
+                format.setValue(TapeMode.asMode(Tape.getFormat(tapeIn)));
+                recorder.setInputTape(tapeIn);
+            }
         }
+        if (tapeIn != null)
+            recorder.startTape();
     }
 
-    private void playTape() {
-        InputStream in = Tape.getInputStream(tapeFile, inFormat, audioDecoder);
-        if (in != null) {
-            format.setValue(tapeFormat(Tape.getFormat(in)));
-            recorder.setInputTape(in);
-        }
+    private void stop() {
+        recorder.stopTape();
     }
 
-    private void stopTape() {
-        format.setValue(TapeFormat.MODE_UNSET);
-        recorder.setInputTape(null);
-        recorder.setOutputTape(null);
-    }
-
-    private String tapeFormat(int format) {
-        return ((format == Tape.STREAM_ASCII) ? TapeFormat.MODE_ASCII : 
-                (format == Tape.STREAM_AUDIO) ? TapeFormat.MODE_AUDIO : TapeFormat.MODE_BINARY);
+    private void eject() {
+        name.setText(null);
+        format.setValue(TapeMode.asMode(Tape.STREAM_UNKNOWN));
+        tapeFile = null;
+        tapeIn = null;
+        tapeOut = null;
+        recorder.ejectTape();
     }
 
     /*
      * Called when tapes are being actively read or written
      */
-    public void setRead() {
-        indicator.setOn(Color.GREEN);
-        autoStop.restart();
-    }
-
-    public void setWrite() {
-        indicator.setOn(Color.RED);
+    public void setActive(boolean write) {
+        indicator.setOn((write) ? Color.RED : Color.GREEN);
         autoStop.restart();
     }
 }

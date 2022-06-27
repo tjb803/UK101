@@ -102,6 +102,7 @@ v1.4.3
   Improvements:
    - Add "snapshot" option to machine image save/load
    - Support maximum line length for ASCII file format
+   - Better handling of play/stop/eject on loaded tapes
    - Additional (experimental) options added to audio decoding
 
   Main bug fixes:

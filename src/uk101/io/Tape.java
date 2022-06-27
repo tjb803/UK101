@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2014
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.io;
 
@@ -25,6 +25,7 @@ public class Tape {
     public static final int STREAM_ASCII = 1;
     public static final int STREAM_BINARY = 2;
     public static final int STREAM_AUDIO = 3;
+    public static final int STREAM_UNKNOWN = -1;
 
     /*
      * Create an OutputStream in either ASCII, Binary or Audio format

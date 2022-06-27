@@ -264,7 +264,7 @@ public class Computer extends Thread implements DataBus {
     public void shutdown() {
         trace(false);
         cpu.stop();
-        recorder.shutdown();
+        recorder.ejectTape();
         for (NVRAM r : nvrams) {
             r.close();
         }

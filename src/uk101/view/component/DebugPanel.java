@@ -19,11 +19,11 @@ import javax.swing.UIManager;
  */
 public class DebugPanel extends JPanel {
     private static final long serialVersionUID = 1L;
-    
+
     public DebugPanel(AbstractButton[] buttons, ActionListener listener) {
         // Normally use a JToolBar as a way to create a compact row of small
-        // buttons.  But this doesn't look good on the Nimbus look-and-feel as 
-        // it seems to get the size very wrong.  So for Mimbus we just add
+        // buttons.  But this doesn't look good on the Nimbus look-and-feel as
+        // it seems to get the size very wrong.  So for Nimbus we just add
         // small button instances to a grid.  Sadly this doesn't work well in
         // anything other than Nimbus.
         if (UIManager.getLookAndFeel().getID().equals("Nimbus")) {

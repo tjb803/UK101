@@ -1,7 +1,7 @@
 /**
  * Compukit UK101 Simulator
  *
- * (C) Copyright Tim Baldwin 2010,2017
+ * (C) Copyright Tim Baldwin 2010,2022
  */
 package uk101.machine;
 
@@ -25,7 +25,7 @@ public class TapeRecorder implements IOBus {
     private IODevice acia;
     private InputStream input;
     private OutputStream output;
-    
+
     public TapeRecorder(IODevice io) {
         acia = io;
     }
@@ -43,7 +43,6 @@ public class TapeRecorder implements IOBus {
             }
         }
         input = in;
-        acia.setRxBus((in == null) ? null : this);
     }
 
     public void setOutputTape(OutputStream out) {
@@ -56,10 +55,22 @@ public class TapeRecorder implements IOBus {
             }
         }
         output = out;
-        acia.setTxBus((out == null) ? null : this);
     }
 
-    public void shutdown() {
+    public void startTape() {
+        if (input != null)
+            acia.setRxBus(this);
+        if (output != null)
+            acia.setTxBus(this);
+    }
+
+    public void stopTape() {
+        acia.setRxBus(null);
+        acia.setTxBus(null);
+    }
+
+    public void ejectTape() {
+        stopTape();
         setInputTape(null);
         setOutputTape(null);
     }
@@ -77,9 +88,7 @@ public class TapeRecorder implements IOBus {
             } catch (IOException e) {
                 System.err.println(e);
             }
-            if (view != null) {
-                view.setRead();
-            }
+            setActive(false);
         }
         return b;
     }
@@ -91,9 +100,7 @@ public class TapeRecorder implements IOBus {
             } catch (IOException e) {
                 System.err.println(e);
             }
-            if (view != null) {
-                view.setWrite();
-            }
+            setActive(true);
         }
     }
 
@@ -107,7 +114,12 @@ public class TapeRecorder implements IOBus {
         this.view = view;
     }
 
-    
+    private void setActive(boolean write) {
+        if (view != null) {
+            view.setActive(write);
+        }
+    }
+
     /*
      * Mainly for debugging
      */
