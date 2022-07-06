@@ -49,6 +49,7 @@ public class Configuration extends Properties {
     public static final String NORMAL = "normal";
     public static final String GAME = "game";
     public static final String SINE = "sine";
+    public static final String SEK = "sek";
     public static final String SYSTEM = "system";
 
     private static final String CPU_SPEED = "cpu.speed";
@@ -72,11 +73,14 @@ public class Configuration extends Properties {
     private static final String VIDEO_ADDR = "video.address";
     private static final String VIDEO_ROWS = "video.rows";
     private static final String VIDEO_COLS = "video.cols";
+    private static final String VIDEO_MODE = "video.mode";
     private static final String SCREEN_SIZE = "screen.size";
     private static final String SCREEN_WIDTH = "screen.width";
     private static final String SCREEN_OFFSET = "screen.offset";
     private static final String SCREEN_COLOUR = "screen.colour";
     private static final String SCREEN_UPDATE = "screen.update";
+    private static final String SEK_ADDR = "sek.address";
+    private static final String SEK_FORMAT = "sek.format";
     private static final String AUDIO_RATE = "audio.rate";
     private static final String AUDIO_BITS = "audio.bits";
     private static final String AUDIO_LEAD = "audio.lead";
@@ -181,12 +185,15 @@ public class Configuration extends Properties {
         applyHex(props, VIDEO_ADDR, 0, 0xFFFF);
         applyInt(props, VIDEO_ROWS, 16, 32);
         applyInt(props, VIDEO_COLS, 32, 64);
+        applyStr(props, VIDEO_MODE, NORMAL, SEK);
         applyInt(props, SCREEN_SIZE, 1, 2);
         applyInt(props, SCREEN_WIDTH, 16, 64);
         applyInt(props, SCREEN_OFFSET, 0, 63);
         applyStr(props, SCREEN_COLOUR, WHITE, GREEN, AMBER);
         apply(props, SCREEN_COLOUR, "screen.color", 0, 0, 0, WHITE, GREEN, AMBER);
         applyStr(props, SCREEN_UPDATE, SYNC, ASYNC);
+        applyHex(props, SEK_ADDR, 0, 0xFFFF);
+        applyInt(props, SEK_FORMAT, 0, 255);
         applyInt(props, AUDIO_RATE, 8000, 96000);
         applyStr(props, AUDIO_BITS, "8", "16");
         applyInt(props, AUDIO_LEAD, 0, 10);
@@ -329,6 +336,10 @@ public class Configuration extends Properties {
         return getInt(VIDEO_COLS);
     }
 
+    public String getVideoMode() {
+        return getString(VIDEO_MODE);
+    }
+
     public int getScreenWidth() {
         return getInt(SCREEN_WIDTH);
     }
@@ -347,6 +358,14 @@ public class Configuration extends Properties {
 
     public String getScreenUpdate() {
         return getString(SCREEN_UPDATE);
+    }
+
+    public int getSEKAddr() {
+        return getHex(SEK_ADDR);
+    }
+
+    public int getSEKFormat() {
+        return getInt(SEK_FORMAT);
     }
 
     public int getAciaAddr() {
@@ -424,6 +443,10 @@ public class Configuration extends Properties {
 
     public void setCpuSpeed(int speed) {
         setInt(CPU_SPEED, speed);
+    }
+
+    public void setSEKFormat(int format) {
+        setInt(SEK_FORMAT, format);
     }
 
     private void setInt(String key, int value) {

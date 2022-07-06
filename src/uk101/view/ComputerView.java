@@ -5,6 +5,7 @@
  */
 package uk101.view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,14 +28,15 @@ import uk101.view.component.ImageFormat;
 public class ComputerView extends JDesktopPane implements ActionListener {
     private static final long serialVersionUID = 1L;
 
-    public static boolean isMac;
+    public static boolean isMac, isNimbus;
 
-    // Improve appearance on GTK look-and-feel and detect native Mac as
-    // some things need special handling on the Mac.
-    static { 
+    // Improve appearance on GTK look-and-feel and detect native Mac and Nimbus
+    // as some things need special handling for these looks and feels :-(
+    static {
         UIManager.put("InternalFrame.useTaskBar", Boolean.FALSE);
         LookAndFeel lf = UIManager.getLookAndFeel();
         isMac = (lf != null && (lf.getID().equals("Mac") || lf.getID().equals("Aqua")));
+        isNimbus = (lf != null && (lf.getID().equals("Nimbus")));
     }
 
     static final String IMAGE_LOAD = "Load...";
@@ -49,9 +51,12 @@ public class ComputerView extends JDesktopPane implements ActionListener {
     private CassetteView cassette;
 
     public ComputerView(Computer computer) {
-        setLayout(null);
-
         this.computer = computer;
+
+        // Pure black background (if used) is a bit too dark
+        if (getBackground().equals(Color.BLACK)) {
+            setBackground(Color.DARK_GRAY);
+        }
 
         // Create views for the various machine elements
         video = new VideoView(computer.video, computer.config);
@@ -85,36 +90,30 @@ public class ComputerView extends JDesktopPane implements ActionListener {
 
     // Layout all the windows in their default positions
     public boolean defaultLayout() {
-        int maxX1 = video.getWidth() + machine.getWidth() + 5;
-        int maxX2 = keyboard.getWidth() + cassette.getWidth() + 10;
-        int maxX = Math.max(maxX1, maxX2);
-        int maxY1 = keyboard.getHeight() + video.getHeight();
-        int maxY2 = keyboard.getHeight() + machine.getHeight();
-        int maxY = Math.max(maxY1,  maxY2);
+        int maxX1 = Math.max(video.getWidth(), keyboard.getWidth());
+        int maxX2 = Math.max(machine.getWidth(), cassette.getWidth());
+        int maxX = maxX1 + maxX2 + 5;
 
-        int macX = maxX - machine.getWidth(), macY = 0;
-        machine.setLocation(macX, macY);
+        int maxY1 = video.getHeight() + keyboard.getHeight() + 2;
+        int maxY2 = machine.getHeight() + cassette.getHeight() + 5;
+        int maxY = Math.max(maxY1, maxY2);
 
         int vidX = 0, vidY = 0;
-        if (video.getWidth() < keyboard.getWidth()) {
-            vidX = (keyboard.getWidth() - video.getWidth())/2;
-            if (vidX + video.getWidth() > macX) {
-                vidX = 0;
-            }
-        }
-        video.setLocation(vidX, vidY);
-
         int kybX = 0, kybY = maxY - keyboard.getHeight();
-        if (keyboard.getWidth() < video.getWidth()) {
+        if (video.getWidth() > keyboard.getWidth()) {
             kybX = (video.getWidth() - keyboard.getWidth())/2;
+        } else {
+            vidX = (keyboard.getWidth() - video.getWidth())/2;
         }
-        keyboard.setLocation(kybX, kybY);
+        int macX = maxX - machine.getWidth(), macY = 0;
+        int casX = maxX - cassette.getWidth(), casY = maxY - cassette.getHeight();
 
-        int casX = kybX + keyboard.getWidth() + 10, casY = maxY - cassette.getHeight();
+        video.setLocation(vidX, vidY);
+        keyboard.setLocation(kybX, kybY);
+        machine.setLocation(macX, macY);
         cassette.setLocation(casX, casY);
 
-        Dimension size = new Dimension(maxX, maxY);
-        setPreferredSize(size);
+        setPreferredSize(new Dimension(maxX, maxY));
 
         return false;       // Layout is incomplete (frame is unsized)
     }

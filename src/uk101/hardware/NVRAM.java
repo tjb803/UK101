@@ -23,7 +23,7 @@ public class NVRAM extends ROM {
      * NVRAM should only be installed if the file is available for writing
      */
     public NVRAM(String id) throws IOException {
-        super(validate(id), false);
+        super(validate(id));
         file = new RandomAccessFile(name, "rwd");
         file.setLength(bytes());
     }

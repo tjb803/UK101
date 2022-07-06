@@ -108,3 +108,9 @@ v1.4.3
   Main bug fixes:
    - Ensure ASCII-to-binary and binary-to-ASCII conversions never
      lose or add information (line ends particularly).
+
+v1.5.0
+------
+  Improvements:
+  - Add support for Premier Publications Screen Enhancement Kit
+

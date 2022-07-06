@@ -19,7 +19,7 @@ import uk101.view.ComputerView;
  */
 public class ViewFrame extends JInternalFrame {
     private static final long serialVersionUID = 1L;
-    
+
     public ViewFrame(String title, boolean minimize) {
         super(title, false, false, false, minimize);
 
@@ -28,10 +28,10 @@ public class ViewFrame extends JInternalFrame {
         if (ComputerView.isMac) {
             putClientProperty("JInternalFrame.frameType", "normal");
             setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(1,1,1,1), getBorder()));
-        }    
+        }
     }
-    
-    // Attach a keyListener to a top level window and ensure that no 
+
+    // Attach a keyListener to a top level window and ensure that no
     // subcomponents can grab focus.
     public void attachKeyboard(KeyListener listener) {
         setFocusable(true);
@@ -40,7 +40,7 @@ public class ViewFrame extends JInternalFrame {
             removeFocus(c);
         }
     }
-    
+
     private void removeFocus(Component c) {
         c.setFocusable(false);
         if (c instanceof Container) {
@@ -52,8 +52,8 @@ public class ViewFrame extends JInternalFrame {
 
     // Pack and display the window
     public ViewFrame display() {
-        pack();
         setVisible(true);
+        pack();
         return this;
     }
 }

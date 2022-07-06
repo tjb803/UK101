@@ -69,9 +69,9 @@ public class Keyboard extends Memory {
      *      (3)  |     |(4)  |     |     | left|right|SHIFT|
      *           | CTRL|     |     |     |SHIFT|SHIFT| LOCK|
      *  R0 ------+-----+-----+-----+-----+-----+-----+-----+
-     *  
+     *
      *  (1) Both MONUK02 and CEGMON decode shift-0 as @
-     *  
+     *
      * Notes for Ohio Superboard II keyboard:
      *  (2) This key is labelled LINE FEED
      *  (3) This position is the REPEAT key
@@ -87,7 +87,7 @@ public class Keyboard extends Memory {
     public Keyboard(String type) {
         super(K1);                  // Decodes to 1K of store
         kbport = (byte)0xFF;        // Default is to return nothing
-        
+
         // UK or US keyboard?
         isUK = type.equals(Configuration.UK);
 
@@ -115,7 +115,7 @@ public class Keyboard extends Memory {
         addKey('-', '=', 6, 3);
         addKey(KEY_RUBOUT, 0, 6, 2);
         addKey('.', '>', 5, 7);
-        addKey('L', 'l', 5, 6);  
+        addKey('L', 'l', 5, 6);
         addKey('O', 'o', 5, 5);
         addKey(KEY_RETURN, 0, 5, 3);
         addKey('W', 'w', 4, 7);
@@ -131,13 +131,13 @@ public class Keyboard extends Memory {
         addKey('G', 'g', 3, 4);
         addKey('H', 'h', 3, 3);
         addKey('J', 'j', 3, 2);
-        addKey('K', 'k', 3, 1);  
+        addKey('K', 'k', 3, 1);
         addKey('X', 'x', 2, 7);
         addKey('C', 'c', 2, 6);
         addKey('V', 'v', 2, 5);
         addKey('B', 'b', 2, 4);
         addKey('N', 'n', 2, 3);
-        addKey('M', 'm', 2, 2);  
+        addKey('M', 'm', 2, 2);
         addKey(',', '<', 2, 1);
         addKey('Q', 'q', 1, 7);
         addKey('A', 'a', 1, 6);
@@ -190,34 +190,34 @@ public class Keyboard extends Memory {
      * control, as those keys actions might get lost.
      */
     public synchronized void pressKey(int key) {
-    	try {
-    	    if (paused) wait();
-	        Key k = keys.get(key);
-	        if (k != null) {
-	            matrix[k.row] &= ~k.col;
-	        }
-    	} catch (InterruptedException e) {
-    	}
+        try {
+            if (paused)
+                wait();
+            Key k = keys.get(key);
+            if (k != null) {
+                matrix[k.row] &= ~k.col;
+            }
+        } catch (InterruptedException e) {
+        }
     }
 
     public synchronized void releaseKey(int key) {
-    	try {
-    		if (paused) wait();
+        try {
+            if (paused) wait();
             Key k = keys.get(key);
-	        if (k != null) {
-	            matrix[k.row] |= k.col;
-	        }
-    	} catch (InterruptedException e) {
-    	}
+            if (k != null) {
+                matrix[k.row] |= k.col;
+            }
+        } catch (InterruptedException e) {
+        }
     }
-    
+
     public synchronized void pause(boolean state) {
-    	paused = state;
-    	if (!paused) {
-    		notifyAll();
-    	}
+        paused = state;
+        if (!paused) {
+            notifyAll();
+        }
     }
-    
 
     // Add details of a key
     private void addKey(int k1, int k2, int row, int col) {
@@ -225,7 +225,7 @@ public class Keyboard extends Memory {
         if (k1 != 0) keys.put(k1, key);
         if (k2 != 0) keys.put(k2, key);
     }
-    
+
     /*
      * Return keyboard type
      */

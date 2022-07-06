@@ -18,34 +18,42 @@ public abstract class Memory {
     public static final int K1 = 1024;
     public static final int K64 = 64*K1;
 
-    public int base;            // Stores the starting memory address
+    public int base;            // Stores the starting base memory address
+    public int start;           // Stores the offset of the start address
     public int blocks;          // Stores the number of blocks
 
-    public byte[] store;        // Storage area, if present    
-    private boolean readOnly;   // true if readonly storage
+    public byte[] store;        // Storage area, if present
+    protected boolean readOnly; // true if read-only storage
 
     public Memory(int bytes) {
         blocks = toBlocks(bytes);
     }
 
-    public Memory(byte[] sb, boolean ro) {
+    public Memory(byte[] sb) {
         store = sb;
-        readOnly = ro;
         blocks = toBlocks(sb.length);
     }
 
-    public byte readByte(int offset) {
-        return store[offset];
+    public void setAddress(int addr) {
+        base = blockBase(addr);
+        start = addr - base;
     }
 
-    public void writeByte(int offset, byte b) {
+    public byte readByte(int a) {
+        if (store != null) {
+            return store[a];
+        }
+        return Data.getHiByte((short)(base+a));
+    }
+
+    public void writeByte(int a, byte b) {
         if (!readOnly) {
-            store[offset] = b;
+            store[a] = b;
         }
     }
 
-    public byte traceByte(int offset) {
-        return readByte(offset);
+    public byte traceByte(int a) {
+        return readByte(a);
     }
 
     // Memory size in bytes
@@ -73,10 +81,20 @@ public abstract class Memory {
         return addr/BLKSIZE;
     }
 
+    // Turn address into block boundary
+    public static final int blockBase(int addr) {
+        return asBlock(addr)*BLKSIZE;
+    }
+
     /*
      * Mainly for debugging
      */
     protected String memBase() {
-        return "@" + Data.toHexString(base) + "-" + Data.toHexString(base+blocks*BLKSIZE);
+        StringBuilder s = new StringBuilder("@");
+        s.append(Data.toHexString(base));
+        if (start > 0)
+            s.append("/").append(Data.toHexString(base+start));
+        s.append("-").append(Data.toHexString(base+blocks*BLKSIZE-1));
+        return s.toString();
     }
 }

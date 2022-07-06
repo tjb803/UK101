@@ -135,7 +135,7 @@ public class Main implements Runnable {
             if (metalTheme != null) {
                 if (metalTheme.equalsIgnoreCase("Steel"))
                     MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-                else if (metalTheme.equalsIgnoreCase("Ocean")) 
+                else if (metalTheme.equalsIgnoreCase("Ocean"))
                     MetalLookAndFeel.setCurrentTheme(new OceanTheme());
             }
             UIManager.setLookAndFeel(lafClass);
@@ -156,7 +156,6 @@ public class Main implements Runnable {
         this.computerView = view;
 
         Image icon = Toolkit.getDefaultToolkit().createImage(Main.class.getResource("icon/uk101-32.png"));
-
         frame = new JFrame(computer.name + " Simulation (v" + computer.version + ")");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setIconImage(icon);

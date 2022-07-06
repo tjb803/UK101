@@ -17,14 +17,14 @@ of the simulator.</p>
 <h3>Obtaining The Source Code</h3>
 <p>The source code can be obtained in two ways:</p>
 <ol>
-<li>Download the source package from the SourceForge download site. 
+<li>Download the source package from the SourceForge download site.
 <p>The source package is named <code>uk101-src-n.n.n.zip</code> and
 contains the full Java source for the project classes.</p></li>
 <li>Download the source code directly from the GitHub code repository
 listed below.
-Anonymous read-only access to the code in GitHub should be available to anyone; if 
+Anonymous read-only access to the code in GitHub should be available to anyone; if
 you want to be able to commit changes to the code you will need a GitHub
-ID and you will need to be added to project. 
+ID and you will need to be added to project.
 <blockquote><pre>
 https://github.com/tjb803/UK101.git
 </pre></blockquote>
@@ -37,14 +37,14 @@ Eclipse has built-in support for GitHub that makes this very easy.</p></li>
 </ol>
 <p>Using Eclipse and the GitHub repository is recommended if you want to try
 to rebuild or modify the code.
-In addition to the source for the simulator classes the GitHub project also 
+In addition to the source for the simulator classes the GitHub project also
 contains a number of JUnit unit tests and the ANT build script used to
 create the project download packages.</p>
 <h3>Code Design</h3>
-<p>The code is designed using an approximate Model-View-Controller type of 
+<p>The code is designed using an approximate Model-View-Controller type of
 architecture, to split the GUI View logic completely from the core emulation
 which combines the Model and the Controller function.
-The intention is that the relatively simple Swing-based UI could be fairly 
+The intention is that the relatively simple Swing-based UI could be fairly
 easily replaced with more fancy graphics if required, without needing any
 changes to hardware simulation.</p>
 <h3>Java Packages</h3>
@@ -54,7 +54,7 @@ changes to hardware simulation.</p>
 <dd>The base package containing the 'main()' entry point: <code>Main.java</code>
 is the main GUI program.</dd>
 <dt><code><b>uk101.hardware</b></code></dt>
-<dd>The classes that implement various pieces of real UK101 hardware, for example 
+<dd>The classes that implement various pieces of real UK101 hardware, for example
 the 6502 CPU, the keyboard, the RAM and ROM etc.</dd>
 <dt><code><b>uk101.hardware.bus</b></code></dt>
 <dd>Some interfaces used by the hardware classes to communicate with other
@@ -66,25 +66,25 @@ to specific pieces of real hardware.</dd>
 <dd>The system ROM images that are built into the simulator.</dd>
 <dt><code><b>uk101.view</b></code></dt>
 <dd>The GUI 'view' classes.
-All of the visuals are contained within these classes (and the component 
+All of the visuals are contained within these classes (and the component
 sub-package) and there is a simple and well defined split between the view
 code and the core emulation code.</dd> 
 <dt><code><b>uk101.view.component</b></code></dt>
-<dd>These are simple (generally, expect maybe the VideoScreen one!) and often 
+<dd>These are simple (generally, expect maybe the VideoScreen one!) and often
 reusable components used to build the GUI views.  
 They are used whenever there is not a standard Swing component that is suitable.</dd>
 <dt><code><b>uk101.io</b></code></dt>
-<dd>These classes handle all the conversions between the various data tape 
+<dd>These classes handle all the conversions between the various data tape
 formats, including all the processing of Kansas City encoded WAV files.</dd>
 <dt><code><b>uk101.utils</b></code></dt>
 <dd>All of the additional utility programs.</dd>
 <dt><code><b>uk101.icon</b></code></dt>
 <dd>Some icons in various formats that are used internally and also packaged as
-part of the distribution ZIP for others to use.</dd> 
+part of the distribution ZIP for others to use.</dd>
 </dl>
 <br><p>More details to come ... probably</p><br>
 <h3>Contributing To The Project</h3>
-<p>If you'd like to help work on the project please contact me at the address at 
+<p>If you'd like to help work on the project please contact me at the address at
 the bottom of the page!</p>
 <br><table border="1" frame="above" rules="none" width="100%" bgcolor="#F0F8FF">
 <tr><td align="left">Tim Baldwin<br>December 2010

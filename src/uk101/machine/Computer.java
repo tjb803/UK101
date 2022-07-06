@@ -16,6 +16,7 @@ import uk101.hardware.Memory;
 import uk101.hardware.NVRAM;
 import uk101.hardware.RAM;
 import uk101.hardware.ROM;
+import uk101.hardware.SEK;
 import uk101.hardware.Video;
 import uk101.hardware.bus.DataBus;
 
@@ -141,13 +142,21 @@ public class Computer extends Thread implements DataBus {
             nvrams.add(r);
         }
 
-        // Keyboard, screen and ACIA are memory mapped.
+        // Video can be the standard hardware or Premier's SEK
         ROM charset = new ROM(cfg.getRomCharset());
+        if (cfg.getVideoMode().equals(Configuration.SEK)) {
+            video = new SEK(cfg.getSEKFormat(), charset, this);
+            addMemory(cfg.getVideoAddr(), video);
+            addMemory(cfg.getSEKAddr(), ((SEK)video).control);
+        } else {
+            video = new Video(cfg.getVideoRows(), cfg.getVideoCols(), charset);
+            addMemory(cfg.getVideoAddr(), video);
+        }
+
+        // Keyboard and ACIA are simple memory mapped items.
         keyboard = new Keyboard(cfg.getKbdLayout());
-        video = new Video(cfg.getVideoRows(), cfg.getVideoCols(), charset);
-        acia = new ACIA6850(cfg.getAciaRate(), getPriority());
         addMemory(cfg.getKbdAddr(), keyboard);
-        addMemory(cfg.getVideoAddr(), video);
+        acia = new ACIA6850(cfg.getAciaRate(), getPriority());
         addMemory(cfg.getAciaAddr(), acia);
 
         // Create a tape recorder to load and save programs and plug it into the ACIA.
@@ -166,17 +175,17 @@ public class Computer extends Thread implements DataBus {
         videoFix1 = (mon == MONITOR_MONUK02);
     }
 
-    // Add some memory into the address space, applying any patches if 
-    // we are installing a ROM.
-    private void addMemory(int base, Memory m) {
-        m.base = base;
-        int bb = Memory.asBlock(base);
+    // Add some memory into the address space.
+    private void addMemory(int addr, Memory m) {
+        m.setAddress(addr);
+        int bb = Memory.asBlock(m.base);
         for (int i = 0; i < m.blocks; i++) {
             if (bb+i < memory.length)
                memory[bb+i] = m;
         }
     }
 
+    // Add ROM memory into the address space, apply any patches if required
     private void addMemory(int base, ROM r) {
         addMemory(base, (Memory)r);
         r.patch();
@@ -190,20 +199,24 @@ public class Computer extends Thread implements DataBus {
     }
 
     /*
-     * Set the CPU clock speed and store back in config so it will be saved in 
-     * any machine image.
+     * Some config values can be stored back to the current active config, so they
+     * will be saved as part of a machine image.
      */
+
+    // CPU Speed
     public void setSpeed(int mhz) {
         cpu.setMHz(mhz);
         config.setCpuSpeed(mhz);
     }
 
-    /*
-     * Store the keyboard game mode back in config so it will be saved in any
-     * machine image.
-     */
+    // Keyboard mode
     public void setGameMode(boolean gameMode) {
         config.setKbdMode((gameMode) ? Configuration.GAME : Configuration.NORMAL);
+    }
+
+    // SEK Video format
+    public void setSEKFormat(byte format) {
+        config.setSEKFormat(Data.asBits(format));
     }
 
     /*

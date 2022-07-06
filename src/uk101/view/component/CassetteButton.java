@@ -29,7 +29,7 @@ public class CassetteButton extends JPanel {
         JLabel title = new JLabel(label);
         title.setAlignmentX(CENTER_ALIGNMENT);
         add(title);
-        add(Box.createVerticalStrut(5));
+        add(Box.createVerticalStrut(3));
 
         button = new JToggleButton(text);
         button.setAlignmentX(CENTER_ALIGNMENT);

@@ -21,7 +21,7 @@ import javax.swing.Timer;
 public class CassetteLight extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1L;
 
-    static final Dimension SIZE = new Dimension(20, 9);
+    static final Dimension SIZE = new Dimension(20, 10);
 
     Timer busyTimer;
 

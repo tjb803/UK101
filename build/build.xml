@@ -1,80 +1,79 @@
 <!--                                     -->
 <!--      Compukit UK101 Simulator       -->
 <!--                                     -->
-<!-- (C) Copyright Tim Baldwin 2010,2021 -->
+<!-- (C) Copyright Tim Baldwin 2010,2022 -->
 <!--                                     -->
 
 <!-- Build the runtime and source JARs and ZIPs -->
 
 <project name="UK101" default="buildAll">
-    <property name="project-name" value="UK101"/>
-    <property name="system-name" value="Compukit UK101"/>
-    <property name="system-version" value="1.4.3"/>
-    <property name="system-author" value="(C) Copyright Tim Baldwin 2010,2022"/>
+    <property name="project-name" value="UK101" />
+    <property name="system-name" value="Compukit UK101" />
+    <property name="system-version" value="1.5.0" />
+    <property name="system-author" value="(C) Copyright Tim Baldwin 2010,2022" />
 
-    <property name="jar-name" value="uk101-${system-version}.jar"/>
-    <property name="zip-name" value="uk101-${system-version}.zip"/>
-    <property name="src-name" value="uk101-src-${system-version}.zip"/>
+    <property name="jar-name" value="uk101-${system-version}.jar" />
+    <property name="zip-name" value="uk101-${system-version}.zip" />
+    <property name="src-name" value="uk101-src-${system-version}.zip" />
 
-    <property name="pkg-build" value="package"/>
-    
+    <property name="pkg-build" value="package" />
+
     <!-- Build all subsections -->
     <target name="buildAll" depends="clean, buildJar, buildZip, buildSrc">
-        <eclipse.refreshLocal resource="${project-name}"/>
+        <eclipse.refreshLocal resource="${project-name}" />
     </target>
-    
+
     <!-- Clean all build artifacts -->
     <target name="clean">
-        <delete dir="${pkg-build}" quiet="true"/>
+        <delete dir="${pkg-build}" quiet="true" />
     </target>
 
     <!-- Build the runtime JAR -->
     <target name="buildJar">
-        <eclipse.incrementalBuild project="${project-name}"/>
-        <mkdir dir="${pkg-build}"/> 
+        <eclipse.incrementalBuild project="${project-name}" />
+        <mkdir dir="${pkg-build}" />
         <jar destfile="${pkg-build}/${jar-name}">
-            <fileset dir="bin"/>
+            <fileset dir="bin" />
             <manifest>
-                <attribute name="Main-Class" value="uk101.Main"/>
-                <attribute name="Class-Path" value="./"/>
-                <attribute name="Implementation-Title" value="${system-name}"/>
-                <attribute name="Implementation-Version" value="${system-version}"/>
-                <attribute name="Implementation-Vendor" value="${system-author}"/>
+                <attribute name="Main-Class" value="uk101.Main" />
+                <attribute name="Class-Path" value="./" />
+                <attribute name="Implementation-Title" value="${system-name}" />
+                <attribute name="Implementation-Version" value="${system-version}" />
+                <attribute name="Implementation-Vendor" value="${system-author}" />
             </manifest>
         </jar>
     </target>
 
     <!-- Build the runtime ZIP package -->
     <target name="buildZip" depends="buildJar">
-        <mkdir dir="${pkg-build}"/> 
+        <mkdir dir="${pkg-build}" />
         <zip destfile="${pkg-build}/${zip-name}">
-        	<mappedresources>
-        		<fileset file="README.md"/>
-        		<globmapper from="README.md" to="readme.txt"/>
+            <mappedresources>
+                <fileset file="README.md" />
+                <globmapper from="README.md" to="readme.txt" />
             </mappedresources>
-            <fileset file="build/license.txt"/>
-            <fileset file="build/bugs.txt"/>
-            <fileset file="build/features.txt"/>
-            <fileset file="${pkg-build}/${jar-name}"/>
-            <zipfileset dir="src/uk101/icon" prefix="icons"/>
-            <zipfileset dir="docs" prefix="docs" excludes="**/pdf/**"/>
-            <zipfileset dir="samples" prefix="samples"/>
+            <fileset file="build/license.txt" />
+            <fileset file="build/bugs.txt" />
+            <fileset file="build/features.txt" />
+            <fileset file="${pkg-build}/${jar-name}" />
+            <zipfileset dir="src/uk101/icon" prefix="icons" />
+            <zipfileset dir="docs" prefix="docs" excludes="**/pdf/**" />
+            <zipfileset dir="samples" prefix="samples" />
         </zip>
     </target>
 
     <!-- Build the source code ZIP package -->
     <target name="buildSrc">
-        <mkdir dir="${pkg-build}"/> 
+        <mkdir dir="${pkg-build}" />
         <zip destfile="${pkg-build}/${src-name}">
-        	<mappedresources>
-        		<fileset file="README.md"/>
-        		<globmapper from="README.md" to="readme.txt"/>
+            <mappedresources>
+                <fileset file="README.md" />
+                <globmapper from="README.md" to="readme.txt" />
             </mappedresources>
-            <fileset file="build/license.txt"/>
-            <fileset file="build/bugs.txt"/>
-            <fileset file="build/features.txt"/>
-            <zipfileset dir="src" prefix="src"/>
+            <fileset file="build/license.txt" />
+            <fileset file="build/bugs.txt" />
+            <fileset file="build/features.txt" />
+            <zipfileset dir="src" prefix="src" />
         </zip>
     </target>
-
 </project>

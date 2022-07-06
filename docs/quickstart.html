@@ -6,7 +6,7 @@
 </head>
 <body>
 <table border="2" frame="box" rules="none" cellpadding="5" width="100%" bgcolor="#F0F8FF">
-<tr align="center"><td><a href="index.html"><img src="image/uk101.gif" alt="UK101"/></a></td></tr>>
+<tr align="center"><td><a href="index.html"><img src="image/uk101.gif" alt="UK101"/></a></td></tr>
 </table>
 <table frame="void" rules="none" cellpadding="0" cellspacing="0" width="100%">
 <tr><td align="right">Return to <a href="index.html">index</a></td></tr>
@@ -14,17 +14,17 @@
 <h1>Quick Start</h1>
 <p>This is a quick overview of how to run a simple program using the simulator.
 There is a lot more detail in the <a href="operation.html">operation guide</a>
-and in the 
+and in the
 <a href="http://uk101.sourceforge.net/docs/pdf/manual.pdf">Compukit UK101 Manual</a>.</p>
 <p>This example just runs a trivial BASIC program that prints a message
 onto the screen.</p>
 <hr>
 <h2>Installation</h2>
 <p>If you haven't already done so install the simulator and the related sample
-programs and documentation by unzipping the runtime package into a 
+programs and documentation by unzipping the runtime package into a
 subdirectory on your machine.
-Make sure you have Java 5 (or later) installed and working - try typing the 
-command <q><kbd>java&nbsp;&#8209;version</kbd></q> at a terminal or command prompt 
+Make sure you have Java 5 (or later) installed and working - try typing the
+command <q><kbd>java&nbsp;&#8209;version</kbd></q> at a terminal or command prompt
 if you are not sure.</p>
 <p>After unzipping the runtime package you will find these files and directories:</p>
 <blockquote><table frame="void" rules="none" cellpadding="0">
@@ -32,7 +32,7 @@ if you are not sure.</p>
 <tr><td><code>readme.txt</code></td><td width="15"/><td>Latest information</td></tr>
 <tr><td><code>license.txt</code></td><td/><td>The BSD license file</td></tr>
 <tr><td><code>docs/</code></td><td/><td>A copy of the latest documentation</td></tr>
-<tr><td><code>icons/</code></td><td/><td>Some icons that can be associated with the 
+<tr><td><code>icons/</code></td><td/><td>Some icons that can be associated with the
 program if required</td></tr>
 <tr><td><code>samples/</code></td><td/><td>Sample programs, tapes, ROMs and properties
 files.</td></tr>
@@ -43,8 +43,8 @@ To start the simulator enter the following command at a terminal or command
 prompt:
 <blockquote><pre>
 <code>java -jar uk101-n.n.n.jar</code>
-</pre></blockquote>    
-<p>On most systems you should also be able to double-click on the JAR file to 
+</pre></blockquote>
+<p>On most systems you should also be able to double-click on the JAR file to
 launch the application.</p>
 <p>The simulator should start and display a window containing several smaller
 windows something like this:</p>
@@ -57,7 +57,7 @@ and configuration panel</td>
 </tr>
 <tr><td>&nbsp;</td></tr>
 <tr>
-<td align="left" valign="middle" width="100">Bottom left is keyboard for typing 
+<td align="left" valign="middle" width="100">Bottom left is keyboard for typing
 into the machine</td>
 <td align="right" valign="middle" width="100">Bottom right is the cassette
 recorder for loading and saving programs</td>
@@ -65,18 +65,18 @@ recorder for loading and saving programs</td>
 </table>
 <hr>
 <h2>The Keyboard</h2>
-<p>The keyboard window displays the layout of the real UK101 keyboard - 
+<p>The keyboard window displays the layout of the real UK101 keyboard -
 you will notice that the layout is not identical to a standard PC keyboard,
-the most noticeable difference being the symbols on the top-row numeric 
+the most noticeable difference being the symbols on the top-row numeric
 keys. 
-The simulation attempts to hide most of these differences, so that typing 
+The simulation attempts to hide most of these differences, so that typing
 on the PC keyboard operates the UK101 correctly.
 See the <a href=operation.html#opkbd>keyboard operation</a> pages for more details.</p>
 <p>You can also operate the keyboard by clicking on keys with the mouse but
-this is rather tedious!</p>  
+this is rather tedious!</p>
 <hr>
 <h2 id="boot">Booting the System</h2>
-<p>When the system starts or when it is <a href="#reset">reset</a> the screen 
+<p>When the system starts or when it is <a href="#reset">reset</a> the screen
 will display a bootstrap start-up message and waits for a key to be pressed.
 With the monitor ROM installed by default (known as the <q>New Monitor</q>
 or <q>MONUK02</q>) the initial screen will look something like the left 
@@ -89,7 +89,7 @@ pressed.
 <dd>A cold start completely resets the system and clears
 the memory, it then enters the BASIC interpreter.</dd>
 <dt><i>Warm Start</i>
-</dt><dd>A warm start recovers from a reset without clearing 
+</dt><dd>A warm start recovers from a reset without clearing
 memory.
 Normally this re-enters BASIC with the previous program still loaded.</dd>
 <dt><i>Monitor</i>
@@ -110,26 +110,26 @@ prompt from the BASIC interpreter - see right hand screen-shot.</p>
 </table>
 <p>You are now ready for some authentic 1979-vintage BASIC programming!</p>
 <p>You could try typing a simple program such as <code>10 PRINT "HELLO!"</code>
-followed by <code>LIST</code> to list it or <code>RUN</code> to 
+followed by <code>LIST</code> to list it or <code>RUN</code> to
 execute it.</p>
 <hr>
 <h2>Loading and Running a Program</h2>
 <p>Programs would normally be loaded from cassette tapes.
-To see how this works, first type the command <code>LOAD</code> at the 
+To see how this works, first type the command <code>LOAD</code> at the
 BASIC <code>OK</code> prompt then press <i>RETURN</i>.
 Not much appears to happen - you may notice the cursor has stopped
-flashing - but the system is now waiting for input from the 
+flashing - but the system is now waiting for input from the
 cassette player.</p>
 <p>Press the <i>Open</i> button on the cassette player window, and in
-the file selection dialog choose the <i>samples</i> folder, then the 
+the file selection dialog choose the <i>samples</i> folder, then the
 <i>basic</i> folder and then select the file called <i>hello.basic</i>.
 With the tape loaded in the cassette player press the <i>Play</i> button
-and you will see the program load into the machine, just as if it had 
+and you will see the program load into the machine, just as if it had
 been typed.</p>
 <p>When the program finishes loading (<i>hello.basic</i> is just a two-line
-program) you need to press <i>Stop</i> on the cassette player, then press 
+program) you need to press <i>Stop</i> on the cassette player, then press
 the <i>SPACE</i> bar on the keyboard.
-Pressing the <i>SPACE</i> bar will end the loading mode and return to 
+Pressing the <i>SPACE</i> bar will end the loading mode and return to
 accepting input from the keyboard - you should see the cursor flashing again.
 Type <code>RUN</code> to execute the newly loaded program.
 <table frame="void">
@@ -138,16 +138,16 @@ Type <code>RUN</code> to execute the newly loaded program.
 </table>
 <hr>
 <h2 id="reset">Resetting the Machine</h2>
-<p>If things go wrong you can <i>reset</i> the machine and return to the 
+<p>If things go wrong you can <i>reset</i> the machine and return to the
 boot-up prompt.
 Another <i>C</i> for a <i>Cold Start</i> should get it all working again
 although a cold-start will always wipe out the contents of the memory.
-<p>To perform a reset you can either press the <i>Reset</i> button 
+<p>To perform a reset you can either press the <i>Reset</i> button
 in the <b>Debug</b> section of the 
-<a href="operation.html#opctl">machine control panel</a>, or you can use 
+<a href="operation.html#opctl">machine control panel</a>, or you can use
 the <i>RESET</i> keys on the keyboard. 
-On a real UK101 you had to press both <i>RESET</i> keys together to do the 
-reset, on the simulator keyboard you simulate this by double-clicking on either 
+On a real UK101 you had to press both <i>RESET</i> keys together to do the
+reset, on the simulator keyboard you simulate this by double-clicking on either
 one of the two keys.</p>
 <br><table border="1" frame="above" rules="none" width="100%" bgcolor="#F0F8FF">
 <tr><td align="left">Tim Baldwin<br>April 2011

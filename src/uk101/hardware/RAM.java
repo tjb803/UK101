@@ -14,7 +14,7 @@ public class RAM extends Memory {
      * RAM is just an area of read/write bytes.  Size is in Kbytes.
      */
     public RAM(int k) {
-        super(new byte[k*K1], false);
+        super(new byte[k*K1]);
     }
 
     // Allow RAM to restored from a saved image

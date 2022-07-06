@@ -12,27 +12,66 @@
 <tr><td align="right">Return to <a href="index.html">index</a></td></tr>
 </table>
 <h1>Additional Function</h1>
+<p>Some additional hardware simulations are included:</p>
+<ul>
+<li><a href="#sek">Screen Enhancement Kit</a></li>
+</ul>
 <p>Since this is a simulation of an UK101, not a real computer, it is possible
-to provide some additional useful function, that can help show the working of the 
-computer and help with programming and debugging.</p>
-<p>The following extra function is provided:</p>
+to provide some additional useful function, that can help show the working of the
+computer and help with programming and debugging.
+The following extra function is provided:</p>
 <ul>
 <li><a href="#dump">Memory Dump Facility</a></li>
 <li><a href="#trace">Instruction Trace Facility</a></li>
 <li><a href="#control">Simulator Control Codes</a></li>
 </ul>
 <hr>
+<h2 id="sek">Screen Enhancement Kit</h2>
+<p>The video can be configured as either the standard machine hardware video
+display or a simulation of <i>Premier Publications</i>
+<a href="http://uk101.sourceforge.net/docs/pdf/sek.pdf">Screen Enhancement
+Kit</a> (SEK).
+The SEK provided 2K of video RAM and could set the screen into a number of
+different formats by writing a value to a software switch location at
+address $DE80.</p>
+<p>The available formats are listed in the table below.
+For use with the UK101 formats <code>0</code>, <code>2</code> or
+<code>10</code> are likely to be the most useful.</p>
+<table frame="box" rules="all" cellspacing="0" cellpadding="5">
+<tr><th>Rows</th><th>Columns</th><th/><th>Normal</th><th>Inverted</th></tr>
+<tr><td>32</td><td>64</td><td/>
+<td><code>0</code> or <code>1</code></td><td><code>128</code> or <code>129</code></td></tr>
+<tr><td>32</td><td>48</td><td/>
+<td><code>2</code> or <code>3</code></td><td><code>130</code> or <code>131</code></td></tr>
+<tr><td>32</td><td>32</td><td>top</td><td><code>4</code></td><td><code>132</code></td></tr>
+<tr><td>32</td><td>32</td><td>bottom</td><td><code>5</code></td><td><code>133</code></td></tr>
+<tr><td>32</td><td>24</td><td>top</td><td><code>6</code></td><td><code>134</code></td></tr>
+<tr><td>32</td><td>24</td><td>bottom</td><td><code>7</code></td><td><code>135</code></td></tr>
+<tr><td>16</td><td>64</td><td>top</td><td><code>8</code></td><td><code>136</code></td></tr>
+<tr><td>16</td><td>64</td><td>bottom</td><td><code>9</code></td><td><code>137</code></td></tr>
+<tr><td>16</td><td>48</td><td>top</td><td><code>10</code></td><td><code>138</code></td></tr>
+<tr><td>16</td><td>48</td><td>bottom</td><td><code>11</code></td><td><code>139</code></td></tr>
+<tr><td colspan="2">illegal!</td><td/>
+<td><code>12</code> to <code>15</code></td><td><code>140</code> to <code>143</code></td></tr>
+</table>
+<p>The BASIC program listed in the Premier Publications documentation that
+enables simple switching of the screen formats is provided in the
+<a href="../samples/basic/sek.basic"><samp>samples/basic/sek.basic</samp></a>.</p>
+<p>A pre-loaded machine running this program with the recommended CEGMON
+monitor can also be loaded directly from
+<samp>samples/machines/sek.uk101</samp>.</p>
+<hr>
 <h2>Debug Functions</h2>
-<p>The simulator is able to produce a <a href="#dump">memory dump</a> and 
+<p>The simulator is able to produce a <a href="#dump">memory dump</a> and
 an <a href="#trace">instruction trace.</a></p>
 <h3 id="dump">Memory Dump</h3>
-<p>The memory dump is a snapshot image containing the complete 
+<p>The memory dump is a snapshot image containing the complete
 system RAM.</p>
 <p>Memory dumps can be produced using the special <a href="#control">control code</a>
 instructions (from within a running program), by pressing the <i>Dump</i> button
 on the <a href="operation.html#opctl">machine control</a> display window.</p>
 <p>Memory dump files are named something like
-<b><code>uk101&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.ram</code></b> and are 
+<b><code>uk101&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.ram</code></b> and are
 in an internal and compressed format.
 The files can be formatted using the <a href=utilities.html#pdump>dump file
 formatter</a> utility.</p>
@@ -40,11 +79,11 @@ formatter</a> utility.</p>
 <p>The instruction trace contains a log of the instructions executed 
 by the CPU together with the CPU registers and status values.</p>
 <p>Instruction trace can be enabled and disabled using the special
-<a href="#control">control code</a> instructions (from within a running 
+<a href="#control">control code</a> instructions (from within a running
 program), by selecting the <i>Trace</i> setting on the 
 <a href="operation.html#opctl">machine control</a> display window.</p>
 <p>Instruction trace files are named something like
-<b><code>uk101&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.trace</code></b> and are 
+<b><code>uk101&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.trace</code></b> and are
 in an internal and compressed format.
 The files can be formatted using the <a href=utilities.html#ptrace>instruction
 trace formatter</a> utility.</p>
@@ -52,19 +91,19 @@ trace formatter</a> utility.</p>
 tight spin-loop!</p>
 <hr>
 <h2>Additional Opcodes</h2>
-<p>The original 6502 processor defined and documented 151 opcodes 
+<p>The original 6502 processor defined and documented 151 opcodes
 out of the possible 256.
-Of the 105 undocumented opcodes some did perform well known and 
-occasionally useful function, but some would cause the processor 
+Of the 105 undocumented opcodes some did perform well known and
+occasionally useful function, but some would cause the processor
 to lock up.
-I have made use of some of these unused opcodes to provide some 
+I have made use of some of these unused opcodes to provide some
 additional processor function inside the simulator.
-I have only used opcodes from the range that would cause the 
+I have only used opcodes from the range that would cause the
 processor to lock up as these should not appear in any useful
 program.</p>
 <h3 id="control">Simulator Control Codes</h3>
 <p>The following additional instruction opcodes can be used
-(the <code>@@x</code> form is the opcode that will be used by the 
+(the <code>@@x</code> form is the opcode that will be shown by the
 <a href="utilities.html#pcode">disassembler</a>):</p>
 <table frame="box" rules="all" cellspacing="0" cellpadding="5">
 <tr><td><b>02</b></td><td>Halt</td><td><code>@@H</code></td>

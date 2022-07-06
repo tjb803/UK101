@@ -35,12 +35,12 @@
 programs and tapes are recovered from original software.
 I do not own the copyrights for these recovered programs and so I sincerely
 hope no one will mind them being included in this package.
-If any of the original copyright owners object, please contact me at 
-the email address at the bottom of the page and I will gladly remove 
+If any of the original copyright owners object, please contact me at
+the email address at the bottom of the page and I will gladly remove
 anything that should not be here.</i></p>
-<p>In addition this page provides some notes about the 
-<a href="#format">tape formats</a> used by the simulator and details of how to 
-<a href="#decode">recover programs from cassette tapes</a>.</p> 
+<p>In addition this page provides some notes about the
+<a href="#format">tape formats</a> used by the simulator and details of how to
+<a href="#decode">recover programs from cassette tapes</a>.</p>
 <h3 id="runbas">Loading and Running BASIC programs</h3>
 <p>To load and run a program written in BASIC:
 <ol>
@@ -52,7 +52,7 @@ cassette player.</li>
 <li>Use the <i>Cassette Recorder</i> to open the program source code file
 and press the <i>Play</i> button.
 You should see the program being loaded.</li>
-<li>When the loading has finished press the <i>SPACE</i> bar to switch 
+<li>When the loading has finished press the <i>SPACE</i> bar to switch
 control back to the keyboard (the cursor should start flashing again).</li>
 <li>Type <code>RUN</code> and press <i>Enter</i> to run the program.</li>
 </ol>
@@ -70,8 +70,8 @@ You should see the program being loaded.</li>
 <li>Machine code tapes normally have trigger commands embedded at the
 end to automatically run the program that was loaded.</li>
 </ol>
-<p>Often machine code is loaded in two or more phases, where the first phase 
-loads a more sophisticated checksum loader that then loads the remaining 
+<p>Often machine code is loaded in two or more phases, where the first phase
+loads a more sophisticated checksum loader that then loads the remaining
 code.</p>
 <hr>
 <h2 id="hello1">Hello World</h2>
@@ -90,7 +90,7 @@ This program is used in the <a href="quickstart.html">quick start guide</a>.</p>
 <tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
 <p>This is the program from page 38 of the 
-<a href="http://uk101.sourceforge.net/docs/pdf/manual.pdf">manual</a> 
+<a href="http://uk101.sourceforge.net/docs/pdf/manual.pdf">manual</a>
 which can be used to display most of the character set of the machine.
 It is not quite the same as the listing in the manual, as that listing
 actually contains a couple of bugs and also needed some changes to work
@@ -136,11 +136,11 @@ to play the game.
 <tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
 <p>This is game kindly sent to me by Chic McGregor.
-It was first published in the July 1980 issue of <i>Personal Computer World</i> and 
+It was first published in the July 1980 issue of <i>Personal Computer World</i> and
 is provided here exactly as originally published.
 When you run the game it can provide some instructions on how to use it.</p>
 <img src="image/blackbox.gif" alt="Black Box"/>
-<p>There's an interesting history to this particular program as it was almost 
+<p>There's an interesting history to this particular program as it was almost
 certainly the first <q>user written</q> BASIC program for the UK101.
 How can we know this?  Chic tells me that the very first shipment of UK101
 machines were sent out without any BASIC ROMs because the ROMs were not ready
@@ -160,7 +160,7 @@ to get hold of a set of ROMs ahead of anyone else.</p>
 </table>
 </td></tr></table>
 <br clear="left">
-This game was published in Practical Electronics in July 1980, although the 
+This game was published in Practical Electronics in July 1980, although the
 copy here is a slightly later version that I bought on cassette.
 It is a version of the 
 <a href="http://en.wikipedia.org/wiki/Connect_Four">Connect Four</a> game.
@@ -174,7 +174,7 @@ to play the game.</p>
 <td><a href="../samples/basic/labyrinth.basic"><samp>samples/basic/labyrinth.basic</samp></a></td></tr>
 <tr><td><b>Load as</b></td><td><a href="#runbas">BASIC</a></td></tr>
 </table>
-<p>This is a version of the ubiquitous <q>first-person 3D maze</q> type of game, 
+<p>This is a version of the ubiquitous <q>first-person 3D maze</q> type of game,
 popular in the early 1980's - this one was written by me in about 1982, I think.</p>
 <img src="image/maze.gif" alt="Labyrinth"/>
 <p>It was written for my modified UK101 and requires a 32-line display and the
@@ -202,13 +202,13 @@ the 8K BASIC memory space!</p>
 standard monitor ROM that fully supports 32 lines.
 A suitable monitor called NEWMON32.ROM can be found in the <samp>samples/roms</samp>
 directory.
-Ensure the following <a href="config.html">configuration options</a> 
+Ensure the following <a href="config.html">configuration options</a>
 are specified when starting the simulator:</p>
 <blockquote><pre>
 -p rom.monitor=samples/roms/NEWMON32.ROM,video.rows=32
 </pre></blockquote>
 <p>It's probably best to run the game with a standard 1MHz CPU speed to start
-with until you get the hang of the controls.  
+with until you get the hang of the controls.
 Then maybe switch to 2MHz (or more) for a greater challenge!
 <h3>Real-Time Star Trek Instructions</h3>
 <p>Real Time Star Trek is, in the modern jargon, a procedurally generated,
@@ -237,19 +237,19 @@ down more than one key at a time.</p>
 If a torpedo hits a star, it will create a large explosion
 which may destroy nearby Klingons (or you!)</td></tr>
 <tr valign="baseline"><td>S</td>
-<td>Recharge shield energy: hold down to charge your shields up to 
-the maximum of 500 energy units. 
-Energy is taken from your main energy store, which recharge (by the power plant) 
+<td>Recharge shield energy: hold down to charge your shields up to
+the maximum of 500 energy units.
+Energy is taken from your main energy store, which recharge (by the power plant)
 up to its maximum of 3000 units.</td></tr>
 <tr valign="baseline"><td>R</td>
-<td>Repair. 
+<td>Repair.
 You can repair damage at the cost of energy.</td></tr>
 <tr valign="baseline"><td>P</td>
-<td>Fire phasers. 
-Phasers automatically lock on target and keep firing as long as you hold down 
-the P key. 
-Phaser effectiveness decreases with distance. 
-The Klingons only have phasers, so their weapons do more damage the closer you 
+<td>Fire phasers.
+Phasers automatically lock on target and keep firing as long as you hold down
+the P key.
+Phaser effectiveness decreases with distance.
+The Klingons only have phasers, so their weapons do more damage the closer you
 are to them.</td></tr>
 <tr valign="baseline"><td>G</td>
 <td>Galaxy Scan: displays the map of the galaxy for as long as you hold
@@ -270,9 +270,9 @@ the eight surrounding sectors:</p>
 <tr><td>9</td><td>edge of galaxy</td></tr>
 </table>
 <p>To dock with a starbase, move next to it (using the impulse drive I+direction)
-and press Y. 
+and press Y.
 This will repair all damage, give you full energy,
-and 8 torpedoes, and reduce shields to zero. 
+and 8 torpedoes, and reduce shields to zero.
 So hold down S afterwards to charge up your shields again.</p>
 <hr>
 <h2 id="exmon">Extended Monitor</h2>
@@ -286,11 +286,11 @@ So hold down S afterwards to charge up your shields again.</p>
 <tr><td><b>Load as</b></td><td><a href="#runmc">Machine code</a></td></tr>
 </table>
 </td></tr></table>
-<p>This is the <i>Extended Monitor</i> that was provided on a sample tape 
+<p>This is the <i>Extended Monitor</i> that was provided on a sample tape
 that came with the original machine.
-The extended monitor provided some extra function to help with writing 
+The extended monitor provided some extra function to help with writing
 and debugging simple machine code programs.</p>
-<p>Details of the extended monitor can be found on its 
+<p>Details of the extended monitor can be found on its
 <a href="http://uk101.sourceforge.net/docs/pdf/exmon.pdf">instruction sheet</a>.</p>
 <p>When the program loads it will first load a short checksum loader program
 then automatically load the rest of the code in checksum format.</p>
@@ -308,13 +308,13 @@ then automatically load the rest of the code in checksum format.</p>
 <p>This is a copy of Premier Publication's excellent <i>Invaders</i>
 space invaders game.</p>
 <img src="image/invaders.gif" alt="Invaders"/>
-<p>The game was intended to be played on a standard 1Mhz processor, 
+<p>The game was intended to be played on a standard 1Mhz processor,
 if you have over-clocked the processor (see <a href="config.html#config">
 system configuration</a>) it may run too fast.
 Some old notes I have suggest that location $0F69 defines the game speed
-with the default value being 20 - on a 2MHz machine this might be best 
+with the default value being 20 - on a 2MHz machine this might be best
 changed to 40, it says.</p>
-<p>To move the laser the <i>CTRL</i> is used to go left and the 
+<p>To move the laser the <i>CTRL</i> is used to go left and the
 <i>left-SHIFT</i> key is used to go right.
 On a real UK101 the CTRL-key is above the SHIFT-key so CTRL-for-left
 and SHIFT-for-right makes sense.
@@ -342,23 +342,23 @@ any time.</p>
 space invaders game, which shows just how much could be done
 with the limited character set graphics.</p>
 <img src="image/sinvaders.gif" alt="Super Invaders"/>
-<p>This games is a mix of machine code and BASIC, but it is loaded 
-as if it were a BASIC program and automatically handles loading both 
+<p>This games is a mix of machine code and BASIC, but it is loaded
+as if it were a BASIC program and automatically handles loading both
 the machine code and BASIC parts.
 If you do a warm start you can restart it just by typing <code>RUN</code>.
 <p>This game rather cleverly hooked into the ACIA timing signals to 
 ensure it always ran at the correct speed, even if the CPU was over-clocked
-to 2MHz - my thanks to Craig for explaining to me how this worked so I 
+to 2MHz - my thanks to Craig for explaining to me how this worked so I
 could ensure the emulator handled it correctly!
-It would also produce some simple sound effects if you hooked up a 
+It would also produce some simple sound effects if you hooked up a
 speaker or earphone to the ACIA output - this is not implemented in
 the simulation yet but I hope to add it soon.</p>
-<p>To move the laser the <i>left-SHIFT</i> key is used to go left and the 
+<p>To move the laser the <i>left-SHIFT</i> key is used to go left and the
 <i>Z</i> key is used to go right.
-The <i>right-SHIFT</i> key is used to fire, but note there are some 
+The <i>right-SHIFT</i> key is used to fire, but note there are some
 problems when trying to use both shift keys independently on Windows
-(something to do with the way Java reports the key events), 
-so you should use an alternative to the right-SHIFT if you can.  
+(something to do with the way Java reports the key events),
+so you should use an alternative to the right-SHIFT if you can.
 When the keyboard is set to <a href="operation.html#kbmode">game mode</a>
 either the <i>right-CTRL</i> or the <i>Windows-Menu</i> key (both normally
 directly beneath the right-SHIFT) can be used as alternatives
@@ -375,17 +375,17 @@ for the right-SHIFT key.</p>
 </table>
 </td></tr></table>
 <p>This is a copy of Arcadia's <i>Asteroids</i> game, another
-really well done game given the limitations of the UK101's simple 
+really well done game given the limitations of the UK101's simple
 character set graphics.</p>
 <img src="image/asteroids.gif" alt="Asteroids"/>
-<p>Asteroids is actually a BASIC program with a large section of 
+<p>Asteroids is actually a BASIC program with a large section of
 additional machine code which it loads automatically.
 Once that has loaded the game will start.
 If you do a warm start you can restart it just by typing <code>RUN</code>.
-<p>To rotate the laser press the <i>left-SHIFT</i> to rotate anti-clockwise  
+<p>To rotate the laser press the <i>left-SHIFT</i> to rotate anti-clockwise
 or press the <i>right-SHIFT</i> to rotate clockwise.
-Press the <i>SPACE</i> bar to fire.  
-The laser does seem to rotate rather fast - I'm not sure if it always did 
+Press the <i>SPACE</i> bar to fire.
+The laser does seem to rotate rather fast - I'm not sure if it always did
 this or if it is related to the simulation!
 You should set the keyboard to <a href="operation.html#kbmode">game mode</a>
 to play the game.</p>
@@ -444,15 +444,15 @@ It is best used in conjunction with <a href="#pbasic4">Premier's BASIC4</a>.
 <br>See <a href="http://www.flaxcottage.com/UK101/BASIC%205.pdf">here</a> for more details.</p>
 <hr>
 <h2 id="format">Binary, ASCII and Audio Tape Formats</h2>
-<p>When the UK101 wrote data to a cassette tape it was written as a 
+<p>When the UK101 wrote data to a cassette tape it was written as a
 series of bytes.
 Although most of the bytes that were written were standard ASCII
 characters, the tapes would include some control characters,
-some padding NUL (0x00) characters and possibly some bytes
+some padding NUL ($00) characters and possibly some bytes
 whose values were outside the range of the standard character
 set.
 If these tapes are saved as PC files, the resulting file is not
-guaranteed to be viewable on the PC and can probably not 
+guaranteed to be viewable on the PC and can probably not
 be successfully edited using standard PC editors without some
 data corruption.</p>
 <p>To help overcome these problems the simulator allows tapes to
@@ -466,7 +466,7 @@ will be in <i>binary</i> format.
 <p>All the sample machine code programs are in <i>binary</i> format
 and have a file extension of <code>.tape</code>.</p></dd>
 <dt><i>ASCII</i></dt>
-<dd>This is a converted format that can be viewed and edited 
+<dd>This is a converted format that can be viewed and edited
 on the PC using any standard PC editor (for example Notepad
 on Windows) without any data loss or data corruption.
 <p>The conversion leaves any standard ASCII character unchanged,
@@ -480,17 +480,17 @@ continues on the next text line.</p>
 <p>All the sample BASIC programs are in <i>ASCII</i> format and
 have a file extension of <code>.basic</code>.</p></dd>
 <dt><i>Audio</i></dt>
-<dd>This is the original Kansas City Standard encoded audio format 
+<dd>This is the original Kansas City Standard encoded audio format
 which is stored in the form of a WAV file.
 The audio encoding parameters can be controlled by properties
 in the <a href="config.html#kcs">system configuration</a>.</dd>
 </dl>
-<p>The simulator will correctly recognise and load tapes any of 
+<p>The simulator will correctly recognise and load tapes any of
 the three formats and can save in any selected format.
-If you are saving a BASIC program it would make sense to 
-save in <i>ASCII</i> format (which is the default) as the 
+If you are saving a BASIC program it would make sense to
+save in <i>ASCII</i> format (which is the default) as the
 resulting program can then be easily viewed and edited on the PC.
-If you are saving a tape to potentially load back onto a 
+If you are saving a tape to potentially load back onto a
 real UK101 you will need to ensure it is in <i>binary</i>
 or maybe <i>audio</i> format.
 The utility programs <a href="utilities.html#tread">Tape Reader</a>,
@@ -498,7 +498,7 @@ The utility programs <a href="utilities.html#tread">Tape Reader</a>,
 <a href="utilities.html#trecord">Tape Recorder</a> can be used
 to quickly convert between the various formats.</p>
 <p>When an audio file is produced the waveform created can either be an
-approximation to the output generated by the real hardware (which is 
+approximation to the output generated by the real hardware (which is
 the default) or pure sine waves (which is probably what the Kansas City
 standard specified).</p>
 <table frame="void">
@@ -508,7 +508,7 @@ standard specified).</p>
 </table>
 <hr>
 <h2 id="decode">Recovering Programs from Old Cassette Tapes</h2>
-<p>If you have original UK101 programs on old cassette tapes it is 
+<p>If you have original UK101 programs on old cassette tapes it is
 usually possible to recover them on a PC so they can be loaded
 and used with the simulator, provided the tapes are still playable
 and provided you still have something to play them with.
@@ -523,12 +523,12 @@ best not to use the microphone input) and set the volume to about 7.</li>
 (rather than Stereo) if you can and sampling at a high rate such as 
 44.1kHz or 48kHz.
 I used <a href="http://www.audacityteam.org/">Audacity</a> to do
-the recording and exporting as a WAV, remembering to trim off any 
+the recording and exporting as a WAV, remembering to trim off any
 unwanted blanks and noise at the beginning and end of the recording.
 Make sure you save as an uncompressed WAV file, not an MP3.</li>
 <li>It may be worth performing some processing on the resulting WAV file
 to try to clean up the signal.
-In <i>Audacity</i> useful effects to experiment with include the High and 
+In <i>Audacity</i> useful effects to experiment with include the High and
 Low Pass Filters (the recording should only contain 1200Hz and 2400Hz tones)
 and Equalization and/or Normalization (to boost the signal levels).</li>
 </ol>
@@ -536,7 +536,7 @@ and Equalization and/or Normalization (to boost the signal levels).</li>
 good condtion it should be possible to load the resulting WAV file
 directly into the simulator by playing it with the
 <a href="operation.html#opcas">cassette player</a>, or it can be converted
-to <i>binary</i> or <i>ASCII</i> format using the 
+to <i>binary</i> or <i>ASCII</i> format using the
 <a href="utilities.html#twrite">Tape Writer</a> or <a href="utilities.html#tread">Tape
 Reader</a> programs.
 It may be necessary to experiment with the <code>-phase</code>
@@ -545,9 +545,9 @@ parameter of these programs to get them to decode correctly.
 condition (which is quite likely) further processing might be needed
 to recover the data.
 This can either be done in an audio editing program such as 
-<a href="http://www.audacityteam.org/">Audacity</a> by applying various 
-effects to try to improve the signal or by using an excellent piece of 
-software written by Martin Ward that can examine and process the WAV file 
+<a href="http://www.audacityteam.org/">Audacity</a> by applying various
+effects to try to improve the signal or by using an excellent piece of
+software written by Martin Ward that can examine and process the WAV file
 in great detail to recover the original data bytes.
 The process is something like this:
 <ol>
@@ -555,10 +555,10 @@ The process is something like this:
 <a href="http://www.gkc.org.uk/martin/software/index.html#CUTS">
 kansas city tape decoder</a>.
 This is a perl script, so might require a few pre-requisites to be gathered
-from elsewhere if you are a Windows user (like me).</li> 
+from elsewhere if you are a Windows user (like me).</li>
 <li>Run the perl script to process the WAV file and create the decoded tape.
 This might take a little while if the original tape was fairly long.
-Hopefully the data will be analysed, processed and extracted correctly - 
+Hopefully the data will be analysed, processed and extracted correctly -
 Martin's program did a fine job for all the tapes I have found and
 tried.</li>
 <li>The resulting file will be what I called <i>binary</i> format

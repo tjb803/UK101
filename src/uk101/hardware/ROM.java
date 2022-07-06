@@ -27,11 +27,8 @@ public class ROM extends Memory {
      * Attempt to load a ROM from a binary image
      */
     public ROM(String id) throws IOException {
-        this(id, true);
-    }
-
-    protected ROM(String id, boolean ro) throws IOException {
-        super(load(findName(id)), ro);
+        super(load(findName(id)));
+        readOnly = true;
         name = id;
 
         // Save the name of the ROM

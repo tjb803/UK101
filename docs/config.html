@@ -17,7 +17,7 @@ correspond with typical hardware and software changes that
 would have been made to real machines.</p>
 <p>This configuration is controlled by a set of system properties
 that are processed when the simulator starts up.
-There are a number of different ways in which these properties 
+There are a number of different ways in which these properties
 may be provided.
 Combinations of these methods can also be used, with properties
 from later in the list taking precedence over those earlier in
@@ -27,12 +27,12 @@ the list:</p>
 A default set of properties corresponding to a
 standard machine configuration will be used.</li>
 <li><i>Load a <a href="operation.html#start">machine image</a></i>.
-The properties saved as part of the machine image will be 
+The properties saved as part of the machine image will be
 applied.
 <li><i>Default properties file</i>.
-A Java properties file called <code>uk101.properties</code> can be 
+A Java properties file called <code>uk101.properties</code> can be
 placed in the same directory as the program JAR file.
-This can be useful if you always want to set some specific 
+This can be useful if you always want to set some specific
 property values.</li>
 <li><i>Additional properties file</i>.
 The command line parameter <code>-configuration</code> (or
@@ -43,26 +43,26 @@ configurations available.</li>
 <li><i>Command line overrides</i>.
 The command line parameter <code>-properties</code> (or
 <code>-p</code>) can be used to apply one or more property
-overrides from the command line. 
-If more than one property is required a comma or semicolon should 
+overrides from the command line.
+If more than one property is required a comma or semicolon should
 be used to separate them.
-This can be useful to temporarily try the effect of an 
-individual property or two. 
-</ol>  
+This can be useful to temporarily try the effect of an
+individual property or two.
+</ol>
 <p>As an example the following start-up command could be used
-to start up the simulation temporarily with a large size, green 
+to start up the simulation temporarily with a large size, green
 display and a 2MHz CPU:</p>
 <blockquote><pre>
 java -jar uk101-n.n.n.jar -p cpu.speed=2,screen.size=2,screen.colour=green
 </pre></blockquote>
-<p>An example of a Java properties file that contains 
+<p>An example of a Java properties file that contains
 the default configuration can be found in the file:
 <blockquote><pre>
 <a href="../samples/properties/uk101.properties">samples/properties/uk101.properties</a>
 </pre></blockquote>
 <p>An example of a Java properties file that contains settings
 suitable for emulating an 
-<a href="operation.html#osi">Ohio Scientific Superboard II</a> can be 
+<a href="operation.html#osi">Ohio Scientific Superboard II</a> can be
 found in the file:
 <blockquote><pre>
 <a href="../samples/superboard/superboard.properties">samples/superboard/superboard.properties</a>
@@ -89,14 +89,14 @@ run as fast as it can.</td></tr>
 <tr><td><code>cpu.control</code></td>
 <td><code>sleep</code>, <code>yield</code> or <code>spin</code></td>
 <td align="center"><code>sleep</code></td>
-<td>This determines the method used by the CPU emulation to manage 
+<td>This determines the method used by the CPU emulation to manage
 instruction timings.
-Generally this is best left set to <code>sleep</code> which provides the 
-best control on any modern (say last 10 years or so) machine.  
+Generally this is best left set to <code>sleep</code> which provides the
+best control on any modern (say last 10 years or so) machine.
 But if the emulation does not seem to run smoothly 
 the other options are available for experimentation and debug.
 <table frame="void" rules="none">
-<tr valign="baseline"><td><code>sleep&nbsp;</code></td> 
+<tr valign="baseline"><td><code>sleep&nbsp;</code></td>
 <td>causes the processor thread to <i>sleep</i> when possible.
 This uses least host system CPU but may give a less smooth emulation
 on some very slow or old machines.</td></tr>
@@ -111,9 +111,9 @@ This uses a lot of host CPU but should give a smooth emulation on all
 machines although the rest of the system may be less responsive.</td></tr>
 </table></td></tr>
 </table>
-<p><i>Note: </i>The <code>cpu.speed</code> setting represents a maximum 
-simulation speed.  
-It is possible that an older or slower PC will not be able reach 
+<p><i>Note: </i>The <code>cpu.speed</code> setting represents a maximum
+simulation speed.
+It is possible that an older or slower PC will not be able reach
 the maximum requested.</p>
 <hr>
 <h2 id="memory">RAM, ROM and NVRAM</h2>
@@ -143,18 +143,18 @@ four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
 and the value should be the required RAM size in KBytes.</td></tr>
 <tr><td><code>nvram.XXXX</code></td>
 <td><code>filename</code></td><td/>
-<td>This allows additional non-volatile RAMs to be installed; unlike 
+<td>This allows additional non-volatile RAMs to be installed; unlike
 normal RAM changes made to NVRAMs will be persisted in a disk image file.
 The NVRAM is installed at address <code>XXXX</code> which must be a valid
 four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
-and the value should be the name of a file containing the initial 
+and the value should be the name of a file containing the initial
 NVRAM image.
 Empty NVRAM images can be created with the
 <a href="utilities.html#nvram">EraseRAM</a> utility program.</td></tr>
 <tr><td><code>monitor.address</code></td>
 <td>from <code>0000</code> to <code>FFFF</code></td>
 <td align="center"><code>F800</code></td>
-<td>This sets the memory address for the monitor ROM. 
+<td>This sets the memory address for the monitor ROM.
 This should normally be left set to the default value.</td></tr>
 <tr><td><code>rom.monitor</code></td>
 <td><code>MONUK01</code><br><code>MONUK02</code><br>
@@ -166,7 +166,7 @@ The value can be the name of a file containing a replacement ROM or
 one of the following built-in names:
 <table frame="void" rules="none">
 <tr valign="baseline"><td><code>MONUK01&nbsp;</code></td>
-<td>was the original monitor shipped with the early machines.</td></tr> 
+<td>was the original monitor shipped with the early machines.</td></tr>
 <tr valign="baseline"><td><code>MONUK02&nbsp;</code></td>
 <td>was the standard 
 <a href="http://uk101.sourceforge.net/docs/pdf/newmon.pdf">New Monitor</a>
@@ -175,13 +175,13 @@ shipped with later machines.</td></tr>
 <td>is the UK101 version of the popular replacement
 <a href="http://uk101.sourceforge.net/docs/pdf/cegmon.pdf">CEGMON</a> monitor.</td></tr>
 <tr valign="baseline"><td><code>WEMON&nbsp;</code></td>
-<td>was another popular replacement monitor from 
+<td>was another popular replacement monitor from
 <a href="http://uk101.sourceforge.net/docs/pdf/wemon.pdf">Watford Electronics</a>.</td></tr>
 </table></td>
 <tr><td><code>basic.address</code></td>
 <td>from <code>0000</code> to <code>FFFF</code></td>
 <td align="center"><code>A000</code></td>
-<td>This sets the memory address for the BASIC ROM. 
+<td>This sets the memory address for the BASIC ROM.
 This should normally be left set to the default value.</td></tr>
 <tr><td><code>rom.basic</code></td>
 <td><code>BASUK101</code><br>or <code>filename</code></td>
@@ -208,8 +208,8 @@ The ROM is installed at address <code>XXXX</code> which must be a valid
 four digit hexadecimal address from <code>0000</code> to <code>FFFF</code>
 and the value should be the name of a file containing the ROM image.</td></tr>
 </table>
-<p><i>Note:</i> The additional ROMs and NVRAMs are processed and installed after 
-the system monitor and BASIC ROMs, so they can be used to replace some or all of 
+<p><i>Note:</i> The additional ROMs and NVRAMs are processed and installed after
+the system monitor and BASIC ROMs, so they can be used to replace some or all of
 the system ROM address spaces.<p/>
 <h3 id="patch">Patching ROM Images</h3>
 <p>When a ROM image is loaded it is possible to define a set of patches to be
@@ -217,7 +217,7 @@ applied to the ROM data.
 This can be useful, for example, to force a ROM to default correctly for a 32
 line screen, or to change timings such as typing auto-repeat rate for use with
 faster CPU clocks.
-Patching can also be done by creating a completely separate ROM image, but for 
+Patching can also be done by creating a completely separate ROM image, but for
 quick testing and simple changes adding the patches to the configuration can
 often be easier.</p>
 <p>Patches are defined using the following syntax appended to the name of the
@@ -229,7 +229,7 @@ ROM to be loaded:
 <tr><td><code>ADDR&nbsp;</code></td>
 <td>Is a four-digit hexadecimal address at which to begin patching.</td></tr>
 <tr><td><code>BB</code></td>
-<td>Are one or more two-digit hexadecimal bytes used to update the ROM starting 
+<td>Are one or more two-digit hexadecimal bytes used to update the ROM starting
 at the specified address.</td></tr>
 </table>
 <p>Some useful patches include:</p>
@@ -270,10 +270,10 @@ This should normally be left set to the default value.</td></tr>
 <td align="center"><code>300</code></td>
 <td>This defines default baud rate of the ACIA. 
 <br><br>Some programs (in particular some games) relied on the ACIA control
-signals to generate accurate timings that were independent of the CPU 
+signals to generate accurate timings that were independent of the CPU
 speed.</td></tr>
 </table>
-<p><i>Note:</i> The ACIA baud rate setting is ignored when reading or 
+<p><i>Note:</i> The ACIA baud rate setting is ignored when reading or
 writing to a simulated cassette tape, these operations simply run as fast
 as they can, however it is required if reading or writing a Kansas City
 Standard audio file.</p>
@@ -325,16 +325,35 @@ This should normally be left set to the default value.</td></tr>
 <td>from <code>32</code> to <code>64</code></td>
 <td align="center"><code>64</code></td>
 <td>This defines the number of columns in the video buffer.</td></tr>
+<tr><td><code>video.mode</code></td>
+<td><code>normal</code> or <code>sek</code></td>
+<td align="center"><code>normal</code></td>
+<td>This defines the video hardware.
+Either the normal video hardware or a simulation of <i>Premier Publications</i>
+<b>Screen Enhancement Kit</b>.
+See <a href="extras.html#sek">SEK</a> for details.</td></tr>
+<tr><td><code>sek.address</code></td>
+<td>from <code>0000</code> to <code>FFFF</code></td>
+<td align="center"><code>DE80</code></td>
+<td>This sets the memory address of the SEK format control byte.
+This should normally be left set to the default value.</td></tr>
+<tr><td><code>sek.format</code></td>
+<td>from <code>0</code> to <code>255</code></td>
+<td align="center"><code>0</code></td>
+<td>This defines the default screen mode when using the SEK.</td>
 </table>
-<p><i>Note:</i> The settings of the video hardware define the amount of 
-video RAM (rows x columns rounded up to the nearest 1K boundary) and 
-the geometry of screen buffer.
-This is not quite the same as what gets displayed on the screen as 
+<p><i>Note:</i> The settings of the normal video hardware define the amount
+of video RAM (<i>rows</i> x <i>cols</i> rounded up to the
+nearest 1K boundary) and the geometry of screen buffer.
+This is not quite the same as what gets displayed on the screen as
 real UK101's simple video hardware was not able to scan all of the
 memory locations to the TV output.
 Some characters were <q>lost</q> from the beginning and end of
 each scan line.
-The <a href="#screen">screen display</a> section configures this.</p> 
+The <a href="#screen">screen display</a> section configures this.</p>
+<p>When running with the Screen Enhancement Kit the <i>rows</i> and
+<i>cols</i> values are not used as the screen is controlled by
+the SEK format setting.</p>
 <hr>
 <h2 id="screen">Screen Display</h2>
 <p>These settings control the appearance of the video output.</p>
@@ -348,12 +367,12 @@ The <a href="#screen">screen display</a> section configures this.</p>
 <tr><td><code>screen.offset</code></td>
 <td>from <code>0</code> to <code>63</code></td>
 <td align="center"><code>12</code></td>
-<td>This defines the offset of the first visible character on 
+<td>This defines the offset of the first visible character on
 each row from the hardware video buffer.</td>
 <tr><td><code>screen.size</code></td>
 <td><code>1</code> or <code>2</code></td>
 <td align="center"><code>1</code></td>
-<td>This defines the size of the video display: <code>1</code> is 
+<td>This defines the size of the video display: <code>1</code> is
 a smaller display, <code>2</code> is a larger display.</td>
 <tr><td><code>screen.colour</code><br><code>screen.color</code></td>
 <td><code>white</code>, <code>green</code> or <code>amber</code></td>
@@ -364,13 +383,13 @@ a smaller display, <code>2</code> is a larger display.</td>
 <td align="center"><code>async</code></td>
 <td>This defines how screen updates are performed.
 <table frame="void" rules="none">
-<tr valign="baseline"><td><code>async&nbsp;</code></td> 
+<tr valign="baseline"><td><code>async&nbsp;</code></td>
 <td>performs all updates via the Java Swing event dispatch thread.
 This is a more correct way to update the screen but can give slower
 results on older PCs.</td></tr>
 <tr valign="baseline"><td><code>sync&nbsp;</code></td>
 <td>performs updates to each character cell as they are written
-by the simulation - this may give faster output but can lead to 
+by the simulation - this may give faster output but can lead to
 some screen corruption if there are windows overlapping the video
 window.</td></tr>
 </table></td></tr>
@@ -380,6 +399,9 @@ or multi-core processor, the default <i>async</i> screen update option
 is likely to produce the best results.
 On older hardware the <i>sync</i> option may result in faster and/or
 smoother operation.</p>
+<p>When running with the Screen Enhancement Kit the <i>width</i> and
+<i>offset</i> values are not used as the screen is controlled by the
+SEK format setting.</p>
 <hr>
 <h2 id="kcs">Kansas City Audio Encoding</h2>
 <p>These settings control the audio encoding when creating Kansas City
@@ -407,8 +429,8 @@ start and after the end of the data.</td></tr>
 <td align="center"><code>system</code></td>
 <td>This defines the shape of the audio waveform.
 <table frame="void" rules="none">
-<tr valign="baseline"><td><code>system&nbsp;</code></td> 
-<td>generates a waveform that closely matches that produced by the real 
+<tr valign="baseline"><td><code>system&nbsp;</code></td>
+<td>generates a waveform that closely matches that produced by the real
 UK101 hardware.</td></tr>
 <tr valign="baseline"><td><code>sine&nbsp;</code></td>
 <td>encodes the audio as pure sine waves.</td></tr>
@@ -417,10 +439,10 @@ UK101 hardware.</td></tr>
 <td><code>0</code>, <code>90</code>, <code>180 </code> or <code>270</code></td>
 <td align="center"><code>90</code></td>
 <td>This defines the waveform phase angle used when decoding.
-This can normally be left as the default but some signals may need a different 
-value - it is usually best to experiment if audio files do not decode correctly. 
+This can normally be left as the default but some signals may need a different
+value - it is usually best to experiment if audio files do not decode correctly.
 </table>
-<p><i>Note:</i> The <a href="#acia">baud rate</a> setting is also required 
+<p><i>Note:</i> The <a href="#acia">baud rate</a> setting is also required
 when reading or writing audio data, however it is restricted to the values
 300, 600 or 1200 only.
 <br><table border="1" frame="above" rules="none" width="100%" bgcolor="#F0F8FF">

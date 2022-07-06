@@ -17,14 +17,16 @@ import uk101.view.VideoView;
  */
 public class Video extends RAM {
 
+    public boolean standard;
     public int rows, cols;
 
     public ROM charSet;
     public int charWidth, charHeight;
 
     public Video(int height, int width, ROM chargen) throws IOException {
-        // Allocate the video RAM as seen by the CPU. 
+        // Allocate the video RAM as seen by the CPU.
         super(toK(height*width));
+        standard = true;
 
         // Fill the video buffer with spaces as this helps avoid some random
         // character flashes when the MONUK02 monitor scrolls the screen.
@@ -56,7 +58,7 @@ public class Video extends RAM {
      * GUI visualisation
      */
 
-    private VideoView view;
+    protected VideoView view;
 
     public void setView(VideoView view) {
         this.view = view;

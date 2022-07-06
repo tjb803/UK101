@@ -12,7 +12,8 @@ import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import javax.swing.UIManager;
+
+import uk101.view.ComputerView;
 
 /**
  * Debug button panel for the machine view
@@ -26,7 +27,7 @@ public class DebugPanel extends JPanel {
         // it seems to get the size very wrong.  So for Nimbus we just add
         // small button instances to a grid.  Sadly this doesn't work well in
         // anything other than Nimbus.
-        if (UIManager.getLookAndFeel().getID().equals("Nimbus")) {
+        if (ComputerView.isNimbus) {
             setLayout(new GridLayout(1, 0));
             for (AbstractButton b : buttons) {
                 b.addActionListener(listener);

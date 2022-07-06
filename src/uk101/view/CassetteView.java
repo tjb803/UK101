@@ -8,6 +8,7 @@ package uk101.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -81,20 +82,24 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
         tp.add(Box.createHorizontalGlue());
         tp.add(format);
 
-        JPanel bp = new JPanel();
-        bp.setLayout(new BoxLayout(bp, BoxLayout.X_AXIS));
-        bp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        // On the Mac the buttons are wide and I'm not sure how to change them, so they
+        // are best arranged in a 2x2 grid rather than the 1x4 used elsewhere.
+        int gx = 1, gy = 4;
+        if (ComputerView.isMac) {
+            gx = 2; gy = 2;
+        }
+
+        JPanel bg = new JPanel();
+        bg.setLayout(new GridLayout(gx, gy, 5, 0));
+        bg.setAlignmentY(BOTTOM_ALIGNMENT);
         record = new CassetteButton("\u25CF", "Rec", Color.RED, this);
         play = new CassetteButton("\u25BA", "Play", Color.BLACK, this);
         stop = new CassetteButton("\u25A0", "Stop", Color.BLACK, this);
         eject = new CassetteButton("\u25B2", "Eject", Color.BLUE, this);
-        bp.add(record);
-        bp.add(Box.createHorizontalStrut(5));
-        bp.add(play);
-        bp.add(Box.createHorizontalStrut(5));
-        bp.add(stop);
-        bp.add(Box.createHorizontalStrut(10));
-        bp.add(eject);
+        bg.add(record);
+        bg.add(play);
+        bg.add(stop);
+        bg.add(eject);
 
         ButtonGroup group = new ButtonGroup();
         group.add(record.button);
@@ -113,13 +118,19 @@ public class CassetteView  extends ViewFrame implements ActionListener, ItemList
         ip.setLayout(new BoxLayout(ip, BoxLayout.Y_AXIS));
         indicator = new CassetteLight();
         indicator.setAlignmentX(RIGHT_ALIGNMENT);
+        ip.add(Box.createVerticalStrut(3));
         ip.add(indicator);
-        ip.add(Box.createVerticalStrut(8));
+        ip.add(Box.createVerticalGlue());
         JButton open = new JButton("Open...");
         open.setAlignmentX(RIGHT_ALIGNMENT);
         open.addActionListener(this);
         ip.add(open);
         ip.setAlignmentY(BOTTOM_ALIGNMENT);
+
+        JPanel bp = new JPanel();
+        bp.setLayout(new BoxLayout(bp, BoxLayout.X_AXIS));
+        bp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        bp.add(bg);
         bp.add(Box.createHorizontalStrut(25));
         bp.add(ip);
 
