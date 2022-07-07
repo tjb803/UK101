@@ -166,8 +166,8 @@ public class Main implements Runnable {
             Class<?> ac = Class.forName("com.apple.eawt.Application");
             Method ga = ac.getMethod("getApplication");
             Method si = ac.getMethod("setDockIconImage", Image.class);
-            Image icon48 = Toolkit.getDefaultToolkit().createImage(Main.class.getResource("icon/uk101-48.png"));
-            si.invoke(ga.invoke(null), icon48);
+            Image icon96 = Toolkit.getDefaultToolkit().createImage(Main.class.getResource("icon/uk101-96.png"));
+            si.invoke(ga.invoke(null), icon96);
         } catch (Exception e) {
         }
 

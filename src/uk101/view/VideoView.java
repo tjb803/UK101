@@ -50,6 +50,10 @@ public class VideoView extends ViewFrame {
             setFormat(video.rows, cfg.getScreenWidth(), cfg.getScreenOffset(), video.cols, false);
         }
 
+        content = getContentPane();
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.setBackground(VideoScreen.SCREEN_BLACK);
+
         video.setView(this);
     }
 

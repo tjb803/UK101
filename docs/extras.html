@@ -37,23 +37,26 @@ address $DE80.</p>
 <p>The available formats are listed in the table below.
 For use with the UK101 formats <code>0</code>, <code>2</code> or
 <code>10</code> are likely to be the most useful.</p>
-<table frame="box" rules="all" cellspacing="0" cellpadding="5">
-<tr><th>Rows</th><th>Columns</th><th/><th>Normal</th><th>Inverted</th></tr>
-<tr><td>32</td><td>64</td><td/>
-<td><code>0</code> or <code>1</code></td><td><code>128</code> or <code>129</code></td></tr>
-<tr><td>32</td><td>48</td><td/>
-<td><code>2</code> or <code>3</code></td><td><code>130</code> or <code>131</code></td></tr>
-<tr><td>32</td><td>32</td><td>top</td><td><code>4</code></td><td><code>132</code></td></tr>
-<tr><td>32</td><td>32</td><td>bottom</td><td><code>5</code></td><td><code>133</code></td></tr>
-<tr><td>32</td><td>24</td><td>top</td><td><code>6</code></td><td><code>134</code></td></tr>
-<tr><td>32</td><td>24</td><td>bottom</td><td><code>7</code></td><td><code>135</code></td></tr>
-<tr><td>16</td><td>64</td><td>top</td><td><code>8</code></td><td><code>136</code></td></tr>
-<tr><td>16</td><td>64</td><td>bottom</td><td><code>9</code></td><td><code>137</code></td></tr>
-<tr><td>16</td><td>48</td><td>top</td><td><code>10</code></td><td><code>138</code></td></tr>
-<tr><td>16</td><td>48</td><td>bottom</td><td><code>11</code></td><td><code>139</code></td></tr>
-<tr><td colspan="2">illegal!</td><td/>
-<td><code>12</code> to <code>15</code></td><td><code>140</code> to <code>143</code></td></tr>
-</table>
+<table><tr>
+<td><table frame="box" rules="all" cellspacing="0" cellpadding="5">
+<tr><th>Normal</th><th>Inverted</th><th/><th>Rows</th><th>Columns</th><th/></tr>
+<tr><td><code>0</code> or <code>1</code><td><code>128</code> or <code>129</code></td>
+<td/><td>32</td><td>64</td><td/></tr>
+<tr><td><code>2</code> or <code>3</code><td><code>130</code> or <code>131</code></td>
+<td/><td>32</td><td>48</td><td/></tr>
+<tr><td><code>4</code></td><td><code>132</code></td><td/><td>32</td><td>32</td><td>top</td></tr>
+<tr><td><code>5</code></td><td><code>133</code></td><td/><td>32</td><td>32</td><td>bottom</td></tr>
+<tr><td><code>6</code></td><td><code>134</code></td><td/><td>32</td><td>24</td><td>top</td></tr>
+<tr><td><code>7</code></td><td><code>135</code></td><td/><td>32</td><td>24</td><td>bottom</td></tr>
+<tr><td><code>8</code></td><td><code>136</code></td><td/><td>16</td><td>64</td><td>top</td></tr>
+<tr><td><code>9</code></td><td><code>137</code></td><td/><td>16</td><td>64</td><td>bottom</td></tr>
+<tr><td><code>10</code></td><td><code>138</code></td><td/><td>16</td><td>48</td><td>top</td></tr>
+<tr><td><code>11</code></td><td><code>139</code></td><td/><td>16</td><td>48</td><td>bottom</td></tr>
+<tr><td><code>12</code> to <code>15</code></td><td><code>140</code> to <code>143</code></td><td/>
+<td colspan="3" align="center">illegal!</td></tr>
+</table></td>
+<td><img src="image/sek32.jpg"/></td><td><img src="image/sek16.jpg"/></td>
+</tr></table>
 <p>The BASIC program listed in the Premier Publications documentation that
 enables simple switching of the screen formats is provided in the
 <a href="../samples/basic/sek.basic"><samp>samples/basic/sek.basic</samp></a>.</p>
