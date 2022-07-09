@@ -28,7 +28,7 @@ public class Computer extends Thread implements DataBus {
     // General debug flag
     public static boolean debug = false;
 
-    // Some flags to control a few special hacks 
+    // Some flags to control a few special hacks
     public static boolean videoFix1 = false;
     public static boolean aciaFix1 = false;
 
@@ -239,7 +239,7 @@ public class Computer extends Thread implements DataBus {
             // real machine but can show on my simulation.  So if this looks like the
             // monitor scroll routine we'll return a space character to keep the screen
             // clean.
-            if (Computer.videoFix1 && cpu.getPC() == 0xFB72) 
+            if (Computer.videoFix1 && cpu.getPC() == 0xFB72)
                 b = 0x20;
         }
         return b;
@@ -324,15 +324,5 @@ public class Computer extends Thread implements DataBus {
      */
     public String toString() {
         return "UK101: " + ram.kBytes() + "K RAM";
-    }
-
-    /*
-     * Dummy constructor for unit tests
-     */
-    public Computer(boolean test) throws IOException {
-        ram = new RAM(4);
-        monitor = new ROM("MONUK02.ROM");
-        cpu = new CPU6502(1, "sleep", null);
-        acia = new ACIA6850(300, Thread.NORM_PRIORITY);
     }
 }

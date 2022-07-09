@@ -77,7 +77,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
             // that monitor we'll only flag the character as read if we read from
             // address F001.  This is fine, F001 is the address that should be used,
             // rather than some other random value in the 256 byte block.
-            if (!Computer.aciaFix1 || offset == 1) {
+            if (!Computer.aciaFix1 || offset == start+1) {
                 statusReg &= ~STATUS_RDRF;
                 notify();
             }
@@ -161,7 +161,7 @@ public class ACIA6850 extends Memory implements IODevice, Runnable {
                     sb = 0;
                 }
 
-                // Anything waiting to be transmitted? 
+                // Anything waiting to be transmitted?
                 if (tx) {
                     // If a device is attached we assume it handles the timing of the
                     // character; if there is no device we pause for the correct time

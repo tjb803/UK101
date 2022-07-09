@@ -30,8 +30,8 @@ public abstract class Memory {
     }
 
     public Memory(byte[] sb) {
+        this(sb.length);
         store = sb;
-        blocks = toBlocks(sb.length);
     }
 
     public void setAddress(int addr) {
@@ -61,7 +61,7 @@ public abstract class Memory {
         return blocks*BLKSIZE;
     }
 
-    // Memory size in Kbytes 
+    // Memory size in Kbytes
     public int kBytes() {
         return toK(bytes());
     }

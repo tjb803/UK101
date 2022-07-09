@@ -51,6 +51,8 @@ public class ComputerView extends JDesktopPane implements ActionListener {
     private CassetteView cassette;
 
     public ComputerView(Computer computer) {
+        setLayout(null);
+
         this.computer = computer;
 
         // Pure black background (if used) is a bit too dark

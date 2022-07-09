@@ -57,22 +57,23 @@ public class SEK extends Video {
 
     // Select format based on control byte value
     private void setViewFormat(byte format) {
-        int k1 = 1024;
         boolean valid = true;
         boolean invert = (format & 0x80) != 0;
         int rows = 0, cols = 0, start = 0, step = 0;
         switch (format & 0x0F) {
-            case 0: case 1: rows = 32; cols = 64; start = 0;     step = 64; break;
-            case 2: case 3: rows = 32; cols = 48; start = 12;    step = 64; break;
-            case 4:         rows = 32; cols = 32; start = 0;     step = 32; break;
-            case 5:         rows = 32; cols = 32; start = k1;    step = 32; break;
-            case 6:         rows = 32; cols = 24; start = 5;     step = 32; break;
-            case 7:         rows = 32; cols = 24; start = k1+5;  step = 32; break;
-            case 8:         rows = 16; cols = 64; start = 0;     step = 64; break;
-            case 9:         rows = 16; cols = 64; start = k1;    step = 64; break;
-            case 10:        rows = 16; cols = 48; start = 12;    step = 64; break;
-            case 11:        rows = 16; cols = 48; start = k1+12; step = 64; break;
-            default: valid = false;  break;
+            case 0:
+            case 1:  rows = 32; cols = 64; start = 0;     step = 64; break;
+            case 2:
+            case 3:  rows = 32; cols = 48; start = 12;    step = 64; break;
+            case 4:  rows = 32; cols = 32; start = 0;     step = 32; break;
+            case 5:  rows = 32; cols = 32; start = K1;    step = 32; break;
+            case 6:  rows = 32; cols = 24; start = 5;     step = 32; break;
+            case 7:  rows = 32; cols = 24; start = K1+5;  step = 32; break;
+            case 8:  rows = 16; cols = 64; start = 0;     step = 64; break;
+            case 9:  rows = 16; cols = 64; start = K1;    step = 64; break;
+            case 10: rows = 16; cols = 48; start = 12;    step = 64; break;
+            case 11: rows = 16; cols = 48; start = K1+12; step = 64; break;
+            default: valid = false; break;
         }
         if (valid) {
             if (view != null)
@@ -87,7 +88,7 @@ public class SEK extends Video {
     }
 
     /*
-     * The control byte is mapped as a single memory byte at 0xDE80.
+     * The control byte is mapped as a single memory byte at $DE80.
      *
      * Note that the main SEK class extends Video and so has direct
      * access to the VideoView if it has been set. It is the VideoView
@@ -98,9 +99,7 @@ public class SEK extends Video {
         private byte format;
 
         public Control() {
-            // Only need 1 byte of memory (but will need to round up to
-            // nearest block size).
-            super(Memory.toBlocks(1));
+            super(1);    // Only need 1 byte of memory
         }
 
         // Only read or write the single byte at 0xDE80

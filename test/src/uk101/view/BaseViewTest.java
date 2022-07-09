@@ -25,8 +25,8 @@ public abstract class BaseViewTest extends TestCase {
 
     protected void setUp() throws Exception {
         // Test Computer instance
-        testComputer = new Computer(true);
         testCfg = new Configuration(new Args("", "", new String[0], null), null);
+        testComputer = new Computer(testCfg);
 
         // Create a multi-document frame for machine view tests
         testFrame = new JFrame("Machine View Tester");
